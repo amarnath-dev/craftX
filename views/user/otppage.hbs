@@ -1,0 +1,197 @@
+
+    <section class="wrapper">
+		<div class="container mt-4">
+			<div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3 text-center mt-5">
+	
+				<form class="rounded bg-white shadow p-5" id="otpForm">
+					<h3 class="text-dark fw-bolder fs-4 mb-2">OTP Verification</h3>
+
+					<div class="fw-normal text-muted mb-4">
+						Enter the verification code we sent to
+                        <div><h5>{{session.userEmail}}</h5></div>
+					</div>  
+
+                    <div class="d-flex align-items-center justify-content-center fw-bold mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <span>8459</span>
+                    </div>
+
+					<div class="otp_input text-start mb-2">
+                        <label for="digit">Type your 6 digit security code</label>
+						<div class="d-flex align-items-center justify-content-between mt-2">
+                            <input type="text" class="form-control" placeholder="" name="otp1">
+                            <input type="text" class="form-control" placeholder="" name="otp2">
+                            <input type="text" class="form-control" placeholder="" name="otp3">
+                            <input type="text" class="form-control" placeholder="" name="otp4">
+                            <input type="text" class="form-control" placeholder="" name="otp5">
+                            <input type="text" class="form-control" placeholder="" name="otp6">
+                        </div> 
+					</div>  
+
+					<button type="submit" class="btn btn-primary submit_btn my-4">Submit</button> 
+
+                    <div class="fw-normal text-muted mb-2">
+						Didn’t get the code ? <a href="#" class="text-primary fw-bold text-decoration-none">Resend</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+<style>
+    /* Google Poppins Font CDN Link */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+/* Variables */
+:root{
+    --primary-font-family: 'Poppins', sans-serif;
+    --light-white:#c7cdd3;
+    --gray:#5e6278;
+    --gray-1:#e3e3e3;
+}
+body{
+    font-family:var(--primary-font-family);
+    font-size: 14px;
+} 
+
+/* Main CSS OTP Verification New Changing */ 
+.wrapper{
+    padding:0 0 100px;
+    background-image:url("images/bg.png");
+    background-position:bottom center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-attachment: fixed;
+    min-height: 100%;
+}
+.wrapper .logo img{
+    max-width:40%;
+}
+.wrapper input{
+    background-color:var(--light-white);
+    border-color:var(--light-white);
+    color:var(--gray);
+}
+.wrapper input:focus{
+    box-shadow: none;
+}
+.wrapper .password-info{
+    font-size:10px;
+}
+.wrapper .submit_btn{
+    padding:10px 15px;
+    font-weight:500;
+}
+.wrapper .login_with{
+    padding:8px 15px;
+    font-size:13px;
+    font-weight: 500;
+    transition:0.3s ease-in-out;
+}
+.wrapper .submit_btn:focus,
+.wrapper .login_with:focus{
+    box-shadow: none;
+}
+.wrapper .login_with:hover{
+    background-color:var(--gray-1);
+    border-color:var(--gray-1);
+}
+.wrapper .login_with img{
+    max-width:7%;
+} 
+
+/* OTP Verification CSS */
+.wrapper .otp_input input{
+    width:14%;
+    height:70px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+@media (max-width:1200px){
+    .wrapper .otp_input input{ 
+        height:50px; 
+    }
+}
+@media (max-width:767px){
+    .wrapper .otp_input input{ 
+        height:40px; 
+    }
+}
+</style>
+
+
+<script>
+  document.getElementById('otpForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+
+  const otp1 = document.getElementsByName('otp1')[0].value;
+  const otp2 = document.getElementsByName('otp2')[0].value;
+  const otp3 = document.getElementsByName('otp3')[0].value;
+  const otp4 = document.getElementsByName('otp4')[0].value;
+  const otp5 = document.getElementsByName('otp5')[0].value;
+  const otp6 = document.getElementsByName('otp6')[0].value;
+
+
+  const otpData = {
+    otp1,
+    otp2,
+    otp3,
+    otp4,
+    otp5,
+    otp6,
+  };
+
+  try {
+    //Send data using getch
+    const response = await fetch('/verifyotp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(otpData),
+    });
+
+     const data = await response.json();
+    if (response.ok) {
+      console.log('OTP verification successful.');
+    } else {
+      console.error('OTP verification failed.');
+    }
+
+
+    if(data.emailID) {
+        location.assign('newpassword');
+    }
+
+  } catch (error) {
+    console.error('An error occurred while verifying OTP:', error);
+  }
+});
+
+
+</script>

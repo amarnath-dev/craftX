@@ -1,0 +1,54 @@
+<div class="container mt-5">
+    <h1>Create Category</h1>
+    <form>
+        <div class="form-group mt-4">
+            <label for="categoryName" class="mt-2">Category Name</label>
+            <input type="text" class="form-control mt-3" id="categoryName" name="categoryName"
+                placeholder="Enter category name">
+        </div>
+        <div class="form-group">
+            <label for="categoryDescription" class="mt-2">Category Description</label>
+            <textarea class="form-control mt-3" id="categoryDescription" name="categoryDescription" rows="4"
+                placeholder="Enter category description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Add Category</button>
+    </form>
+</div>
+
+
+
+<script>
+  const form = document.querySelector('form');
+  
+ 
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const categoryName = form.categoryName.value;
+    const categoryDescription = form.categoryDescription.value;
+
+
+    try {
+      const result = await fetch('/admin/category/newcategory', {
+        method: 'POST',
+        body: JSON.stringify({ categoryName, categoryDescription }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await result.json();
+      console.log(data);
+
+      if (data.error) {
+        res.status(401).send("Coudn't fetch the data")
+      }
+
+      if (data.savedCatID) {
+
+        location.assign('/admin/category');
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  
+</script>

@@ -1,0 +1,160 @@
+<section>
+    <nav class="navbar navbar-expand-lg bg-body-dark">
+        <div class="container-fluid" style="height: 50px;">
+            <a class="navbar-brand" href="/admin/home">CraftX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <form class="d-flex" role="search">
+                    <a href="products/newproduct" class="btn btn-primary" style="width: 220px; margin-left: 200px">Add
+                        New</a>
+
+                </form>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<hr>
+
+<section>
+    <div class="container-fluid">
+        <div class="row">
+
+
+            <div class="col-md-4" style="width: 250px;">
+                <div class="list-group">
+                    <li class="list-group-item"><a href=""> <i
+                                class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
+                    <li class="list-group-item"><a href="/admin/customers"><i
+                                class="fa-regular fa-user side-bar-icon"></i>Customers</a>
+                    </li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a></li>
+                    <li class="list-group-item"><a href="category"><i
+                                class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
+                    <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
+                                style="transform: rotate(90deg);"></i>Sales Report</a></li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage Coupon</a></li>
+                    <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
+                            Manage</a></li>
+                </div>
+                <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
+                    <a href="logout" class="btn border-primary-subtle">Log Out</a>
+                    <a href="/admin/home" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
+                </div>
+            </div>
+
+            <div class="col-md-8" style="width: 1000px;">
+                {{!-- {{#if message}}
+                <div class="alert alert-success">
+                    {{message}}
+                </div>
+                {{/if}} --}}
+                <table style="width: 100%;" id="example" class="table table-striped table-bordered table-sm"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="th-sm">Image</th>
+                            <th class="th-sm">Name</th>
+                            <th class="th-sm">Category</th>
+                            <th class="th-sm">Status</th>
+                            <th class="th-sm">Stocks</th>
+                            <th class="th-sm">Price</th>
+                            <th class="th-sm">Color</th>
+                            <th class="th-sm">Delete/Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+
+                        {{#each products}}
+                        {{#unless this.is_delete}}
+                        <tr>
+                            <td>
+                                <img src="/uploads/{{this.primaryImage}}" alt="{{this.name}}" width="100"
+                                    class="border border-2 rounded-top">
+                            </td>
+                            <td>{{this.name}}</td>
+                            <td>{{this.category_name}}</td>
+                            <td>
+                                {{#if this.status}}
+                                Listed
+                                {{else}}
+                                Unlisted
+                                {{/if}}
+                            </td>
+                            <td>{{this.stock}}</td>
+                            <td>{{this.price}}</td>
+                            <td>{{this.color}}</td>
+                            <td>
+                                <!-- Edit and delete buttons for each product -->
+                                <a href="/admin/products/editproduct/{{this._id}}" class="ms-3"><i
+                                        class="fa-solid fa-pen"></i></a>
+
+
+                                <a href="#" class="text-danger ms-2" onclick="confirmDelete('{{this._id}}')">
+                                    <i class="fa-solid fa-trash"></i></a>
+
+                            </td>
+                        </tr>
+                        {{/unless}}
+                        {{/each}}
+
+
+                        
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<script>
+    function confirmDelete(productId) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            window.location.href = "/admin/products/deleteproduct/" + productId;
+        } else {
+
+        }
+    }
+
+    //search jquery
+    $(document).ready(function () {
+        new DataTable('#example');
+    })
+
+</script>
+
+
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        margin-right: 20px;
+    }
+
+    .btn2 {
+        border: 1px solid black;
+        color: white;
+        border-radius: 5px;
+        padding: 7px;
+    }
+
+    .collapse {
+        margin-left: 700px;
+        border-radius: 20px;
+    }
+</style>

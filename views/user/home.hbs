@@ -1,0 +1,284 @@
+{{!-- <section>
+  <nav class="navbar navbar-expand-lg bg-info-subtle">
+    <div class="container-fluid">
+      <a class="navbar-brand mt-1" href="/" style="font-size: 30px; font-weight:bold;">CarftX</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
+        <form class="d-flex" role="search">
+          <input class="form-control me-3" type="search" placeholder="Search here" aria-label="Search"
+            style="width: 500px;">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+    <div class="icons" id="icons-container" style="width: 300px;">
+      <a href="/profile"><span class="material-symbols-outlined nav-icon" id="profile-icon">person</span></a>
+
+
+
+      <a href="#"><span class="material-symbols-outlined nav-icon">favorite</span></a>
+
+      <a href="/my-cart"><span class="material-symbols-outlined nav-icon">shopping_cart</span></a>
+
+      <span class="badge" id="count-badge">{{getProductCount}}</span>
+
+    </div>
+  </nav>
+</section> --}}
+
+<header>
+  <!-- Jumbotron -->
+  <div class="p-3 text-center bg-white border-bottom">
+    <div class="container">
+      <div class="row gy-3">
+        <!-- Left elements -->
+        <div class="col-lg-2 col-sm-4 col-4">
+          <a href="/" target="_blank" class="float-start">
+            <img src="https://drive.google.com/uc?id=17bT9juLOoxuxK7C38GBujZsJiYwl2u43" style="width: 8rem;"/>
+
+          </a>
+        </div>
+        <!-- Left elements -->
+
+        <!-- Center elements -->
+        <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+          <div class="d-flex float-end">
+            <a href="/profile" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i
+                class="fas fa-user-alt m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">Profile</p>
+            </a>
+
+            <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i
+                class="fas fa-heart m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">Wishlist</p>
+            </a>
+
+            <a href="/my-cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
+
+              <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+              <p class="d-none d-md-block mb-0">My cart</p>
+
+            </a>
+            <div>
+              <span class="badge" id="count-badge">{{getProductCount}}</span>
+
+            </div>
+
+          </div>
+
+        </div>
+        <!-- Center elements -->
+
+        <!-- Right elements -->
+        <div class="col-lg-5 col-md-12 col-12">
+          <div class="input-group float-center">
+            <div class="form-outline">
+              <input type="search" id="form1" class="form-control" placeholder="Search" />
+
+            </div>
+            <button type="button" class="btn btn-primary shadow-0">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+
+  <!-- Heading -->
+  {{!-- <div style="background-color: rgb(148, 243, 243);">
+    <div class="container py-4">
+      <!-- Breadcrumb -->
+      <nav class="d-flex">
+        <h6 class="mb-0">
+          <a href="" class="text-dark-50">Home</a>
+          <span class="text-dark-50 mx-2"> > </span>
+          <a href="" class="text-dark-50">Library</a>
+          <span class="text-dark-50 mx-2"> > </span>
+          <a href="" class="text-dark"><u>Data</u></a>
+        </h6>
+      </nav>
+      <!-- Breadcrumb -->
+    </div>
+  </div> --}}
+  <!-- Heading -->
+</header>
+
+
+<section>
+  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+
+      <a href="">
+        <div class="carousel-item active">
+          <img src="https://drive.google.com/uc?id=1Iapkf4cvpB0PL82hOXvYqxtBd_ZCGB_y" class="d-block w-100" alt="...">
+        </div>
+      </a>
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+
+</section>
+
+
+
+<section class="row mt-4">
+  <div class="card-container d-flex mt-3 border">
+
+    {{#each allproducts}}
+    {{#unless this.is_delete}}
+
+    <div class="card border" style="width: 18rem;">
+
+      <a href=""><span class="material-symbols-outlined icon" style="margin-left: 250px;">favorite</span></a>
+
+      {{#each this.primaryImage}}
+      <a href="/view-product/{{this._id}}">
+        <img src="/uploads/{{this}}" class="card-img-top images" alt="">
+      </a>
+      {{/each}}
+
+      <div class="card-body">
+        <a href="/view-product/{{this._id}}" class="card-title" style="margin-left: 5px;">{{this.name}}</a>
+
+        <small class="card-text fw-bold" style="color: red; margin-left: 110px;">{{this.price}}</small>
+
+        <div class="d-flex mt-3">
+
+          <button class="btn border border-dark" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
+            Cart</button>
+
+
+          <a href="/check-out/{{this._id}}" class="btn border-dark" id="buy-now">Buy Now</a>
+
+
+          {{!-- <button class="btn border border-dark" onclick="buyNow('{{this._id}}')" id="buy-now">Buy Now</button>
+          --}}
+        </div>
+      </div>
+    </div>
+    {{/unless}}
+    {{/each}}
+  </div>
+</section>
+{{>user-footer}}
+
+
+
+<script>
+  $(document).ready(() => {
+    $('#profile-list').hide()
+    $('#profile-icon').on().click(function () {
+      $('#profile-list').slideToggle()
+    })
+
+  })
+
+
+  function addToCart(prodID) {
+    $.ajax({
+      url: '/add-to-cart/' + prodID,
+      method: 'get',
+      success: (response) => {
+        if (response.status) {
+
+          let count = $('#count-badge').html()
+          count = parseInt(count) + 1;
+          $('#count-badge').html(count);
+
+        }
+      }
+    });
+  }
+
+</script>
+
+
+
+<style>
+  img {
+    cursor: pointer;
+  }
+
+  .profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .list-group-item a {
+    text-decoration: none;
+  }
+
+  .listTag {
+    text-decoration: none;
+    margin-left: 20px;
+    color: black;
+  }
+
+  .material-symbols-outlined {
+    margin-left: 25px;
+    font-size: 30px;
+  }
+
+  .images {
+    height: 250px;
+    margin-top: 10px;
+  }
+
+  .card {
+    margin-left: 40px;
+  }
+
+  .icon {
+    margin-left: 250px;
+    padding: 5px;
+  }
+
+  #count-badge {
+    position: absolute;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    color: rgb(12, 180, 54);
+    border: 1px solid black;
+  }
+
+  #profile-list {
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #add-to-cart {
+    margin-left: 10px;
+    background-color: red;
+    color: white;
+
+    &:hover {
+      background-color: rgb(60, 58, 54);
+    }
+  }
+
+  #buy-now {
+    margin-left: 40px;
+
+    &:hover {
+      background-color: rgb(130, 255, 255);
+    }
+  }
+</style>

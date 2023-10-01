@@ -1,0 +1,91 @@
+<section>
+   <nav class="navbar navbar-expand-lg bg-primary-subtle">
+      <div class="container-fluid" style="height: 50px;">
+         <a class="navbar-brand" href="">CraftX</a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="d-flex" role="search">
+               {{!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> --}}
+               {{!-- <button class="btn btn-outline-success" type="submit" style="margin-right: 10px;">Search</button>
+               --}}
+            </form>
+         </div>
+      </div>
+   </nav>
+</section>
+
+
+
+<section class="section">
+   <div class="container">
+      <ul class="list-group">
+         <div class="list">
+            <li class="list-group-item"><a href="/admin/products"> <i
+                     class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href="/admin/customers"><i class="fa-regular fa-user side-bar-icon"></i>Customers</a></li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href="/admin/orders"><i class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a>
+            </li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href="/admin/category"><i
+                     class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
+                     style="transform: rotate(90deg);"></i>Sales Report</a></li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href=""><i class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage
+                  Coupon</a></li>
+         </div>
+         <div class="list">
+            <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
+                  Manage</a></li>
+         </div>
+
+
+
+      </ul>
+   </div>
+
+   <a href="admin/logout" class="btn logout_btn">Log Out</a>
+
+</section>
+
+
+
+
+<style>
+   .section {
+      margin-top: 50px;
+      width: 350px;
+   }
+
+   a {
+      text-decoration: none;
+      margin-left: 50px;
+   }
+
+   i {
+      margin-right: 25px;
+   }
+
+   .logout_btn {
+      margin-top: 100px;
+      margin-left: 120px;
+      border: 1px solid black;
+      background-color: rgb(231, 126, 126);
+   }
+
+   .collapse {
+      margin-left: 700px;
+      border-radius: 20px;
+   }
+</style>

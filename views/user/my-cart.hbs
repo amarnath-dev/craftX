@@ -1,0 +1,306 @@
+<section>
+    <header>
+        <!-- Jumbotron -->
+        <div class="p-3 text-center bg-white border-bottom">
+            <div class="container">
+                <div class="row gy-3">
+                    <!-- Left elements -->
+                    <div class="col-lg-2 col-sm-4 col-4">
+                        <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
+                            <img src="" />
+
+                        </a>
+
+                    </div>
+                    <!-- Left elements -->
+
+                    <!-- Center elements -->
+                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                        <div class="d-flex float-end">
+                            <a href="/profile" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
+                                <i class="fas fa-user-alt m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">Profile</p>
+                            </a>
+
+                            <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i
+                                    class="fas fa-heart m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">Wishlist</p>
+                            </a>
+
+                            <a href="/my-cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
+
+                                <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">My cart</p>
+
+                            </a>
+                            <div>
+                                <span class="badge" id="count-badge">{{getProductCount}}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-5 col-md-12 col-12">
+                        <div class="input-group float-center">
+                            <div class="form-outline">
+                                <input type="search" id="form1" class="form-control" placeholder="Search" />
+
+                            </div>
+                            <button type="button" class="btn btn-primary shadow-0">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Jumbotron -->
+
+        <!-- Heading -->
+        {{!-- <div style="background-color: rgb(148, 243, 243);">
+            <div class="container py-4">
+                <!-- Breadcrumb -->
+                <nav class="d-flex">
+                    <h6 class="mb-0">
+                        <a href="" class="text-dark-50">Home</a>
+                        <span class="text-dark-50 mx-2"> > </span>
+                        <a href="" class="text-dark-50">Library</a>
+                        <span class="text-dark-50 mx-2"> > </span>
+                        <a href="" class="text-dark"><u>Data</u></a>
+                    </h6>
+                </nav>
+                <!-- Breadcrumb -->
+            </div>
+        </div> --}}
+        <!-- Heading -->
+
+        
+    </header>
+</section>
+
+
+
+
+
+
+<section class="h-100 gradient-custom">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center my-4">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Cart - {{cartCount}} items</h5>
+                    </div>
+
+
+                    {{#if cartList}}
+                    {{#unless cartList.prod_detail.is_delete}}
+                    <div class="card-body">
+                        {{#each cartList}}
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+
+                                {{#each this.prod_detail.primaryImage}}
+                                <a href="/view-product/{{this.prod_detail._id}}">
+                                    <div class="bg-image hover-overlay hover-zoom ripple rounded "
+                                        data-mdb-ripple-color="light">
+                                        <img src="/uploads/{{this}}" class="w-100" alt="Product Image" />
+                                    </div>
+                                </a>
+                                {{/each}}
+
+                            </div>
+
+                            <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                <p><strong>{{this.prod_detail.name}}</strong></p>
+                                <p>Color: {{this.prod_detail.color}}</p>
+
+                                <p class="">
+
+                                    <strong style="color: green; font-size: 20px;">{{this.prod_detail.price}}</strong>
+                                </p>
+
+                                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+                                    title="Remove item" onclick="removeItem('{{this.prod_detail._id}}')">
+
+                                    <span class="material-symbols-outlined" style="color: black;">delete</span>
+                                </button>
+
+
+
+
+                                <button type="button" class="btn btn-danger btn-sm mb-2 " data-mdb-toggle="tooltip"
+                                    title="Move to the wish list">
+                                    <a href=""><span class="material-symbols-outlined"
+                                            style="color: white;">favorite</span></a>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                <div class="d-flex mb-4" style="max-width: 300px">
+                                    <button style="height: 50px;" class="btn bg-info-subtle px-3 me-2 mt-2"
+                                        onclick="countDec('{{this.prod_detail._id}}')">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                    <div class="form-outline">
+                                        <input id="form1" min="0" name="quantity" value="{{cart.count}}" type="number"
+                                            class="form-control increment mt-3" disabled max="4" />
+                                        <label class="form-label" for="form1"
+                                            style="margin-left: 20px;">Quantity</label>
+                                    </div>
+
+                                    <button style="height: 50px;" class="btn bg-info-subtle px-3 ms-2 mt-2"
+                                        onclick="countInc('{{this.prod_detail._id}}')">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4" />
+
+                        {{/each}}
+                    </div>
+                </div>
+
+
+                <div class="card mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <p><strong>We accept</strong></p>
+                        <img class="me-2" width="45px"
+                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                            alt="Visa" />
+                        <img class="me-2" width="45px"
+                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+                            alt="American Express" />
+                        <img class="me-2" width="45px"
+                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+                            alt="Mastercard" />
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li
+                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                Price
+                                <span style="color: green; font-size: 20px; font-weight: bold">{{totalAmount}}</span>
+                            </li>
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Delivery Charges
+                                <span>Free</span>
+                            </li>
+                            <li
+                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Total amount</strong>
+                                    <strong>
+
+                                    </strong>
+                                </div>
+                                <span><strong
+                                        style="color: green; font-size: 20px; font-weight: bold">Rs.{{totalAmount}}</strong></span>
+                            </li>
+                        </ul>
+
+
+                        <a href="/my-cart/check-out">
+                            <button type="button" class="btn bg-info-subtle btn-lg btn-block">
+                                Go to checkout
+                            </button>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        {{/unless}}
+        {{/if}}
+    </div>
+</section>
+
+
+{{>user-footer}}
+
+
+<script>
+
+    function removeItem(productID) {
+        Swal.fire({
+            title: 'Confirm Deletion',
+            text: 'Are you sure you want to remove this product from your cart?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/my-cart/remove/' + productID,
+                    method: 'get',
+                    success: (response) => {
+                        console.log(response);
+                        if (response.status) {
+                            location.reload();
+                        }
+                    }
+                });
+            } else {
+
+            }
+        });
+    }
+
+    function countInc(prodID) {
+        $.ajax({
+            url: '/my-cart/increment/' + prodID,
+            method: 'get',
+            success: (response) => {
+                if (response.status) {
+                    console.log(response.status)
+                    location.reload();
+                }
+            }
+        })
+    }
+
+
+    function countDec(prodID) {
+        console.log("Function Called")
+        $.ajax({
+            url: '/my-cart/decrement/' + prodID,
+            method: 'get',
+            success: (response) => {
+                if (response.status) {
+                    location.reload();
+                }
+            }
+        })
+    }
+
+</script>
+
+
+
+<style>
+    #form1 {
+        padding-left: 45px;
+    }
+</style>

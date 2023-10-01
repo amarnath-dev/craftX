@@ -1,0 +1,125 @@
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Admin Login</p>
+                                <form class="mx-1 mx-md-4" id="loginForm">
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-user fa-lg me-3 fa-fw mt-4"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="form3Example1c">Your Email</label>
+                                            <input type="email" id="userEmail" class="form-control" name="email"
+                                                required />
+                                            <p id="email-error" style="color: red;"></p>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-lock fa-lg me-3 fa-fw mt-4"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="form3Example4c">Password</label>
+                                            <input type="password" id="userPassword" class="form-control"
+                                                name="password" required />
+                                            <p id="password-error" style="color: red;"></p>
+                                        </div>
+                                    </div>
+
+
+                                    {{!-- <div class="form-check d-flex justify-content-center mb-3">
+                                        <label class="form-check-label" for="form2Example3">
+                                            Create an account ? <a href="http://localhost:3000/admin/signup">SignUp</a>
+                                        </label>
+
+
+
+                                    </div> --}}
+
+                                    <div class="form-check d-flex justify-content-center mb-3">
+                                        <label class="form-check-label" for="form2Example3">
+                                            Forgot Password ? <a
+                                                href="http://localhost:3000/admin/login/forgotpassword">Reset
+                                                Password</a>
+                                        </label>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button type="submit" class="btn btn-primary btn-lg">LogIn</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                                <img src="https://static.vecteezy.com/system/resources/previews/005/879/539/original/cloud-computing-modern-flat-concept-for-web-banner-design-man-enters-password-and-login-to-access-cloud-storage-for-uploading-and-processing-files-illustration-with-isolated-people-scene-free-vector.jpg"
+                                    class="img-fluid" alt="Sample image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    const form = document.querySelector('form');
+    const emailError = document.getElementById('email-error')
+    const passwordError = document.getElementById('password-error');
+
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = form.email.value;
+        const password = form.password.value;
+
+
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+
+        // check if empty
+        if (!email || !password) {
+            emailError.textContent = 'Email and password are required.';
+            passwordError.textContent = 'Email and password are required.';
+            return;
+        }
+
+        try {
+            const result = await fetch('/admin/login', {
+                method: 'POST',
+                body: JSON.stringify({ email, password }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await result.json();
+            console.log(data);
+
+            if (data.error) {
+                if (data.error == 'Invalid Email') {
+                    emailError.textContent = data.error;
+                } else {
+                    passwordError.textContent = data.error;
+                }
+
+            }
+
+            if (data.adminID) {
+                location.assign('/admin');
+            }
+
+        } catch (error) {
+            console.error(error);
+            emailError.textContent = 'An error occurred. Please try again later.';
+            passwordError.textContent = 'An error occurred. Please try again later.';
+        }
+    });
+</script>

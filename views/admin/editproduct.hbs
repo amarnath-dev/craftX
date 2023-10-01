@@ -1,0 +1,172 @@
+<section class="new-product p-md-5">
+    <div class="h3 fw-bold text-second px-4 py-2">
+        <span>Edit Product</span>
+        <hr>
+    </div>
+    <form method="post" class="row d-flex justify-content-center" enctype="multipart/form-data"
+        action="/admin/products/editproduct">
+
+        <section class="left-section col-md-6 p-3">
+
+            <div class="card p-md-5 p-2 me-md-5">
+                <h5>Choose product images</h5>
+                <span class="fw-normal mb-4 text-success">*file supports only: jpeg, jpg, png</span>
+
+                <div class="img d-flex">
+                    <img id="imgPrimary" src="/uploads/{{product.primaryImage}}" alt="{{product.name}}"
+                        style="width: 50px; height: 40px" class="border border-secondary rounded-1">
+                </div>
+                <span class="fw-bold">Select the Primary Image</span>
+                <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader mt-2" name="primaryImage"
+                    onchange="previewImg(event, 'imgPrimary')" />
+                <span class="fw-bold mt-3">Select secondary images <br> <span
+                        class="fw-normal text-success"></span></span>
+
+                {{!-- button and div to create new image input --}}
+                <button id="addImageButton" type="button" class="btn border border-secondary mt-3 bg-primary">Add
+                    Image</button>
+                <div id="imageContainer">
+
+
+                </div>
+
+
+                {{#each product.secondaryImage}}
+
+                <div class="img d-flex mt-4">
+
+                    <img id="imgSecondary{{@index}}" src="/uploads/{{this}}" alt="{{product.name}}"
+                        style="width: 50px; margin-right: 10px" class="border border-secondary rounded-1">
+                    <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader" name="images"
+                        class="mb-3" onchange="previewImg(event, 'imgSecondary{{@index}}')" />
+
+                    {{!-- Image delete button --}}
+                    <a href="/admin/products/editproduct/deleteImage/{{this}}/{{../product._id}}">
+                        <span class="delete-icon" onclick="deleteImage('imgSecondary{{@index}}')"
+                            style="padding-left: 10px; margin-top: 5px;">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                    </a>
+                </div>
+
+                {{/each}}
+            </div>
+
+        </section>
+        <section class="right-section col-md-6  col-md-6 p-4">
+            <div class="form-group mb-4">
+                <label for="" class="fw-bold mb-2">Product Name</label>
+                <input type="text" name="product_name" class="form-control" value="{{product.name}}">
+            </div>
+            <div class="row mb-4">
+                <div class="form-group col-md-6">
+                    <label for="" class="fw-bold mb-2">Category</label>
+                    <input type="text" name="category_name" class="form-control" value="{{product.category_name}}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="" class="fw-bold mb-2">Color</label>
+                    <input type="text" name="color" class="form-control" value="{{product.color}}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="" class="fw-bold mb-2">Stock</label>
+                    <input type="number" name="stock" class="form-control" value="{{product.stock}}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="" class="fw-bold mb-2">Status</label>
+
+                    <select class="form-select" name="status" aria-label="Default select example">
+                        {{#if product.status}}
+                        <option value="false">Unlist</option>
+                        <option value="true" selected>List</option>
+                        {{else}}
+                        <option value="true">List</option>
+                        <option value="false" selected>Unlist</option>
+                        {{/if}}
+                    </select>
+
+
+
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="form-group col-md-6">
+                    <label for="" class="fw-bold mb-2">Price</label>
+                    <input type="number" name="prod_price" class="form-control" value="{{product.price}}">
+                </div>
+            </div>
+
+            <div class="form-floating my-2 me-md-5">
+                <label class="form-label fw-bold" for="form4Example3">Description</label>
+                <br>
+                <textarea class="form-control mt-4 text-area" rows="5" name="description"
+                    style="min-height:150px !important;" required>{{product.description}}</textarea>
+            </div>
+
+            <div>
+                <input type="text" name="productID" value="{{product._id}}" hidden>
+            </div>
+
+
+            <button type="submit" class="btn newproduct add-btn py-3 border border-primary bg-primary mt-5"
+                style="width: 100%;">Update</button>
+
+
+        </section>
+    </form>
+</section>
+
+<script>
+
+
+    // Function to update image preview
+    function updateImage(event, imgId) {
+        const inputElement = event.target;
+        const imgElement = $("#" + imgId);
+
+        if (inputElement.files && inputElement.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imgElement.attr("src", e.target.result);
+            };
+            reader.readAsDataURL(inputElement.files[0]);
+        }
+    }
+
+    // Function to remove a secondary image element
+    function removeSecondaryImage(imgId) {
+        $("#" + imgId).parent().remove();
+    }
+
+    $(document).ready(function () {
+        $("#addImageButton").on("click", function () {
+            const imageContainer = $("#imageContainer");
+            const lastIndex = imageContainer.find(".img").length;
+
+            const newImageElement = `
+                <div class="img d-flex mt-4">
+                    <img id="imgSecondary${lastIndex}" src="" alt=""
+                        style="width: 50px; margin-right: 10px" class="border border-secondary rounded-1">
+                    <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader" name="images"
+                        class="mb-3" onchange="updateImage(event, 'imgSecondary${lastIndex}')" />
+
+                    <!-- Image delete button -->
+                    <span class="delete-icon" onclick="removeSecondaryImage('imgSecondary${lastIndex}')"
+                        style="padding-left: 5px;">
+                        <i class="fas fa-trash"></i> 
+                    </span>
+                </div>`;
+
+            imageContainer.append(newImageElement);
+        });
+    });
+
+
+
+    function previewImg(event, imgId) {
+        console.log(event.target.value);
+        let image = URL.createObjectURL(event.target.files[0]);
+        let imgPreview = document.getElementById(imgId);
+        imgPreview.src = image;
+    }
+
+</script>

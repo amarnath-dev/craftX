@@ -1,0 +1,115 @@
+<div class="card login-form">
+    <div class="card-body">
+        <h3 class="card-title text-center">Change password</h3>
+
+        <div class="card-text">
+            <form>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                    <a class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                </div>
+                 {{!-- <div class="form-group">
+                    <label for="exampleInputEmail1">Enter Your'e Current Email ID</label>
+                    <input type="email" class="form-control form-control-sm">
+                </div> --}}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Set Your'e New Password</label>
+                    <input type="password" class="form-control form-control-sm" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Re-enter Your'e Password</label>
+                    <input type="password" class="form-control form-control-sm">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block submit-btn">Confirm</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    html,body { height: 100%; }
+
+body{
+	display: -ms-flexbox;
+	display: -webkit-box;
+	display: flex;
+	-ms-flex-align: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	background-color: #f5f5f5;
+}
+
+form{
+	padding-top: 10px;
+	font-size: 13px;
+	margin-top: 30px;
+}
+
+.card-title{ font-weight:300; }
+
+.btn{
+	font-size: 13px;
+}
+
+.login-form{ 
+	width:320px;
+	margin:20px;
+}
+
+.sign-up{
+	text-align:center;
+	padding:20px 0 0;
+}
+
+span{
+	font-size:14px;
+}
+
+.submit-btn{
+	margin-top:20px;
+}
+</style>
+
+
+
+<script>
+  const form = document.querySelector('form')
+ 
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    
+    const password = form.password.value;
+
+    try {
+      const result = await fetch('/newpassword', {
+        method: 'POST',
+        body: JSON.stringify({ password }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await result.json();
+      console.log(data);
+
+      if (data.errors) {
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+
+    
+     if(data.userEmail) {
+      location.assign('login');
+     }
+      
+    }
+    catch (error) {
+      console.log(error);
+    }
+  });
+
+</script>

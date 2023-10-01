@@ -1,0 +1,73 @@
+<section class="border border-secondary">
+  <div style="width: 80%;" class="container py-5 w mb-5 new-category">
+    <div class="div h3 text-second fw-bold mt-5">Edit Category</div>
+    <hr>
+
+
+    <form>
+      <div class="form-group">
+        <label class="fw-bold" for="exampleFormControlInput1">Category Name</label>
+        <input type="text" class="form-control mt-2" name="name" id="exampleFormControlInput1"
+          value="{{categories.name}}">
+      </div>
+      <div class="form-group">
+        <input type="hidden" name="_id" class="form-control" id="exampleFormControlInput1" value="{{categories._id}}">
+      </div>
+      <label class="fw-bold mt-2" for="exampleFormControlInput1">Status</label>
+      <select class="form-select m-2" name="status" aria-label="Default select example">
+        <option value="true">List</option>
+        <option value="false">Unlist</option>
+      </select>
+      <div class="form-group">
+        <label class="fw-bold mt-3" for="exampleFormControlTextarea1">Description</label>
+        <textarea class="form-control mt-2" name="description" id="exampleFormControlTextarea1" rows="3"
+          style="height: 150px;">{{categories.description}}</textarea>
+      </div>
+      <div class="text-center text-lg-start mt-4 d-flex">
+        <button type="submit" class="btn btn-primary add-btn btn-lg"
+          style="display:block; padding:0.5em 2rem">Update</button>
+
+      </div>
+    </form>
+  </div>
+
+</section>
+
+
+<script>
+
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = form.name.value;
+    const id = form._id.value;
+    const status = form.status.value;
+    const description = form.description.value;
+
+    try {
+      const result = await fetch('/admin/categories/editcategory', {
+        method: 'POST',
+        body: JSON.stringify({ name, id, status, description }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await result.json();
+      console.log(data);
+
+      if (data.error) {
+        console.error(data.error);
+      }
+
+      if (data.catID) {
+        window.location.assign('/admin/category');
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+
+</script>

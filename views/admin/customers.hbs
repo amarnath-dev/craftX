@@ -1,0 +1,163 @@
+{{!-- <div class="titile">
+    <h4>Manage Category</h4>
+</div> --}}
+{{!--
+<hr> --}}
+<section>
+    <nav class="navbar navbar-expand-lg bg-body-dark">
+        <div class="container-fluid" style="height: 50px;">
+            <a class="navbar-brand" href="/admin/home">CraftX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex" role="search">
+                    {{!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit" style="margin-right: 10px;">Search</button>
+                    --}}
+                    {{!-- <button class="addCat"><a href="category/newcategory"></a>Add Category</button> --}}
+                </form>
+            </div>
+        </div>
+    </nav>
+</section>
+<hr>
+
+<section>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4" style="width: 250px;">
+                <div class="list-group">
+                    <li class="list-group-item"><a href="/admin/products"> <i
+                                class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
+                    <li class="list-group-item"><a href=""><i class="fa-regular fa-user side-bar-icon"></i>Customers</a>
+                    </li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a></li>
+                    <li class="list-group-item"><a href="category"><i
+                                class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
+                    <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
+                                style="transform: rotate(90deg);"></i>Sales Report</a></li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage Coupon</a></li>
+                    <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
+                            Manage</a></li>
+                </div>
+
+                <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
+                    <a href="logout" class="btn border-primary-subtle">Log Out</a>
+                    <a href="/admin/home" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
+                </div>
+            </div>
+
+            <div class="col-md-8 " style="width: 1000px;">
+
+                <section class="category d-flex mt-2">
+                    <div class="object-fit-contain mt-3" style="width: 100%;">
+                        <div class="header d-flex justify-content-between">
+                            <h3 class="h3 text-second fw-bold mb-3">Customers</h3>
+                        </div>
+                        <table style="width: 100%;" id="customerTable"
+                            class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="th-sm">Customer Name
+                                    </th>
+                                    <th class="th-sm">Email ID
+                                    </th>
+                                    <th class="th-sm">Phone
+                                    </th>
+                                    <th class="th-sm">Status
+                                    </th>
+                                    <th class="th-sm">Created At
+                                    </th>
+                                    <th class="th-sm">Block/Unblock
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {{#each allCustomers}}
+                                {{#unless this.delete}}
+                                <tr>
+                                    <td>{{this.fullname}}</td>
+                                    <td>{{this.email}}</td>
+                                    <td>{{this.phonenumber}}</td>
+                                    {{#if this.status}}
+                                    <td style="color: green;">Active</td>
+                                    {{else}}
+                                    <td style="color: rgb(227, 51, 51);">Blocked</td>
+                                    {{/if}}
+                                    <td>{{this.createdAt}}</td>
+                                    <td>
+
+                                        {{#if this.status}}
+                                        <a href="/admin/customers/block/{{this._id}}" class="ms-3 btn"
+                                            style="background-color: rgb(231, 59, 59);">Block</a>
+                                        {{else}}
+                                        <a href="/admin/customers/unblock/{{this._id}}" class="ms-3 btn"
+                                            style="background-color: green;">Unblock</a>
+                                        {{/if}}
+
+                                        {{!-- <a href="/admin/customers/editcategory/{{this._id}}" class="ms-3 btn"
+                                            style="background-color: green;">Unblock</a> --}}
+
+                                        {{!-- <a
+                                            onclick="return confirm('Are you sure you want to delete {{this.name}}?')"
+                                            href="/admin/categories/deletecategory/{{this._id}}"
+                                            class="text-danger ms-2"><i class="fa-solid fa-trash"></i></a> --}}
+                                    </td>
+                                </tr>
+
+                                {{/unless}}
+                                {{/each}}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+
+<script>
+    //search jquery
+    $(document).ready(function () {
+        new DataTable('#customerTable');
+    })
+</script>
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        margin-right: 20px;
+    }
+
+    .btn2 {
+        border: 1px solid black;
+        color: white;
+        border-radius: 5px;
+        padding: 7px;
+    }
+
+    .backBtn {
+        margin-left: 20px;
+        color: black;
+    }
+
+    .logout_btn {
+        margin-top: 50px;
+        margin-left: 10px;
+        border: 1px solid black;
+        background-color: rgb(231, 126, 126);
+    }
+</style>

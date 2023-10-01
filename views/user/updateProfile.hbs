@@ -1,0 +1,269 @@
+{{>new-user-header}}
+
+<section>
+
+    <div class="col-md-9 personal-info border border-dark-subtle rounded-4"
+        style="margin-left: 400px; margin-top: 20px; width: 500px">
+
+        <div class="container">
+            <h2 style="margin-left: 150px;" class="mt-2">Edit Profile</h2>
+            <hr>
+
+            <form id="edit-profile-form" class="profileForm">
+                <div class="mb-3">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullname" value="{{userDetails.fullname}}"
+                        name="fullname" placeholder="Enter your full name">
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" value="{{userDetails.email}}" name="email"
+                        placeholder="Enter your email">
+                </div>
+
+                <div class="mb-3">
+                    <label for="phonenumber" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phonenumber" value="{{userDetails.phonenumber}}"
+                        name="phonenumber" placeholder="Enter your phone number">
+                </div>
+
+                <label for="pass">Change Password ?</label>
+                <input id="checkBox" type="checkbox">
+                <br>
+
+                {{!--First pass verify --}}
+                <div class="very-pass col-md-6">
+                    <input type="password" class="form-controll" id="current-pass" placeholder="Enter Current Password">
+                    <input type="button" value="verify" class="btn mt-3 btn-primary" id="checkPass">
+                </div>
+
+                {{!-- enter new pass fields --}}
+                <div class="newPassplace">
+                    <input type="password" class="form-control mt-2" id="newpass1" placeholder="New Password">
+                    <input type="password" class="form-control mt-2" id="newpass2" placeholder="New Password">
+                    <input type="button" value="Submit" class="btn mt-3 btn-primary" id="confirmPass">
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2" style="margin-left: 160px;">Save Changes</button>
+
+            </form>
+
+            <div style="margin-left: 190px;" class="mt-2">
+                <a href="/profile" style="text-decoration: none;" class="btn">Back</a>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+{{>user-footer}}
+
+<script>
+
+    $(document).ready(() => {
+
+        const editProfileForm = document.getElementById('edit-profile-form');
+
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phonenumber = document.getElementById('phonenumber').value;
+
+
+
+            const data = {
+                fullname: fullname,
+                email: email,
+                phonenumber: phonenumber
+            };
+
+            try {
+                const response = await fetch('/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+
+                    if (responseData.user) {
+                        location.assign('/profile')
+                    }
+
+                } else {
+                    console.error('Profile update failed:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+
+        //Password Updating Section
+
+        $('.very-pass').hide();
+        $('.newPassplace').hide();
+
+        let checkBox = document.getElementById('checkBox');
+
+       
+        checkBox.addEventListener('click', () => {
+            if (checkBox.checked) {
+                $('.very-pass').slideToggle();
+            } else {
+                $('.very-pass').slideToggle();
+
+            }
+        })
+
+       
+
+        const checkPass = document.getElementById('checkPass');
+
+        checkPass.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const currpassValue = document.getElementById('current-pass').value;
+            console.log(currpassValue);
+
+            let payload = {
+                password: currpassValue
+            }
+
+            try {
+                const response = await fetch('/profile/update/password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                console.log(data);
+
+
+                if (data.userID) {
+
+                    $('.very-pass').animate({
+                        height: 'hide',
+                    }, 500);
+
+                    $('.newPassplace').show();
+                }
+
+
+                //Settin the New Password
+                const confirmPass = document.getElementById('confirmPass');
+
+                confirmPass.addEventListener('click', async (e) => {
+                    e.preventDefault();
+
+                    const firstPass = document.getElementById('newpass1').value;
+                    const secondPass = document.getElementById('newpass2').value;
+
+                    let payload = {
+                        password: firstPass
+                    }
+
+                    if (firstPass !== secondPass) {
+                        console.log("Password Does not Match");
+                    } else {
+                        try {
+
+                            const response = await fetch('/profile/update/password/newpass', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            })
+
+                            const data = await response.json();
+                            console.log(data);
+
+                            if (data.message) {
+                                location.assign('/profile');
+                            }
+
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                })
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    })
+
+
+    //custom rules for validation
+    $.validator.addMethod("nodigits", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Numbers not Allowed");
+
+    $.validator.addMethod("noletters", function (value, element) {
+        return this.optional(element) || /^\d+$/.test(value);
+    }, "Letters not allowed");
+
+
+
+    $('.profileForm').validate({
+        rules: {
+            fullname: {
+                required: true,
+                minlength: 3,
+                maxlength: 15,
+                nodigits: true,
+            },
+            phonenumber: {
+                required: true,
+                minlength: 10,
+                noletters: true,
+                maxlength: 10,
+            },
+            email: {
+                required: true,
+                minlength: 3,
+                maxlength: 20,
+            },
+        },
+
+        messages: {
+            fullname: {
+                required: "This field is required",
+                minlength: "Name should be at least 3 characters",
+                maxlength: "Name should be under 15 characters",
+            },
+            phonenumber: {
+                required: "This field is Required",
+                minlength: "Enter a valid number",
+                maxlength: "Enter a valid number",
+
+            },
+            email: {
+                minlength: "Enter a valid number",
+                maxlength: "Invalid Email",
+            },
+        }
+
+    });
+
+
+
+
+
+
+
+
+
+</script>

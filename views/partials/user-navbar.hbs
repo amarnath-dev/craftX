@@ -1,0 +1,45 @@
+<section>
+    <nav class="navbar navbar-expand-lg bg-info-subtle">
+        <div class="container-fluid">
+              <a class="navbar-brand mt-1" href="/" style="font-size: 30px; font-weight:bold;">CarftX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-3" type="search" placeholder="Search here" aria-label="Search"
+                        style="width: 500px;">
+                </form>
+            </div>
+        </div>
+        <div class="icons icon-container mb-2">
+            <a href="/profile"><span class="material-symbols-outlined nav-icon" id="person">person</span></a>
+            <a href=""><span class="material-symbols-outlined nav-icon" id="favorite">favorite</span></a>
+            {{!-- <a href=""><span class="material-symbols-outlined nav-icon" id="cart">shopping_cart</span></a> --}}
+        </div>
+    </nav>
+</section>
+
+
+<style>
+    .icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .icon-container a {
+        margin-right: 30px;
+    }
+    #person{
+        margin-top: 25px;
+    }
+    #favorite{
+        margin-top: 25px;
+    }
+    #cart {
+        margin-top: 25px;
+    }
+
+</style>

@@ -1,0 +1,454 @@
+{{>new-user-header}}
+
+
+<section style="background-color: #eee;">
+    {{!-- <div class="container py-5">
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/profile">Youre Profile</a></li>
+                        <li class="breadcrumb-item"><a href="/profile/manageaddress">Manage Address</a></li>
+
+                    </ol>
+                </nav>
+            </div>
+        </div> --}}
+
+        <div class="row" style="margin-top: 50px;">
+
+
+            {{>user-left-menue}}
+
+            <div class="col-lg-8" id="address-card">
+                <div class="card mb-4 rounded-4" id="details-container">
+                    <div class="card-body">
+
+                        <div style="background-color: rgb(226, 235, 94);" class="border border-dark rounded-2 mt-2">
+                            <button class="btn" style="width: 700px;" id="add-address">
+                                <span class="material-symbols-outlined"></span>ADD New Address</button>
+                        </div>
+
+
+                        {{!-- Edit Addess Container --}}
+                        <div class="col-md-8 mb-4 mt-4" style="width: 700px;" id="edit-container">
+                            <div class="card mb-4">
+                                <div class="card-header py-3">
+                                    <h5 class="mb-0">Edit Address</h5>
+                                </div>
+                                <div class="card-body">
+
+                                    <form action="/profile/manageaddress/editaddress" method="post"
+                                        id="editAddressForm">
+
+                                        <div class="row mb-4">
+                                            <div class="col">
+
+
+                                                <div class="form-outline d-flex">
+                                                    <input type="text" id="form7Example1" name="name"
+                                                        class="form-control" placeholder="Name" />
+                                                    <input type="text" id="form7Example3" class="form-control"
+                                                        placeholder="Mobile Number" style="margin-left: 40px;"
+                                                        name="phonenumber" />
+                                                </div>
+
+
+                                                <div class="form-outline mt-3 d-flex">
+                                                    <input type="text" id="form7Example1" class="form-control"
+                                                        placeholder="Pincode" name="pincode" />
+                                                    <input type="text" id="form7Example3" class="form-control"
+                                                        placeholder="Locality" name="locality"
+                                                        style="margin-left: 40px;" />
+                                                </div>
+
+
+                                                <div class="form-floating mt-3">
+                                                    <textarea class="form-control" placeholder="Leave a comment here"
+                                                        id="floatingTextarea2" style="height: 100px"
+                                                        name="address"></textarea>
+                                                    <label for="floatingTextarea2"><small>Adress(Area and
+                                                            Street)</small></label>
+                                                </div>
+
+
+                                                <div class="form-outline d-flex mt-3">
+                                                    <input type="text" id="form7Example1" class="form-control"
+                                                        placeholder="City/District/Town" name="town" />
+                                                    <input type="text" id="form7Example3" class="form-control"
+                                                        placeholder="State" name="state" style="margin-left: 40px;" />
+                                                </div>
+
+
+                                                <div class="form-outline d-flex mt-3">
+                                                    <input type="text" id="form7Example1" class="form-control"
+                                                        placeholder="Landmark(Optional)" name="optionalLandmark" />
+                                                    <input type="text" id="form7Example3" class="form-control"
+                                                        placeholder="Alternative Phone(Optional)"
+                                                        style="margin-left: 40px;" name="alternativenumber" />
+                                                </div>
+
+
+                                                <div>
+                                                    <input type="hidden" name="objectID" value="{{userAddress._id}}">
+                                                </div>
+
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" value="home"
+                                                        id="flexRadioDefault1" name="workHome">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        Home
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" value="work"
+                                                        id="flexRadioDefault2" name="workHome" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                        Work
+                                                    </label>
+                                                </div>
+
+
+                                            </div>
+                                            <hr class="mt-4">
+                                            <button class="btn border bg-primary" type="submit">Edit</button>
+
+                                            <a href="" class="btn mt-3" id="update-cancel">Cancel</a>
+
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- edit conatiner end --}}
+
+
+                        {{!-- centeril idunnu --}}
+
+                        <div class="col-md-8 mb-4 mt-4" style="width: 700px;" id="update-container">
+                            <div class="card mb-4">
+                                <div class="card-header py-3">
+                                    <h5 class="mb-0">Add Address</h5>
+                                </div>
+
+
+                                <div class="card-body">
+
+                                    <form action="/profile/manageaddress/addaddress" method="post" id="addAddressForm">
+
+                                        <div class="row mb-4">
+                                            <div class="col">
+
+
+                                                <div class="form-outline d-flex">
+                                                    <div class="form-group">
+
+                                                        <input type="text" id="nameField" name="name"
+                                                            class="form-control" placeholder="Name" required style="width: 18rem;"/>
+
+                                                    </div>
+
+                                                    <div class="from-group">
+                                                        <input type="text" id="numberField" class="form-control"
+                                                            placeholder="Mobile Number" style="margin-left: 40px;"
+                                                            name="phonenumber" required/>
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-outline mt-3 d-flex">
+                                                    <div class="form-group">
+                                                        <input type="text" id="pincodeField" class="form-control"
+                                                            placeholder="Pincode" name="pincode" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" id="localityField" class="form-control"
+                                                            placeholder="Locality" name="locality"
+                                                            style="margin-left: 40px;" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-floating mt-3">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" id="fullAddressField"
+                                                            style="height: 100px" name="address"
+                                                            placeholder="Adress(Area and Street)"></textarea>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-outline d-flex mt-3">
+                                                    <div class="form-group">
+                                                        <input type="text" id="townField" class="form-control"
+                                                            placeholder="City/District/Town" name="town" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" id="stateField" class="form-control"
+                                                            placeholder="State" name="state"
+                                                            style="margin-left: 40px;" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-outline d-flex mt-3">
+                                                    <div class="form-group">
+                                                        <input type="text" id="landmarkField" class="form-control"
+                                                            placeholder="Landmark(Optional)" name="optionalLandmark" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" id="optionalNumberField" class="form-control"
+                                                            placeholder="Alternative Phone(Optional)"
+                                                            style="margin-left: 40px;" name="alternativenumber" />
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" value="home"
+                                                        id="flexRadioDefault1" name="workHome">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        Home
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" value="work"
+                                                        id="flexRadioDefault2" name="workHome" checked>
+                                                    <label class="form-check-label" for="flexRadioDefault2">
+                                                        Work
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <hr class="mt-4">
+                                            <button class="btn border bg-primary" type="submit">Add</button>
+
+                                            <a href="" class="btn mt-3" id="update-cancel">Cancel</a>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        {{#if userAddress}}
+                        {{#each userAddress}}
+                        <div class="card mt-4">
+                            <div class="card-header">Current Address</div>
+                            <div class="d-flex" style="margin-left: 600px;">
+                                <button class="btn">
+                                    <a href="/profile/manageaddress/edit-address/{{this._id}}">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+                                </button>
+
+                                <button class="btn deleteAddressButton" data-address-id="{{this._id}}">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+
+                            </div>
+                            <div class="card-body">
+                                <button type="button" disabled>{{this.workHome}}</button>
+                                <br>
+                                <span>Pincode:{{this.pinCode}} </span>
+                                <h5 class="card-title">{{this.userName}}</h5>
+                                <p class="card-text">{{this.address}}</p>
+                                <small>Phone:{{this.phoneNumber}}</small>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{{>user-footer}}
+
+
+<script>
+    $(document).ready(() => {
+
+        $('#update-container').hide()
+
+        $('#add-address').on().click(function () {
+            $('address-card').hide()
+            $('#update-container').slideToggle()
+        })
+
+        $('#update-cancel').on().click(function () {
+            $('#update-container').hide()
+        })
+    })
+
+    //Edit address Code
+    $('#edit-container').hide();
+    $('#edit-address-btn').on().click(function () {
+        $('#edit-container').show();
+    })
+
+
+    //custom rules for validation
+    $.validator.addMethod("nodigits", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Numbers not Allowed");
+
+    $.validator.addMethod("noletters", function (value, element) {
+        return this.optional(element) || /^\d+$/.test(value);
+    }, "Letters not allowed");
+
+
+
+    $('#addAddressForm').validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 3,
+                maxlength: 15,
+                nodigits: true,
+            },
+            phonenumber: {
+                required: true,
+                minlength: 10,
+                noletters: true,
+                maxlength: 10,
+            },
+            pincode: {
+                required: true,
+                noletters: true,
+                minlength: 6,
+                maxlength: 6,
+            },
+            locality: {
+                required: true,
+                nodigits: true,
+                maxlength: 20,
+            },
+            address: {
+                required: true,
+                maxlength: 150,
+            },
+            town: {
+                required: true,
+                maxlength: 15,
+                minlength: 4,
+                nodigits: true,
+            },
+            state: {
+                required: true,
+                minlength: 4,
+                maxlength: 15,
+                nodigits: true,
+            },
+            optionalLandmark: {
+                minlength: 4,
+                maxlength: 15,
+                nodigits: true,
+            },
+            alternativenumber: {
+                noletters: true,
+                minlength: 10,
+                maxlength: 10,
+            }
+        },
+
+        messages: {
+            name: {
+                required: "This field is required",
+                minlength: "Name should be at least 3 characters",
+                maxlength: "Name should be under 15 characters",
+            },
+            phonenumber: {
+                required: "This field is Required",
+                minlength: "Enter a valid number",
+                maxlength: "Enter a valid number",
+
+            },
+            pincode: {
+                minlength: "Invalid Pincode",
+                maxlength: "Invalid Pincode",
+            },
+            locality: {
+                maxlength: "Enter a valid Place",
+            },
+            address: {
+                maxlength: "Invalid Address",
+            },
+            town: {
+                required: "This field is required",
+                minlength: "Invalid Data",
+                maxlength: "Invalid Data"
+            },
+            state: {
+                minlength: "Invalid State Name",
+                maxlength: "Invalid State Name",
+            },
+            optionalLandmark: {
+                minlength: "Invalid Data",
+                maxlength: "Invalid Data",
+            },
+            alternativenumber: {
+                minlength: "Enter a valid number",
+                maxlength: "Enter a valid number",
+            }
+        }
+
+
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const deleteButtons = document.querySelectorAll(".deleteAddressButton");
+
+        deleteButtons.forEach(function (deleteButton) {
+
+            deleteButton.addEventListener("click", function (event) {
+                event.preventDefault();
+
+
+                const addressId = this.getAttribute("data-address-id");
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/profile/manageaddress/delete/${addressId}`;
+                    }
+                });
+            });
+
+
+            deleteButton.addEventListener("click", function (event) {
+                event.preventDefault();
+            });
+
+
+            const deleteIcon = deleteButton.querySelector(".material-symbols-outlined");
+            deleteIcon.addEventListener("click", function (event) {
+                deleteButton.click();
+            });
+        });
+    });
+
+
+</script>

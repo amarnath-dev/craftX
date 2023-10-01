@@ -1,0 +1,129 @@
+<section class="wrapper">
+    <div class="container mt-5">
+        <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3 text-center mt-5">
+            <form class="rounded bg-white shadow p-5" id="otpForm">
+                <h3 class="text-dark fw-bolder fs-4 mb-2">OTP Verification</h3>
+
+                <div class="fw-normal text-muted mb-4">
+                    Enter the verification code we sent to
+                    <div>
+                        <h5>{{session.userEmail}}</h5>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center fw-bold mb-4">
+                    <div class="otp-input text-center">
+                        <input type="text" class="form-control otp-field" name="otp1" maxlength="1">
+                        <input type="text" class="form-control otp-field" name="otp2" maxlength="1">
+                        <input type="text" class="form-control otp-field" name="otp3" maxlength="1">
+                        <input type="text" class="form-control otp-field" name="otp4" maxlength="1">
+                        <input type="text" class="form-control otp-field" name="otp5" maxlength="1">
+                        <input type="text" class="form-control otp-field" name="otp6" maxlength="1">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit_btn my-4">Submit</button>
+
+                <div class="fw-normal text-muted mb-2">
+                    Didn’t get the code ? <a href="#" class="text-primary fw-bold text-decoration-none">Resend</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<style>
+    .otp-input {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .otp-field {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        margin: 5px;
+    }
+</style>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        const otpFields = document.querySelectorAll('.otp-field');
+
+        otpFields.forEach((field, index) => {
+            field.addEventListener('input', (event) => {
+                const inputValue = event.target.value;
+                if (inputValue.length === 1) {
+                    if (index < otpFields.length - 1) {
+                        otpFields[index + 1].focus();
+                    } else {
+
+                    }
+                }
+            });
+
+            field.addEventListener('keydown', (event) => {
+                if (event.key === "Backspace" && index > 0 && !field.value) {
+                    otpFields[index - 1].focus();
+                }
+            });
+        });
+
+
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+
+            const otp1 = document.getElementsByName('otp1')[0].value;
+            const otp2 = document.getElementsByName('otp2')[0].value;
+            const otp3 = document.getElementsByName('otp3')[0].value;
+            const otp4 = document.getElementsByName('otp4')[0].value;
+            const otp5 = document.getElementsByName('otp5')[0].value;
+            const otp6 = document.getElementsByName('otp6')[0].value;
+
+
+            const otpData = {
+                otp1,
+                otp2,
+                otp3,
+                otp4,
+                otp5,
+                otp6,
+            };
+
+            try {
+                const send = await fetch('/signup/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(otpData),
+                });
+
+                const data = await send.json();
+
+                if (send.ok) {
+                    console.log('OTP verification successful.');
+                } else {
+                    // Handle errors from the server
+                    console.error('OTP verification failed.');
+                }
+
+                if (data.emailID) {
+                    location.assign('/');
+                }
+
+            } catch (error) {
+                console.error('An error occurred while verifying OTP:', error.message);
+            }
+        })
+
+    });
+
+</script>

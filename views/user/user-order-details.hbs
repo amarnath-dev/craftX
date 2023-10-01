@@ -1,0 +1,117 @@
+
+{{>new-user-header}}
+
+{{#if orderDetails}}
+{{#each orderDetails}}
+<input type="text" name="orderID" value="{{this._id}}" hidden>
+{{#each this.orderItems}}
+{{#unless this.is_Canceled}}
+<div class="card shadow-0 border rounded-3 d-flex mt-2">
+    <div class="card-body" style="width: 700px; height: 220px; margin-left: 300px">
+        <div class="row">
+            <div class="col-md-4">
+
+                <div>
+                    {{#each this.primaryImages}}
+                    <img src="/uploads/{{this}}" alt="" style="width: 100px; height: 100px; margin-top: 25px">
+                    {{/each}}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h6>{{this.productName}}</h6>
+
+                <p>Quantity: {{this.quantity}}</p>
+                <p>Unit Price: Rs.{{this.unitPrice}}</p>
+
+            
+                <button class="btn border border-dark status-button" data-status="{{this.orderStatus}}"
+                    id="statusBtn-{{this._id}}">
+                    <small>{{this.orderStatus}}</small>
+                </button>
+
+
+
+                <div class="d-flex flex-row mt-3">
+                    <a href="/view-product/{{this.productID}}">
+                        <button class="btn btn-primary btn-sm" type="button">Details</button>
+                    </a>
+
+                    <button class="btn btn-danger btn-sm cancel-button" type="button"
+                        data-product-id="{{this.productID}}" data-order-id="{{this._id}}"
+                        style="margin-left: 40px;">Cancel</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/unless}}
+{{/each}}
+{{/each}}
+{{/if}}
+
+
+{{>user-footer}}
+
+
+<script>
+
+    $(document).ready(function () {
+        $('.cancel-button').click(function () {
+            const productID = $(this).data('product-id');
+            const orderID = $('input[name="orderID"]').val();
+
+            Swal.fire({
+                title: 'Confirm Cancel',
+                text: 'Are you sure you want to cancel the order ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Cancel !',
+                cancelButtonText: 'No, Keep',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/profile/my-orders/cancel-order/?productID=${productID}&orderID=${orderID}`,
+                        method: 'GET',
+                        success: function (data) {
+                            if (data.message) {
+                                Swal.fire({
+                                    title: "Order Canceled",
+                                    text: "Order Canceled Successfully",
+                                    icon: "success",
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                console.log("Order Cancellation Failed !");
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Error canceling order:', error);
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+<style>
+    @media (max-width: 767.98px) {
+        .border-sm-start-none {
+            border-left: none !important;
+        }
+    }
+
+    #statusBtn {
+        border-radius: 10px;
+        padding-bottom: 3px;
+        background-color: white;
+        border-color: green;
+    }
+</style>

@@ -1,0 +1,665 @@
+<section>
+    <div class=" container-fluid my-5 ">
+        <div class="row justify-content-center ">
+            <div class="col-xl-10">
+                <div class="card shadow-lg ">
+
+                    <div class="row justify-content-around">
+                        <div class="col-md-5">
+                            <div class="card border-0">
+                                <div class="card-header pb-0">
+                                    <h2 class="card-title space mt-5">Checkout</h2>
+                                    <p class="card-text text-muted mt-4  space">SHIPPING DETAILS</p>
+                                    <hr class="my-0">
+                                </div>
+
+                                {{#if cartList}}
+                                {{#each userAddress}}
+
+                                <div class="card-body">
+
+                                    <div class="row justify-content-between">
+                                        <div>
+
+                                            <div class="d-flex">
+                                                <button type="button" id="userPlace" disabled>{{this.workHome}}</button>
+
+                                                <button class="editBtn" style="margin-left: 300px;" id="editButton"
+                                                    onclick="editAddress()">
+                                                    <span class="material-symbols-outlined">edit</span></button>
+                                            </div>
+
+                                            {{!-- Edit Address Form --}}
+                                            <div class="card-body">
+
+                                                <form action="/check-out/edit-address" method="post"
+                                                    class="checkOut-editAddress" id="submitData">
+
+                                                    <div class="row mb-4">
+                                                        <div class="col">
+
+
+                                                            <div>
+                                                                <input type="text" name="addressID" value="{{this._id}}"
+                                                                    hidden>
+                                                            </div>
+
+                                                            <div class="form-outline d-flex">
+                                                                <div class="form-group">
+
+                                                                    <input type="text" id="form7Example1" name="name"
+                                                                        class="form-control" placeholder="Name" required
+                                                                        value="{{this.userName}}" />
+
+                                                                </div>
+
+                                                                <div class="from-group">
+                                                                    <input type="text" id="form7Example3"
+                                                                        class="form-control" placeholder="Mobile Number"
+                                                                        style="margin-left: 40px;" name="phonenumber"
+                                                                        required value="{{this.phoneNumber}}" />
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-outline mt-3 d-flex">
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example1"
+                                                                        class="form-control" placeholder="Pincode"
+                                                                        name="pincode" value="{{this.pinCode}}" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example3"
+                                                                        class="form-control" placeholder="Locality"
+                                                                        name="locality" style="margin-left: 40px;"
+                                                                        value="{{this.locality}}" />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-floating mt-3">
+                                                                <div class="form-group">
+                                                                    <textarea class="form-control"
+                                                                        id="floatingTextarea2"
+                                                                        style="height: 100px; width: 390px;"
+                                                                        name="address"
+                                                                        placeholder="Adress(Area and Street)">{{this.address}}</textarea>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-outline d-flex mt-3">
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example1"
+                                                                        class="form-control"
+                                                                        placeholder="City/District/Town" name="town"
+                                                                        value="{{this.town}}" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example3"
+                                                                        class="form-control" placeholder="State"
+                                                                        name="state" style="margin-left: 40px;"
+                                                                        value="{{this.state}}" />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-outline d-flex mt-3">
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example1"
+                                                                        class="form-control"
+                                                                        placeholder="Landmark(Optional)"
+                                                                        name="optionalLandmark"
+                                                                        value="{{this.landmark}}" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="text" id="form7Example3"
+                                                                        class="form-control"
+                                                                        placeholder="Alternative Phone(Optional)"
+                                                                        style="margin-left: 40px;"
+                                                                        name="alternativenumber"
+                                                                        value="{{this.alternativeNumber}}" />
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            <div class="form-check mt-2">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="home" id="flexRadioDefault1" name="radioBtn">
+                                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                                    Home
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="work" id="flexRadioDefault2" name="radioBtn"
+                                                                    checked>
+                                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                                    Work
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-4">
+
+                                                        <button class="btn border bg-primary" type="submit"
+                                                            style="width: 100%;">Edit</button>
+
+
+                                                        <a href="" class="btn cancel-Btn mt-3 border"
+                                                            onclick="updateCancel()">Cancel</a>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <br>
+                                            <h4>{{this.userName}}</h4>
+                                        </div>
+
+                                        <div class="col-auto mt-0">
+                                            <p><b>{{this.address}}</b></p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <p><b>Pin Code: {{this.pinCode}}</b> </p>
+                                        </div>
+                                        <br>
+                                        <div class="col-auto">
+                                            <p><b>Phone: {{this.phoneNumber}}</b> </p>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="userAddress" type="checkbox"
+                                                value="{{this._id}}" id="addressCheck" data-address-id="{{this._id}}">
+
+                                            <label class="form-check-label" for="flexCheckDefault"
+                                                style="margin-left: 5px;">
+                                                Deliver to this Address
+                                            </label>
+                                        </div>
+
+
+                                        <a href="/profile/manageaddress">
+                                            <button class="btn border mb-3"
+                                                style="margin-left: 240px; width: 150px;">Manage Address</button>
+                                        </a>
+                                        <hr>
+                                    </div>
+                                    {{!-- //Cash on delivery choose radio --}}
+                                </div>
+                                {{/each}}
+                                {{/if}}
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-5">
+                            <div class="card border-0 ">
+                                <div class="card-header card-2">
+                                    <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER
+
+                                    </p>
+                                    <hr class="my-2">
+                                </div>
+
+
+                                <div class="card-body pt-0">
+
+                                    <div class="row justify-content-between">
+                                        <div class="col-auto col-md-7">
+                                            {{#each cartList}}
+                                            <a href="/view-product/{{this.cart.product_id}}">
+                                                <div class="media flex-column flex-sm-row">
+                                                    {{#each prod_detail.primaryImage}}
+                                                    <img class="img-fluid" src="/uploads/{{this}}" width="62"
+                                                        height="62">
+                                                    {{/each}}
+                                                    <div class="media-body my-auto">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                                <p class="mb-0 mt-2"><b
+                                                                        style="color: black;">{{prod_detail.name}}</b>
+                                                                </p>
+
+                                                                {{!-- Quantity Button --}}
+                                                                <button type="input" class="btn btn-primary" disabled>
+                                                                    Qty:
+                                                                    <span
+                                                                        class="badge badge-light">{{cart.count}}</span>
+                                                                </button>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                            <hr>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+
+
+                                    <hr class="my-2">
+
+
+                                    <div class="row ">
+                                        <div class="col">
+                                            <div class="row justify-content-between">
+                                                <div class="col-4">
+                                                    <p class="mb-1"><b>Subtotal</b></p>
+                                                </div>
+                                                <div class="flex-sm-col col-auto">
+                                                    <p class="mb-1"><b>Rs.{{totalAmount}}</b></p>
+                                                </div>
+                                            </div>
+                                            <div class="row justify-content-between">
+                                                <div class="col">
+                                                    <p class="mb-1"><b>Shipping</b></p>
+                                                </div>
+                                                <div class="flex-sm-col col-auto">
+                                                    <p class="mb-1"><b>Free</b></p>
+                                                </div>
+                                            </div>
+                                            <div class="row justify-content-between">
+
+                                                <span id="totalCartCount" class="mt-2"><strong>Total Products :
+                                                        {{cartCount}}</strong></span>
+                                                <div class="col-4">
+                                                    <p class="mt-2" style="font-size: 20px;"><b>Total</b></p>
+                                                </div>
+
+                                                <div class="flex-sm-col col-auto">
+                                                    <p id="totalAmount" class="mb-1 mt-2"
+                                                        style="color: green; font-size: 20px;">
+                                                        <b>RS.{{totalAmount}}</b>
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                            <hr class="my-0">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col mt-2">
+                                                <p class="text-muted mb-2">PAYMENT DETAILS</p>
+                                                <hr class="mt-0">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Cash On Delivery"
+                                                id="flexCheckDefault1" name="paymentType">
+                                            <label class="form-check-label" for="flexCheckDefault1"
+                                                style="margin-left: 5px">
+                                                Cash On Delivery
+                                            </label>
+                                        </div>
+
+
+
+                                        <div class="form-check mt-3">
+                                            <input class="form-check-input" type="checkbox" value="Pay Online"
+                                                id="flexCheckDefault2" name="paymentType">
+                                            <label class="form-check-label" for="flexCheckDefault2"
+                                                style="margin-left: 5px">
+                                                Pay Online
+                                            </label>
+                                        </div>
+
+
+
+
+
+
+                                        <div class="row mb-md-5 mt-3">
+                                            <div class="col">
+                                                <button type="button" id="purchaseButton"
+                                                    class="btn btn-lg btn-block">PURCHASE</button>
+                                            </div>
+                                        </div>
+
+
+                                         {{!-- newly added cart  --}}
+                                        <div class="card-body border">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label class="form-label">Have coupon?</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control border" name=""
+                                                            placeholder="Coupon code" />
+                                                        <button class="btn btn-light border">Apply</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<script>
+
+    $(document).ready(() => {
+        $('.checkOut-editAddress').hide();
+
+        $('.editBtn').on('click', function () {
+            const editForm = $(this).closest('.card-body').find('.checkOut-editAddress');
+            editForm.slideToggle();
+        });
+
+        $('.cancel-Btn').on('click', function () {
+            const editForm = $(this).closest('.card-body').find('.checkOut-editAddress');
+            editForm.hide();
+        });
+
+    });
+
+
+
+    //Check Out Router
+    $(document).ready(function () {
+        const purchaseBtn = $('#purchaseButton');
+
+        purchaseBtn.click(async function () {
+            const selectedCheckbox = $('input[name="userAddress"]:checked');
+            const paymentCheckboxes = $('input[name="paymentType"]');
+
+            if (selectedCheckbox.length > 0) {
+                const orderAddressID = selectedCheckbox.attr('data-address-id');
+                console.log(orderAddressID);
+
+                const paymentType = [];
+
+                paymentCheckboxes.each(function () {
+                    if ($(this).prop('checked')) {
+                        paymentType.push($(this).val());
+                    }
+                });
+
+
+                Swal.fire({
+                    title: 'Confirm Order',
+                    text: 'Are you sure you want to confirm the order?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Confirm Order!',
+                    cancelButtonText: 'No, cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/my-cart/check-out',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ orderAddressID, paymentType }),
+                            success: function (data) {
+                                if (data.message) {
+                                    Swal.fire({
+                                        title: 'Order Placed',
+                                        text: 'Your Order Has been Placed Successfully.',
+                                        icon: 'Success',
+                                    }).then(() => {
+                                        location.assign('/profile/my-orders');
+                                    });
+                                } else {
+                                    console.log("Order Couldn't Complete");
+                                }
+                            },
+                            error: function () {
+                                console.log('AJAX Request Failed');
+                            },
+                        });
+                    }
+                })
+
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    .shop {
+        font-size: 10px;
+    }
+
+    .space {
+        letter-spacing: 0.8px !important;
+    }
+
+    .second a:hover {
+        color: rgb(92, 92, 92);
+    }
+
+    .active-2 {
+        color: rgb(92, 92, 92)
+    }
+
+
+    .breadcrumb>li+li:before {
+        content: "" !important
+    }
+
+    .breadcrumb {
+        padding: 0px;
+        font-size: 10px;
+        color: #aaa !important;
+    }
+
+    .first {
+        background-color: white;
+    }
+
+    a {
+        text-decoration: none !important;
+        color: #aaa;
+    }
+
+    .btn-lg,
+    .form-control-sm:focus,
+    .form-control-sm:active,
+    a:focus,
+    a:active {
+        outline: none !important;
+        box-shadow: none !important
+    }
+
+    .form-control-sm:focus {
+        border: 1.5px solid #4bb8a9;
+    }
+
+    .btn-group-lg>.btn,
+    .btn-lg {
+        padding: .5rem 0.1rem;
+        font-size: 1rem;
+        border-radius: 0;
+        color: white !important;
+        background-color: #4bb8a9;
+        height: 2.8rem !important;
+        border-radius: 0.2rem !important;
+    }
+
+    .btn-group-lg>.btn:hover,
+    .btn-lg:hover {
+        background-color: #26A69A;
+    }
+
+    .btn-outline-primary {
+        background-color: #fff !important;
+        color: #4bb8a9 !important;
+        border-radius: 0.2rem !important;
+        border: 1px solid #4bb8a9;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #4bb8a9 !important;
+        color: #fff !important;
+        border: 1px solid #4bb8a9;
+    }
+
+    .card-2 {
+        margin-top: 40px !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 0px solid #aaaa !important;
+    }
+
+    p {
+        font-size: 13px;
+    }
+
+    .small {
+        font-size: 9px !important;
+    }
+
+    .form-control-sm {
+        height: calc(2.2em + .5rem + 2px);
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: 0;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .boxed {
+        padding: 0px 8px 0 8px;
+        background-color: #4bb8a9;
+        color: white;
+    }
+
+    .boxed-1 {
+        padding: 0px 8px 0 8px;
+        color: black !important;
+        border: 1px solid #aaaa;
+    }
+
+    .bell {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+
+    @media (max-width: 767px) {
+        .breadcrumb-item+.breadcrumb-item {
+            padding-left: 0
+        }
+    }
+
+
+    input,
+    textarea {
+        border: 1px solid #eeeeee;
+        box-sizing: border-box;
+        margin: 0;
+        outline: none;
+        padding: 10px;
+    }
+
+    input[type="button"] {
+        -webkit-appearance: button;
+        cursor: pointer;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    .input-group {
+        clear: both;
+        margin: 15px 0;
+        position: relative;
+    }
+
+    .input-group input[type='button'] {
+        background-color: #eeeeee;
+        min-width: 38px;
+        width: auto;
+        transition: all 300ms ease;
+    }
+
+    .input-group .button-minus,
+    .input-group .button-plus {
+        font-weight: bold;
+        height: 38px;
+        padding: 0;
+        width: 38px;
+        position: relative;
+    }
+
+    .input-group .quantity-field {
+        position: relative;
+        height: 38px;
+        left: -6px;
+        text-align: center;
+        width: 62px;
+        display: inline-block;
+        font-size: 13px;
+        margin: 0 0 5px;
+        resize: vertical;
+    }
+
+    .button-plus {
+        left: -13px;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        -webkit-appearance: none;
+    }
+
+    #editButton {
+        border: none;
+        background-color: white;
+    }
+
+    #userPlace {
+        width: 60px;
+        height: 25px;
+        color: black;
+        border-radius: 10px;
+        padding-bottom: 10px;
+    }
+</style>
