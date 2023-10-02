@@ -5,6 +5,7 @@ const productControl = require('../controllers/productControl');
 const adminauthControl = require('../controllers/adminauthControl');
 const customersControl = require('../controllers/customersControl');
 const adminOrderControl = require('../controllers/adminOrderControl');
+const adminSalesControl = require('../controllers/adminSalesControl');
 const upload = require('../middlewares/multer');
 const { checkAuthadmin } = require('../middlewares/authMiddleware');
 
@@ -73,7 +74,8 @@ router.get('/orders', adminOrderControl.adminOrders_get);
 router.get('/orders/editOrder', adminOrderControl.adminOrderEdit_get);
 router.post('/orders/editOrder', adminOrderControl.adminOrderEdit_post);
 
-
+// Sales Report Routes
+router.get('/sales-report',adminSalesControl.salesPage_get);
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)

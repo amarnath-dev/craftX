@@ -68,28 +68,26 @@ module.exports.products_get = async (req, res) => {
 
 
 module.exports.adminaddproduct_get = async (req, res) => {
-    console.log("Admin add peoduct get");
-
+  
     const categoryNames = await getAllCategoryNames();
-    console.log(categoryNames);
 
     res.render("admin/newproduct", { categoryNames });
 }
 
 
 module.exports.adminaddproduct_post = async (req, res) => {
-    console.log("entered new product")
-
     try {
         const { product_name, category_name, color, stock, description, prod_price } = req.body;
 
         const primaryImage = req.files['primaryImage'];
         const secondaryImages = req.files['images'];
 
-        //extract files names 
-        const primaryImageNames = primaryImage.map(file => file.filename);
-        const secondaryImageNames = secondaryImages.map(file => file.filename);
+       //Selecting Only the png format images
+        const primaryImageNames = primaryImage
+            .filter(file => file.mimetype === 'image/png') 
+            .map(file => file.filename);
 
+        const secondaryImageNames = secondaryImages.map(file => file.filename);
 
         const newProduct = new Product({
             name: product_name,
@@ -107,9 +105,8 @@ module.exports.adminaddproduct_post = async (req, res) => {
         if (!savedProduct) {
             return res.status(400).send("Product creation failed");
         }
-
-        res.redirect(302, '/admin/products');
-
+        // res.redirect(302, '/admin/products');
+        return res.status(200).json({message: "Product Created Successfully"});
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ error: 'Internal server error' });

@@ -153,16 +153,16 @@
 
       <div class="card-body">
         <a href="/view-product/{{this._id}}" class="card-title" style="margin-left: 5px;">{{this.name}}</a>
-
+         <br>
         <small class="card-text fw-bold" style="color: red; margin-left: 110px;">{{this.price}}</small>
 
         <div class="d-flex mt-3">
 
-          <button class="btn border border-dark" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
+          <button class="btn border border-dark mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
             Cart</button>
 
 
-          <a href="/check-out/{{this._id}}" class="btn border-dark" id="buy-now">Buy Now</a>
+          <a href="/check-out/{{this._id}}" target="_blank" class="btn border-dark mt-4" id="buy-now">Buy Now</a>
 
 
           {{!-- <button class="btn border border-dark" onclick="buyNow('{{this._id}}')" id="buy-now">Buy Now</button>

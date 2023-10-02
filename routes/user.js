@@ -78,19 +78,24 @@ router.post('/check-out/edit-address', userOrderControl.checkOut_editproduct_pos
 //Cart check out
 router.get('/my-cart/check-out', userOrderControl.cartCheck_out_get);
 
-router.post('/my-cart/check-out', userOrderControl.user_confirmOrder);
-
+router.post('/check-out', userOrderControl.user_confirmOrder);
 
 
 //Single Order Routes(Buy Now)
 router.get('/check-out/:productID', userOrderControl.purachasePage_get);
-router.post('/check-out', userOrderControl.purachasePage_post);
+
+
+// This was separate payment process route for single productDetails_get
+// router.post('/check-out', userOrderControl.purachasePage_post);
 
 
 
 router.get('/profile/my-orders', userOrderControl.user_orderdetails_get)
 
 router.get('/profile/my-orders/cancel-order', userOrderControl.user_orderCancel_get);
+
+
+router.post('/verify-payment',userOrderControl.verifyPayment_post)
 
 router.get('/logout', userControllers.logout_get)
 

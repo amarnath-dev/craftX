@@ -1,17 +1,26 @@
-<section class="new-product p-md-5">
+<section class="new-product p-md-5" style="position: relative;">
     <div class="h3 fw-bold text-second px-4 py-2">
         <span>New Product</span>
     </div>
     <hr>
-    <form method="post" class="row d-flex justify-content-center" enctype="multipart/form-data"
-        action="/admin/products/newproduct">
+    <form class="row d-flex justify-content-center" id="newProductadd" enctype="multipart/form-data">
         <section class="left-secton col-md-6 p-3 border border-bottom-0">
             <div class="card p-md-5 p-2 me-md-5">
                 <h5>Choose product images </h5>
                 <span class="fw-normal mb-4 text-success">*file supports only: jpeg,jpg,png,webp</span>
                 <span class="fw-bold">Select the Primary Image</span>
+
                 <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader" name="primaryImage"
-                    class="mb-3" style="margin-top: 5px;" />
+                    class="mb-3" style="margin-top: 5px;" id="primaryImage" />
+
+
+                <img id="prev" src="" alt="" />
+
+                <input type="hidden" id="result" name="result" value="" />
+
+                <input type="hidden" id="croppedImage" name="croppedImage" value="">
+
+
                 <span class="fw-bold">Select secondary images <br> <span class="fw-normal text-success">*maximum of 3
                         images only accepts</span></span>
                 <input type="file" class="form-control FilUploader" accept=".jpg,.jpeg,.png" name="images" class="mb-3"
@@ -62,6 +71,133 @@
             </div>
         </section>
 
-        <button type="submit" class="btn newproduct add-btn py-3 border border-primary bg-primary mt-5">Submit</button>
+        <button type="submit" id="newProduct"
+            class="btn newproduct add-btn py-3 border border-primary bg-primary mt-5">Submit</button>
     </form>
+
+
+    {{!-- //This is croper container --}}
+    <div class="crop-product card shadow" id="crp-container" style="position: absolute;">
+        <div>
+            <img src="" id="image" alt="" width="300" height="300px">
+            <a href="" class="btn border border-dark mt-3" style="margin-left: 700px;">Cancel</a>
+            <button id="cropImageBtn" class="btn btn-primary mt-3">Crop Image</button>
+        </div>
+            
+    </div>
+
 </section>
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $('#primaryImage').on('change', (e) => {
+            console.log("change")
+            let container = document.getElementById('crp-container')
+            container.style.display = "block"
+            let image = document.getElementById('image')
+            let file = e.target.files[0]
+            $('.btn-grp').toggle()
+            if (file) {
+                // Create a new FileReader to read the selected image file
+                var reader = new FileReader(file);
+                reader.onload = function (event) {
+                    // Set the source of the image element in the Cropper container
+                    document.getElementById('image').src = event.target.result;
+                    // Initialize Cropper.js with the updated image source
+                    let cropper = new Cropper(image, {
+                        aspectRatio: 5 / 5,
+                        viewMode: 0,
+                        autoCrop: true,
+                        background: false,
+                    })
+
+                    $('#cropImageBtn').on('click', function () {
+                        var cropedImg = cropper.getCroppedCanvas()
+                        if (cropedImg) {
+                            cropedImg = cropedImg.toDataURL('image/png')
+
+                            document.getElementById('prev').src = cropedImg
+                            document.getElementById('result').value = cropedImg
+                            container.style.display = "none"
+
+                            $('.btn-grp').toggle()
+                        }
+                        cropper.destroy();
+                    })
+                };
+                reader.readAsDataURL(file);
+            }
+
+
+        })
+
+        $('.change-file').on('click', function () {
+            let input = document.getElementById('banner-image')
+            input.value = ''
+            input.style.display = 'block'
+        })
+
+
+
+        $('#newProduct').on('click', function (e) {
+            e.preventDefault();
+
+            const form = document.getElementById('newProductadd');
+            const formData = new FormData(form);
+
+            const base64String = document.getElementById('result').value;
+            const base64Data = base64String.split(',')[1];
+            const binaryData = atob(base64Data);
+            const uint8Array = new Uint8Array(binaryData.length);
+
+            for (let i = 0; i < binaryData.length; i++) {
+                uint8Array[i] = binaryData.charCodeAt(i);
+            }
+
+            const blob = new Blob([uint8Array], { type: 'image/png' });
+            const file = new File([blob], 'image.png', { type: 'image/png' });
+            formData.append('primaryImage', file);
+
+           fetch('/admin/products/newproduct', {  
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire({
+                        title: "Product Added",
+                        text:"Product Added Successfully",
+                        icon: "success",
+                    }).then(()=> {
+                      location.assign('/admin/products')
+                    });
+                } else {
+                    console.log("Request failed terrible");
+                }
+            }).catch(error => {
+                console.error("Request failed:", error);
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
+<style>
+    .crop-product {
+        top: 200px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        display: none;
+    }
+</style>

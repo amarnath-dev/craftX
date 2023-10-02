@@ -324,7 +324,7 @@
                                         </div>
 
 
-                                         {{!-- newly added cart  --}}
+                                        {{!-- newly added cart --}}
                                         <div class="card-body border">
                                             <form>
                                                 <div class="form-group">
@@ -337,9 +337,6 @@
                                                 </div>
                                             </form>
                                         </div>
-
-
-
                                     </div>
                                 </div>
                             </div>
@@ -350,9 +347,6 @@
         </div>
     </div>
 </section>
-
-
-
 
 
 
@@ -396,8 +390,6 @@
                         paymentType.push($(this).val());
                     }
                 });
-
-
                 Swal.fire({
                     title: 'Confirm Order',
                     text: 'Are you sure you want to confirm the order?',
@@ -410,39 +402,104 @@
 
                         $.ajax({
                             type: 'POST',
-                            url: '/my-cart/check-out',
+                            url: '/check-out',
                             contentType: 'application/json',
                             data: JSON.stringify({ orderAddressID, paymentType }),
-                            success: function (data) {
-                                if (data.message) {
+                            success: function (response) {
+                                if (response.success) {
                                     Swal.fire({
                                         title: 'Order Placed',
                                         text: 'Your Order Has been Placed Successfully.',
-                                        icon: 'Success',
+                                        icon: 'success',
                                     }).then(() => {
                                         location.assign('/profile/my-orders');
                                     });
+
                                 } else {
-                                    console.log("Order Couldn't Complete");
+                                    razorPayPayment(response);
                                 }
                             },
                             error: function () {
                                 console.log('AJAX Request Failed');
                             },
                         });
+
                     }
                 })
 
             }
         });
+
+
+        function razorPayPayment(order) {
+            var options = {
+                "key": "rzp_test_tCfZmeT9T0PkkV",
+                "amount": parseInt(order.amount),
+                "currency": "INR",
+                "name": "CraftX",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id,
+                "handler": function (response) {
+                    verifyPayment(response, order)
+                },
+                "prefill": {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9000090000"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+
+
+            function verifyPayment(payment, order) {
+                $.ajax({
+                    url: '/verify-payment',
+                    data: {
+                        payment,
+                        order,
+                    },
+                    method: "post",
+                    success: (response) => {
+                        if (response.message) {
+                            Swal.fire({
+                                title: 'Order Placed',
+                                text: 'Your Order Has been Placed Successfully.',
+                                icon: 'success',
+                            }).then(() => {
+                                location.assign('/profile/my-orders');
+                            });
+                        } else {
+                            alert("Payment Failed");
+                        }
+                    }
+                });
+            }
+
+
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            rzp1.on('payment.failed', function (response) {
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+            });
+
+
+        }
     });
 
 
-
 </script>
-
-
-
 
 
 

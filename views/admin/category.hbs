@@ -80,31 +80,33 @@
                                     {{else}}
                                     <td>Unlisted</td>
                                     {{/if}}
-                                    <td>{{this.createdAt}}</td>
+                                    <td>{{this.formattedDate}}</td>
 
                                     <td>{{this.productCount}}</td>
 
                                     <td>
-                                        <a href="/admin/categories/editcategory/{{this._id}}" class="ms-3">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <a onclick="return confirm('Are you sure you want to delete {{this.name}}?')"
-                                            href="/admin/categories/deletecategory/{{this._id}}"
-                                            class="text-danger ms-2">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
+                                        <div class="d-flex">
+                                            <a href="/admin/categories/editcategory/{{this._id}}" class="ms-3">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+                                            <a onclick="return confirm('Are you sure you want to delete {{this.name}}?')"
+                                                href="/admin/categories/deletecategory/{{this._id}}"
+                                                class="text-danger ms-2">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
                                     </td>
-                                </tr>
-                                {{/unless}}
-                                {{/each}}
-                            </tbody>
-                        </table>
                     </div>
-                </section>
+                    </tr>
+                    {{/unless}}
+                    {{/each}}
+                    </tbody>
+                    </table>
             </div>
-        </div>
-    </div>
-    </div>
+</section>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 
@@ -112,9 +114,8 @@
 <script>
     const hbs = require('express-handlebars');
 
-    // Define the custom Handlebars helper
     hbs.handlebars.registerHelper('getProductCount', function (categoryName, getProductcount) {
-        return getProductcount[categoryName] || 0; // Default to 0 if not found
+        return getProductcount[categoryName] || 0;
     });
     F
 

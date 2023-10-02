@@ -1,5 +1,6 @@
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
+const {formatDate} = require('../helpers/date-time-format');
 
 
 //Get product coutn comes under each category
@@ -37,7 +38,6 @@ module.exports.admincategory_get = async (req, res) => {
   try {
     const allCategories = await Category.find();
 
-    // Calculate product count for each category using $lookup and $size
     const categoriesWithProductCount = await Category.aggregate([
       {
         $lookup: {
@@ -49,7 +49,7 @@ module.exports.admincategory_get = async (req, res) => {
       },
       {
         $addFields: {
-          productCount: { $size: '$products' }, 
+          productCount: { $size: '$products' },
         },
       },
     ]);
@@ -58,9 +58,18 @@ module.exports.admincategory_get = async (req, res) => {
       return res.status(404).send("Couldn't complete the request");
     }
 
+
+    categoriesWithProductCount.forEach((category) => {
+      category.formattedDate = formatDate(category.createdon);
+    });
+
+
+    console.log('----------------------------------')
     console.log(categoriesWithProductCount);
 
-    // Render the view with category data including product counts
+
+
+
     res.render('admin/category', {
       message: 'Fetch Successful',
       allCategories: allCategories,

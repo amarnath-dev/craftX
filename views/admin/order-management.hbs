@@ -67,6 +67,7 @@
                   <th class="th-sm">Order State</th>
                   <th class="th-sm">Address</th>
                   <th class="th-sm">Order Status</th>
+                  <th class="th-sm">Payment Method</th>
                   <th class="th-sm">Manage</th>
                 </tr>
               </thead>
@@ -93,6 +94,7 @@
                   {{!-- Specific Product Status --}}
                   <td style="color: green; font-weight: bold;">{{this.orderStatus}}</td>
 
+                  <td style="font-weight: bold;">{{../payment_method}}</td>
 
                   <td>
                     <a href="/admin/orders/editOrder?orderId={{../orderId}}&productID={{this.productID}}"

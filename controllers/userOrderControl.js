@@ -5,6 +5,9 @@ const User = require("../models/userModel");
 const { getCartCount } = require('../helpers/cart-product-count');
 const mongoose = require('mongoose');
 const Order = require('../models/userOrderModel');
+const { generateRazorpay } = require('../helpers/generateRazorpay');
+const Payment = require("../models/paymentModel");
+const crypto = require("crypto");
 
 
 module.exports.purachasePage_get = async (req, res) => {
@@ -31,6 +34,8 @@ module.exports.purachasePage_get = async (req, res) => {
     }
 }
 
+//This was the single product Purchase route 
+// now both cartCheck out and single product buying merged into one route 
 
 module.exports.purachasePage_post = async (req, res) => {
 
@@ -42,8 +47,6 @@ module.exports.purachasePage_post = async (req, res) => {
 
     const productID = new mongoose.Types.ObjectId(req.body.productID);
 
-
-
     const paymentMethod = paymentType.join(', ');
 
     try {
@@ -51,21 +54,29 @@ module.exports.purachasePage_post = async (req, res) => {
 
         const productDetails = await Product.findOne({ _id: productID });
 
-        if (userAddress && productDetails) {
+        console.log("This is product details", productDetails);
 
-            const orderData = {
+        let orderData = {};
+
+        if (userAddress && productDetails) {
+            orderData = {
                 userID: userID,
                 orderAmount: productDetails.price,
-                orderItems: productDetails,
+                orderItems: {
+                    productID: productDetails._id,
+                    quantity: 1,
+                    unitPrice: productDetails.price,
+                },
                 address: userAddress,
                 payment_method: paymentMethod,
-            }
+            };
         }
 
         const newOrder = new Order(orderData);
 
         newOrder.save()
             .then(savedOrder => {
+                console.log("This is saved Order", savedOrder);
                 res.status(201).json({ message: "Order placed successfully" });
             })
             .catch(error => {
@@ -77,7 +88,10 @@ module.exports.purachasePage_post = async (req, res) => {
         console.log(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
+
+
 }
+
 
 
 
@@ -154,9 +168,6 @@ module.exports.cartCheck_out_get = async (req, res) => {
         }
 
         if (cartList.length > 0) {
-
-            console.log("This is product total amount", totalAmount);
-            console.log(cartList);
             res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, message: 'Cart fetched successfully' });
         } else {
             res.render('user/cart-check-out', { message: 'Cart is empty or fetch failed' });
@@ -177,80 +188,214 @@ module.exports.user_confirmOrder = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
-    const addressID = req.body.orderAddressID;
-    const paymentType = req.body.paymentType;
 
-    const paymentMethod = paymentType.join(', ');
+    //Single Product Buy
+    if (req.body.productID) {
 
-    try {
-        const userAddress = await Address.findOne({ _id: addressID });
+        const addressID = req.body.orderAddressID;
+        const paymentType = req.body.paymentType;
 
-        if (!userAddress) {
-            return res.status(404).json({ error: "Address not found" });
+        const productID = new mongoose.Types.ObjectId(req.body.productID);
+
+        const paymentMethod = paymentType.join(', ');
+
+        try {
+            const userAddress = await Address.findOne({ _id: addressID });
+
+            const productDetails = await Product.findOne({ _id: productID });
+
+            console.log("This is product details", productDetails);
+
+            let orderData = {};
+
+            if (userAddress && productDetails) {
+                orderData = {
+                    userID: userID,
+                    orderAmount: productDetails.price,
+                    orderItems: {
+                        productID: productDetails._id,
+                        quantity: 1,
+                        unitPrice: productDetails.price,
+                    },
+                    address: userAddress,
+                    payment_method: paymentMethod,
+                };
+            }
+
+            const newOrder = new Order(orderData);
+
+            newOrder.save()
+                .then(async savedOrder => {
+                    if (newOrder.payment_method == "Cash On Delivery") {
+                        return res.status(201).json({ success: "Order placed successfully" });
+                    } else if (newOrder.payment_method == "Pay Online") {
+
+
+
+                        //Choosed Online Payment
+                        const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
+                            .then((response) => {
+
+                                const paymentData = {
+                                    payment_ID: response.id,
+                                    amount: response.amount,
+                                    currency: response.currency,
+                                    payment_method: "",
+                                    status: response.status,
+                                    order_id: response.receipt,
+                                    created_at: response.created_at,
+                                    attempts: response.attempts,
+                                }
+
+
+                                try {
+                                    const savePaymentData = new Payment(paymentData).save();
+
+                                    if (savePaymentData) {
+                                        return res.status(200).json(response);
+                                    }
+
+                                } catch (error) {
+                                    console.log(error);
+                                    return res.status(400).json({ error: "Payment Data Saved Failed" })
+                                }
+                            });
+
+                    } else {
+                        return res.status(400).json({ error: "Please select an payment Method" });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving order:', error);
+                    res.status(500).json({ error: "Internal Server Error" });
+                });
+
+
+
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Internal Server Error" });
         }
 
-        let cartList = await User.aggregate([
-            { $match: { _id: new mongoose.Types.ObjectId(userID) } },
-            { $project: { cart: 1, _id: 0 } },
-            { $unwind: { path: '$cart' } },
-            {
-                $lookup: {
-                    from: 'products',
-                    localField: 'cart.product_id',
-                    foreignField: '_id',
-                    as: 'prod_detail',
+    } else {
+
+
+        const addressID = req.body.orderAddressID;
+        const paymentType = req.body.paymentType;
+
+        const paymentMethod = paymentType.join(', ');
+
+        try {
+            const userAddress = await Address.findOne({ _id: addressID });
+
+            if (!userAddress) {
+                return res.status(404).json({ error: "Address not found" });
+            }
+
+            let cartList = await User.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(userID) } },
+                { $project: { cart: 1, _id: 0 } },
+                { $unwind: { path: '$cart' } },
+                {
+                    $lookup: {
+                        from: 'products',
+                        localField: 'cart.product_id',
+                        foreignField: '_id',
+                        as: 'prod_detail',
+                    },
                 },
-            },
-            { $unwind: { path: '$prod_detail' } },
-        ]);
+                { $unwind: { path: '$prod_detail' } },
+            ]);
 
-        const orderItems = [];
+            const orderItems = [];
 
-        for (const item of cartList) {
-            const productID = item.cart.product_id;
-            const productQuantity = item.cart.count;
-            const itemPrice = item.prod_detail.price;
+            for (const item of cartList) {
+                const productID = item.cart.product_id;
+                const productQuantity = item.cart.count;
+                const itemPrice = item.prod_detail.price;
 
-            // Create an order item object and push it to the orderItems array
-            orderItems.push({
-                productID: productID,
-                quantity: productQuantity,
-                unitPrice: itemPrice,
-                totalAmount: itemPrice * productQuantity,
-                orderStatus: 'processing',
-            });
+
+                orderItems.push({
+                    productID: productID,
+                    quantity: productQuantity,
+                    unitPrice: itemPrice,
+                    totalAmount: itemPrice * productQuantity,
+                    orderStatus: 'processing',
+                });
+            }
+
+            const totalAmount = orderItems.reduce((total, item) => {
+                return total + item.totalAmount;
+            }, 0);
+
+            const orderData = {
+                userID: userID,
+                orderAmount: totalAmount,
+                totalOrderProducts: orderItems.length,
+                orderItems: orderItems,
+                address: userAddress,
+                payment_method: paymentMethod,
+            };
+
+
+            const newOrder = new Order(orderData);
+
+            newOrder.save()
+                .then(async savedOrder => {
+                    if (newOrder.payment_method === "Cash On Delivery") {
+
+                        return res.status(201).json({ success: "Order placed successfully" });
+                   
+            
+                    } else if (newOrder.payment_method === "Pay Online") {
+
+
+
+                        //Choosed Online Payment
+                        const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
+                            .then((response) => {
+
+                                const paymentData = {
+                                    payment_ID: response.id,
+                                    amount: response.amount,
+                                    currency: response.currency,
+                                    payment_method: "",
+                                    status: response.status,
+                                    order_id: response.receipt,
+                                    created_at: response.created_at,
+                                    attempts: response.attempts,
+                                }
+
+
+                                try {
+                                    const savePaymentData = new Payment(paymentData).save();
+
+                                    if (savePaymentData) {
+                                        return res.status(200).json(response);
+                                    }
+
+                                } catch (error) {
+                                    console.log(error);
+                                    return res.status(400).json({ error: "Payment Data Saved Failed" })
+                                }
+                            });
+
+                    } else {
+                        return res.status(400).json({ error: "Please select an payment Method" });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving order:', error);
+                    res.status(500).json({ error: "Internal Server Error" });
+                });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Internal Server Error" });
         }
-
-        const totalAmount = orderItems.reduce((total, item) => {
-            return total + item.totalAmount;
-        }, 0);
-
-        const orderData = {
-            userID: userID,
-            orderAmount: totalAmount,
-            totalOrderProducts: orderItems.length,
-            orderItems: orderItems,
-            address: userAddress,
-            payment_method: paymentMethod,
-        };
-
-
-        const newOrder = new Order(orderData);
-
-        newOrder.save()
-            .then(savedOrder => {
-                res.status(201).json({ message: "Order placed successfully" });
-            })
-            .catch(error => {
-                console.error('Error saving order:', error);
-                res.status(500).json({ error: "Internal Server Error" });
-            });
-
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Internal Server Error" });
     }
+
 };
 
 
@@ -325,3 +470,39 @@ module.exports.user_orderCancel_get = async (req, res) => {
 };
 
 
+module.exports.verifyPayment_post = async (req, res) => {
+
+    console.log(req.body);
+
+    const payment = req.body.payment;
+    const order = req.body.order;
+
+    let hmac = crypto.createHmac('sha256', 'bfr2tHHzfjafjSdQPPtH8MuY')
+
+    hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id);
+
+    hmac = hmac.digest('hex');
+
+
+    if (hmac == payment.razorpay_signature) {
+
+        const orderID = new mongoose.Types.ObjectId(order.receipt);
+
+        try {
+            const update = await Payment.updateOne({ order_id: orderID }, { $set: { status: 'placed' } })
+
+            if (update) {
+
+
+                return res.status(200).json({ message: "Payment Successfull" });
+            }
+
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ error: "Payment Failed" });
+        }
+
+    } else {
+        return res.status(400).json({ error: "Payment Failed" });
+    }
+}
