@@ -64,10 +64,6 @@ module.exports.admincategory_get = async (req, res) => {
     });
 
 
-    console.log('----------------------------------')
-    console.log(categoriesWithProductCount);
-
-
 
 
     res.render('admin/category', {

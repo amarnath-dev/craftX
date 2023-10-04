@@ -8,6 +8,7 @@ const Order = require('../models/userOrderModel');
 const { generateRazorpay } = require('../helpers/generateRazorpay');
 const Payment = require("../models/paymentModel");
 const crypto = require("crypto");
+const { generateUniqueID } = require('../helpers/codUniquePaymntID');
 
 
 module.exports.purachasePage_get = async (req, res) => {
@@ -182,7 +183,6 @@ module.exports.cartCheck_out_get = async (req, res) => {
 
 
 
-
 module.exports.user_confirmOrder = async (req, res) => {
 
     const token = req.cookies.jwt;
@@ -227,10 +227,31 @@ module.exports.user_confirmOrder = async (req, res) => {
             newOrder.save()
                 .then(async savedOrder => {
                     if (newOrder.payment_method == "Cash On Delivery") {
-                        return res.status(201).json({ success: "Order placed successfully" });
+
+                        const paymentData = {
+                            payment_ID: generateUniqueID(),
+                            amount: newOrder.orderAmount,
+                            currency: "INR",
+                            payment_method: "Cash on Delivery",
+                            status: newOrder.orderItems[0].orderStatus,
+                            order_id: newOrder._id,
+                            created_at: newOrder.orderDate,
+                            attempts: 1,
+                        }
+
+                        try {
+                            const savePaymentData = new Payment(paymentData).save();
+
+                            if (savePaymentData) {
+                                return res.status(201).json({ success: "Order placed successfully" });
+                            }
+
+                        } catch (error) {
+                            console.log(error)
+                            return res.status(400).json({ error: "Payment data insertion failed" })
+                        }
+
                     } else if (newOrder.payment_method == "Pay Online") {
-
-
 
                         //Choosed Online Payment
                         const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
@@ -345,9 +366,31 @@ module.exports.user_confirmOrder = async (req, res) => {
                 .then(async savedOrder => {
                     if (newOrder.payment_method === "Cash On Delivery") {
 
-                        return res.status(201).json({ success: "Order placed successfully" });
-                   
-            
+
+                        const paymentData = {
+                            payment_ID: "order_" + generateUniqueID(),
+                            amount: newOrder.orderAmount,
+                            currency: "INR",
+                            payment_method: "Cash on Delivery",
+                            status: newOrder.orderItems[0].orderStatus,
+                            order_id: newOrder._id,
+                            created_at: newOrder.orderDate,
+                            attempts: 1,
+                        }
+
+                        try {
+                            const savePaymentData = new Payment(paymentData).save();
+
+                            if (savePaymentData) {
+                                return res.status(201).json({ success: "Order placed successfully" });
+                            }
+
+                        } catch (error) {
+                            console.log(error)
+                            return res.status(400).json({ error: "Payment data insertion failed" })
+                        }
+
+
                     } else if (newOrder.payment_method === "Pay Online") {
 
 
@@ -360,7 +403,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                                     payment_ID: response.id,
                                     amount: response.amount,
                                     currency: response.currency,
-                                    payment_method: "",
+                                    payment_method: "Pay Online",
                                     status: response.status,
                                     order_id: response.receipt,
                                     created_at: response.created_at,

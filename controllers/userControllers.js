@@ -111,7 +111,7 @@ const sendEmailotp = async (fullname, email, userID) => {
 //res and req managing exports belove
 module.exports.get_home = async (req, res) => {
 
-  if(req.cookies.jwt) {
+  if (req.cookies.jwt) {
     const token = req.cookies.jwt;
     var userID = decodeJwt(token);
   }
@@ -122,9 +122,9 @@ module.exports.get_home = async (req, res) => {
     if (!allproducts) {
       return res.status(404).send("No products found");
     }
-    
-    if(userID) {
-      const getUser = await User.findById({_id: userID});
+
+    if (userID) {
+      const getUser = await User.findById({ _id: userID });
       var getProductCount = getUser.cart.length;
     }
 
@@ -172,13 +172,13 @@ module.exports.post_signup = async (req, res) => {
         return res.status(401).json({ error: 'Email Alredy Exists' });
       }
 
-     //check for phone number alredy exists or not 
-     const phonenumCheck = await User.findOne({ phonenumber: req.body.phonenumber });
-     console.log(phonenumCheck);
+      //check for phone number alredy exists or not 
+      const phonenumCheck = await User.findOne({ phonenumber: req.body.phonenumber });
+      console.log(phonenumCheck);
 
-     if(phonenumCheck) {
-      return res.status(401).json({ error: 'Phone Number Alredy Exists' });
-     }
+      if (phonenumCheck) {
+        return res.status(401).json({ error: 'Phone Number Alredy Exists' });
+      }
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: "Internal sever Error" });
@@ -212,7 +212,7 @@ module.exports.post_login = async (req, res) => {
   try {
     const user = await User.login(email, password);
 
-    
+
     if (user.status == false) {
       return res.status(401).json({ error: 'Account has been Blocked' });
     }

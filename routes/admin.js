@@ -76,6 +76,8 @@ router.post('/orders/editOrder', adminOrderControl.adminOrderEdit_post);
 
 // Sales Report Routes
 router.get('/sales-report',adminSalesControl.salesPage_get);
+router.get('/sales-report/getInvoice', adminSalesControl.salesInvoice_get);
+router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)
