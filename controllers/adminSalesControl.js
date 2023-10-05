@@ -4,8 +4,10 @@ const mongoose = require('mongoose')
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
 const path = require('path');
+const { dateFormate } = require('../helpers/date-time-format')
 
 module.exports.salesPage_get = async (req, res) => {
+
     try {
         const totalSales = await Order.aggregate([
             {
@@ -35,11 +37,9 @@ module.exports.salesPage_get = async (req, res) => {
 
 
         if (totalSales) {
-            
             totalSales.forEach((detail) => {
                 detail.dateFormatted = new Date(detail.orderDate).toLocaleDateString();
             });
-
             return res.render('admin/salesReport', { totalSales });
         }
 
@@ -47,6 +47,7 @@ module.exports.salesPage_get = async (req, res) => {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
+
 }
 
 module.exports.salesInvoice_get = async (req, res) => {
@@ -77,6 +78,7 @@ module.exports.salesInvoice_get = async (req, res) => {
         ]);
 
         if (allDetails) {
+            console.log("this is all deails from server", allDetails)
             return res.render('admin/sale-invoice', { allDetails });
         } else {
             return res.status(404).json({ error: "Order not found" });
@@ -153,5 +155,68 @@ module.exports.salesInvoice_post = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+module.exports.salesFilter_get = async (req, res) => {
+    let { from_Date, to_Date, from_amount, to_amount, payment_method } = req.body;
+
+    try {
+        let totalSales = await Order.aggregate([
+            {
+                $match: {
+                    "orderItems": {
+                        $elemMatch: { "orderStatus": "delivered" }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userID',
+                    foreignField: '_id',
+                    as: 'userDetails',
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'orderItems.productID',
+                    foreignField: '_id',
+                    as: "productDetails",
+                }
+            }
+        ]);
+
+        if (req.body.from_Date !== '') {
+            from_Date = new Date(from_Date);
+            totalSales = totalSales.filter((order) => new Date(order.orderDate) >= from_Date);
+        }
+
+        if (req.body.to_Date !== '') {
+            to_Date = new Date(to_Date);
+            totalSales = totalSales.filter((order) => new Date(order.orderDate) <= to_Date);
+        }
+
+        if (req.body.from_amount !== '' && req.body.to_amount !== '') {
+            totalSales = totalSales.filter((order) => {
+                const orderAmount = parseFloat(order.orderAmount);
+                return orderAmount >= parseFloat(req.body.from_amount) && orderAmount <= parseFloat(req.body.to_amount);
+            });
+        }
+
+        if (totalSales && (req.body.payment_method === '' || req.body.payment_method === undefined)) {
+        } else if (req.body.payment_method !== '') {
+            totalSales = totalSales.filter((order) => order.payment_method === req.body.payment_method);
+        }
+
+        if (totalSales) {
+            totalSales.forEach((detail) => detail.dateFormatted = new Date(detail.orderDate).toLocaleDateString());
+        }
+        return res.render('admin/salesReport', { totalSales });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }
