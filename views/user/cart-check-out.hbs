@@ -1,4 +1,4 @@
-<section>
+<section style="position: relative;">
     <div class=" container-fluid my-5 ">
         <div class="row justify-content-center ">
             <div class="col-xl-10">
@@ -197,11 +197,22 @@
 
 
                         <div class="col-md-5">
+
                             <div class="card border-0 ">
                                 <div class="card-header card-2">
-                                    <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER
 
-                                    </p>
+
+
+                                    <div class="card text-white mt-3"
+                                        style="max-width: 25rem; background-color: black;">
+                                        <button id="couponCheck" style="border: none; height: 50px; padding: 5px;">
+                                            <span>Check For Coupons</span>
+                                        </button>
+                                    </div>
+
+
+
+                                    <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER</p>
                                     <hr class="my-2">
                                 </div>
 
@@ -254,7 +265,7 @@
                                                     <p class="mb-1"><b>Subtotal</b></p>
                                                 </div>
                                                 <div class="flex-sm-col col-auto">
-                                                    <p class="mb-1"><b>Rs.{{totalAmount}}</b></p>
+                                                    <p class="mb-1" id="subTotalAmt"><b>Rs.{{totalAmount}}</b></p>
                                                 </div>
                                             </div>
                                             <div class="row justify-content-between">
@@ -277,6 +288,10 @@
                                                     <p id="totalAmount" class="mb-1 mt-2"
                                                         style="color: green; font-size: 20px;">
                                                         <b>RS.{{totalAmount}}</b>
+
+                                                        <input type="text" name="checkoutTotalAmt"
+                                                            value="{{totalAmount}}" hidden disabled name=""
+                                                            id="cartTotalAmount">
                                                     </p>
                                                 </div>
 
@@ -312,10 +327,6 @@
                                         </div>
 
 
-
-
-
-
                                         <div class="row mb-md-5 mt-3">
                                             <div class="col">
                                                 <button type="button" id="purchaseButton"
@@ -324,19 +335,6 @@
                                         </div>
 
 
-                                        {{!-- newly added cart --}}
-                                        <div class="card-body border">
-                                            <form>
-                                                <div class="form-group">
-                                                    <label class="form-label">Have coupon?</label>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control border" name=""
-                                                            placeholder="Coupon code" />
-                                                        <button class="btn btn-light border">Apply</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -349,10 +347,40 @@
 </section>
 
 
+<div id="couponFormsContainer">
+    <div class="card-body rounded" id="couponApply" style="position: absolute;">
+
+        {{#each allCoupons}}
+        <form id="getCouponDiscount_{{this._id}}">
+            <input type="text" value="{{this._id}}" name="couponID" hidden>
+            <div class="form-group border border-dark rounded">
+                <label class="form-label mt-4" style="margin-left: 10px;">Enter the Coupon Code
+                    <strong>{{this.coupon_code}}</strong></label>
+                <small>For <strong> {{this.discount_value}}%</strong> Discount</small>
+                <input type="text" name="discountValue" hidden value="{{this.discount_value}}">
+                <div class="input-group">
+                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code" />
+
+                    <button class="btn btn-primary border" type="submit" style="padding: 10px">Apply</button>
+                </div>
+                <small style="margin-left: 10px;">Apply the Coupon and Enjoy!</small>
+                <a href="" class="btn" style="margin-left: 320px;">Cancel</a>
+            </div>
+        </form>
+        {{/each}}
+
+
+    </div>
+</div>
+
+
+
+
 
 
 
 <script>
+    let couponDiscountAmt;
 
     $(document).ready(() => {
         $('.checkOut-editAddress').hide();
@@ -367,7 +395,74 @@
             editForm.hide();
         });
 
+
+        $('#couponApply').hide();
+        $('#couponCheck').on().click(function () {
+            $('#couponApply').slideToggle();
+        });
+
     });
+
+
+
+    const couponFormsContainer = document.getElementById('couponFormsContainer');
+
+    couponFormsContainer.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const form = e.target;
+        const totalAmount = document.getElementById('cartTotalAmount').value;
+
+        const couponID = form.querySelector('[name="couponID"]').value;
+        const coupon_code = form.querySelector('[name="coupon_code"]').value;
+        const discountValue = form.querySelector('[name="discountValue"]').value;
+
+        try {
+            const result = await fetch('/my-cart/check-out/get-coupon', {
+                method: 'POST',
+                body: JSON.stringify({ couponID, coupon_code, discountValue, totalAmount }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (result.ok) {
+                const data = await result.json();
+                console.log("Coupon Applied Successfully");
+                console.log("Discounted Amount:", data.discountAmt);
+                couponDiscountAmt = data.discountAmt;
+
+                //Swal message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Coupon Applied Successfully',
+                    text: `Discounted Amount: ${data.discountAmt}`,
+                });
+
+                const totalAmountElement = document.getElementById('totalAmount');
+                if (totalAmountElement) {
+                    totalAmountElement.textContent = data.discountAmt;
+                }
+
+                const subTotalAmtElement = document.getElementById('subTotalAmt');
+                if (subTotalAmtElement) {
+                    subTotalAmtElement.textContent = data.discountAmt;
+                }
+
+                //UI updation here
+                $('#couponApply').hide();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Coupon Apply Failed',
+                    text: 'Please check the coupon code and try again.',
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+
 
 
 
@@ -381,7 +476,7 @@
 
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
-                console.log(orderAddressID);
+                // console.log(orderAddressID);
 
                 const paymentType = [];
 
@@ -390,6 +485,8 @@
                         paymentType.push($(this).val());
                     }
                 });
+
+
                 Swal.fire({
                     title: 'Confirm Order',
                     text: 'Are you sure you want to confirm the order?',
@@ -504,17 +601,14 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 <style>
+    #couponApply {
+        top: 220px;
+        left: 700px;
+        width: 400px;
+        background-color: darkcyan;
+    }
+
     .shop {
         font-size: 10px;
     }

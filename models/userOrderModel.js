@@ -69,6 +69,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Cash On Delivery', 'Pay Online'],
     },
+    totalOrderProducts: {
+        type: Number,
+    },
 });
 
 

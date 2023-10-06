@@ -89,6 +89,7 @@
         body: JSON.stringify({ email }),
         headers: { 'Content-Type': 'application/json' }
       });
+      
       const data = await result.json();
 
       if (data.userId) {

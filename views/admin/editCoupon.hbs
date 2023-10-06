@@ -1,0 +1,104 @@
+<section class="mt-5">
+
+
+    <div style="width: 600px; margin-left: 400px; position: absolute; background-color:rgb(231, 126, 126)"
+        class="newCoupon" id="coupon_container">
+
+        <form>
+
+            <div>
+                <input type="text" name="couponID" value="{{coupon._id}}">
+            </div>
+
+            <div class="form-group border border-dark">
+                <label for="exampleFormControlInput1">Coupon Code</label>
+                <input type="text" class="form-control" value="{{coupon.coupon_code}}" id="exampleFormControlInput1"
+                    name="coupon_code">
+            </div>
+            <div class="form-group border border-dark">
+                <label for="exampleFormControlInput1">Max Use</label>
+                <input type="number" class="form-control" value="{{coupon.max_use}}" id="exampleFormControlInput1"
+                    name="max_usage">
+            </div>
+            <div class="form-group border border-dark">
+                <label for="exampleFormControlInput1">Min Purchase Amount</label>
+                <input type="number" class="form-control" value="{{coupon.minPurchase_amount}}"
+                    id="exampleFormControlInput1" name="minPurchase_amount">
+            </div>
+
+            <div class="form-group border border-dark">
+                <label for="exampleFormControlInput1">Discount Percentage</label>
+                <input type="number" class="form-control" value="{{coupon.discount_value}}"
+                    id="exampleFormControlInput1" name="discount_percentage">
+            </div>
+
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Example select</label>
+                <select class="form-control" name="coupon_status" id="exampleFormControlSelect1">
+                    <option>None</option>
+                    <option>Activate</option>
+                    <option>De-Activate</option>
+                </select>
+            </div>
+
+
+            <button type="submit" class="btn border border-dark btn-primary">Edit</button>
+
+        </form>
+
+    </div>
+</section>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const coupon_code = form.coupon_code.value;
+            const max_use = form.max_usage.value;
+            const minPurchase_amount = form.minPurchase_amount.value;
+            const discount_value = form.discount_percentage.value;
+            const status = form.coupon_status.value;
+            const couponID = form.couponID.value;
+
+
+            Swal.fire({
+                title: 'Confirm Edit',
+                text: 'Edit the Coupon?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, edit it!',
+                cancelButtonText: 'No, cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("/admin/coupons/edit-coupon", {
+                        method: "POST",
+                        body: JSON.stringify({ coupon_code, max_use, minPurchase_amount, discount_value, status, couponID }),
+                        headers: { 'Content-Type': 'application/json' },
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+
+                        return response.json();
+                    }).then(data => {
+                        Swal.fire({
+                            title: 'Update Successfull',
+                            text: 'Coupon Update Successfull',
+                            icon: 'success',
+                        }).then(() => {
+                            location.assign('/admin/coupons');
+                        });
+                    }).catch(error => {
+                        console.error("There was a problem with the fetch operation:", error);
+                    });
+                }
+            })
+        });
+    });
+</script>

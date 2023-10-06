@@ -9,6 +9,7 @@ const { generateRazorpay } = require('../helpers/generateRazorpay');
 const Payment = require("../models/paymentModel");
 const crypto = require("crypto");
 const { generateUniqueID } = require('../helpers/codUniquePaymntID');
+const Coupon = require("../models/couponModel");
 
 
 module.exports.purachasePage_get = async (req, res) => {
@@ -168,8 +169,15 @@ module.exports.cartCheck_out_get = async (req, res) => {
             totalAmount += item.prod_detail.price * item.cart.count;
         }
 
-        if (cartList.length > 0) {
-            res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, message: 'Cart fetched successfully' });
+        //Getting all coupons
+        const allCoupons = await Coupon.find();
+
+
+
+
+        if (cartList.length > 0 && allCoupons) {
+
+            res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, allCoupons, message: 'Cart fetched successfully' });
         } else {
             res.render('user/cart-check-out', { message: 'Cart is empty or fetch failed' });
         }
@@ -204,7 +212,7 @@ module.exports.user_confirmOrder = async (req, res) => {
 
             const productDetails = await Product.findOne({ _id: productID });
 
-            console.log("This is product details", productDetails);
+            // console.log("This is product details", productDetails);
 
             let orderData = {};
 
@@ -291,9 +299,6 @@ module.exports.user_confirmOrder = async (req, res) => {
                     res.status(500).json({ error: "Internal Server Error" });
                 });
 
-
-
-
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: "Internal Server Error" });
@@ -301,10 +306,9 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     } else {
 
-
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
-
+       
         const paymentMethod = paymentType.join(', ');
 
         try {
@@ -392,7 +396,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
 
                     } else if (newOrder.payment_method === "Pay Online") {
-
 
 
                         //Choosed Online Payment

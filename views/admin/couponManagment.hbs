@@ -1,0 +1,285 @@
+<section>
+    <nav class="navbar navbar-expand-lg bg-body-dark">
+        <div class="container-fluid" style="height: 50px;">
+            <a class="navbar-brand" href="/admin/home">CraftX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        </div>
+    </nav>
+</section>
+<hr>
+
+<section style="position: relative;">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4" style="width: 250px;">
+                <div class="list-group">
+                    <li class="list-group-item"><a href="/admin/products"> <i
+                                class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
+                    <li class="list-group-item"><a href="/admin/customers"><i
+                                class="fa-regular fa-user side-bar-icon"></i>Customers</a>
+                    </li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a></li>
+                    <li class="list-group-item"><a href="category"><i
+                                class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
+                    <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
+                                style="transform: rotate(90deg);"></i>Sales Report</a></li>
+                    <li class="list-group-item"><a href=""><i
+                                class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage Coupon</a></li>
+                    <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
+                            Manage</a></li>
+                </div>
+                <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
+                    <a href="logout" class="btn border-primary-subtle">Log Out</a>
+                    <a href="/admin/home" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
+                </div>
+            </div>
+
+            <div class="col-md-8 " style="width: 1000px;">
+
+                <section class="category d-flex mt-2">
+                    <div class="object-fit-contain mt-3" style="width: 100%;">
+                        <div class="header d-flex justify-content-between">
+                            <h3 class="h3 text-second fw-bold mb-3">Coupons</h3>
+                            <button class="btn btn-primary border border-dark mb-2" id="addNew_coupon"
+                                style="margin-left: 600px;">Add New</button>
+                        </div>
+
+                        <table style="width: 100%;" id="categoryTable"
+                            class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="th-sm">Coupon Code</th>
+                                    <th class="th-sm">Max Use</th>
+                                    <th class="th-sm">Used Count</th>
+                                    <th class="th-sm">Discount</th>
+                                    <th class="th-sm">Min Purchase Amount</th>
+                                    <th class="th-sm">Validity</th>
+                                    <th class="th-sm">Status</th>
+                                    <th class="th-sm">Delete/Edit</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each coupons}}
+                                {{#unless this.is_delete}}
+                                <tr>
+                                    <td>{{this.coupon_code}}</td>
+                                    <td>{{this.max_use}}</td>
+                                    <td>{{this.usedCount}}</td>
+                                    <td>{{this.discount_value}}%</td>
+                                    <td>Rs.{{this.minPurchase_amount}}</td>
+                                    <td>{{this.end_date}}</td>
+                                    {{#if this.status}}
+                                    <td><button disabled
+                                            style="background-color: green; color: white;border-radius: 20px;"
+                                            class="mt-2">Active</button></td>
+                                    {{else}}
+                                    <td><button disabled
+                                            style="background-color: red; color: white; border-radius: 20px;"
+                                            class="mt-2">Closed</button></td>
+                                    {{/if}}
+
+                                    <td>
+                                        <div class="d-flex">
+                                            <a href="/admin/coupons/edit-coupon/{{this._id}}" class="ms-3">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+
+                                            <button style="border: none; background-color: transparent;"
+                                                onclick="deleteCoupon('{{this._id}}')">
+                                                <i class="fa-solid fa-trash" style="color: red;"></i>
+                                            </button>
+
+                                    </td>
+                    </div>
+                    </tr>
+                    {{/unless}}
+                    {{/each}}
+                    </tbody>
+                    </table>
+            </div>
+</section>
+</div>
+</div>
+</div>
+</div>
+
+
+<div style="width: 600px; margin-left: 400px; position: absolute; background-color:rgb(231, 126, 126)" class="newCoupon"
+    id="coupon_container">
+
+    <form>
+        <div class="form-group border border-dark">
+            <label for="exampleFormControlInput1">Coupon Code</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="coupon_code">
+        </div>
+        <div class="form-group border border-dark">
+            <label for="exampleFormControlInput1">Max Use</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" name="max_usage">
+        </div>
+        <div class="form-group border border-dark">
+            <label for="exampleFormControlInput1">Min Purchase Amount</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" name="minPurchase_amount">
+        </div>
+
+        <div class="form-group border border-dark">
+            <label for="exampleFormControlInput1">Discount Percentage</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" name="discount_percentage">
+        </div>
+
+        <small>Start Date & End Date</small>
+        <div class="form-group d-flex" style="width: 300px;">
+            <input type="date" class="form-control" id="exampleFormControlInput1" name="start_date">
+            <input type="date" class="form-control" id="exampleFormControlInput1" name="end_date">
+        </div>
+
+        <button type="submit" class="btn border border-dark btn-primary">Add</button>
+        <a href="" class="btn border border-dark">Cancel</a>
+    </form>
+
+</div>
+    
+</section>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#coupon_container').hide();
+
+        $('#addNew_coupon').click(function () {
+            $('#coupon_container').slideToggle();
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const coupon_code = form.coupon_code.value;
+            const max_use = form.max_usage.value;
+            const minPurchase_amount = form.minPurchase_amount.value;
+            const discount_value = form.discount_percentage.value;
+            const start_date = form.start_date.value;
+            const end_date = form.end_date.value;
+
+
+            Swal.fire({
+                title: 'Confirm Add',
+                text: 'Are you sure you want to add the Coupon?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, add it!',
+                cancelButtonText: 'No, cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("/admin/coupons/new-coupon", {
+                        method: "POST",
+                        body: JSON.stringify({ coupon_code, max_use, minPurchase_amount, minPurchase_amount, start_date, end_date, discount_value }),
+                        headers: { 'Content-Type': 'application/json' },
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+
+                        return response.json();
+                    })
+                        .then(data => {
+                            location.reload();
+                        })
+                        .catch(error => {
+                            console.error("There was a problem with the fetch operation:", error);
+                        });
+                }
+            })
+        });
+    });
+
+
+
+    function deleteCoupon(couponID) {
+        Swal.fire({
+            title: 'Confirm Deletion',
+            text: 'Are you sure you want to delete this Coupon?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/coupons/delete-coupon/' + couponID,
+                    method: 'get',
+                    success: (response) => {
+                       Swal.fire({
+                        title: 'Delete Successfull',
+                        text: "Coupon has deleted Successfully",
+                        icon: 'success',
+                       }).then(()=> {
+                        location.reload();
+                       })
+                    }
+                });
+            } else {
+
+
+            }
+        })
+    }
+
+
+</script>
+
+
+
+
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        margin-right: 20px;
+    }
+
+    .btn2 {
+        border: 1px solid black;
+        color: white;
+        border-radius: 5px;
+        padding: 7px;
+    }
+
+    .backBtn {
+        margin-left: 20px;
+        color: black;
+    }
+
+    .logout_btn {
+        margin-top: 50px;
+        margin-left: 10px;
+        border: 1px solid black;
+        background-color: rgb(231, 126, 126);
+    }
+
+
+    .newCoupon {
+        top: 20px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        border: black 1px solid;
+    }
+</style>

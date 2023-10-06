@@ -6,6 +6,7 @@ const adminauthControl = require('../controllers/adminauthControl');
 const customersControl = require('../controllers/customersControl');
 const adminOrderControl = require('../controllers/adminOrderControl');
 const adminSalesControl = require('../controllers/adminSalesControl');
+const adminCouponControl = require('../controllers/adminCouponControl');
 const upload = require('../middlewares/multer');
 const { checkAuthadmin } = require('../middlewares/authMiddleware');
 
@@ -81,6 +82,18 @@ router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 
 //sales Filter Router
 router.post('/sales-report/filter', adminSalesControl.salesFilter_get);
+
+
+
+//Coupons
+router.get('/coupons', adminCouponControl.adminCoupon_get);
+router.post('/coupons/new-coupon', adminCouponControl.newCoupon_post);
+router.get('/coupons/edit-coupon/:couponID', adminCouponControl.editCoupon_get);
+router.post('/coupons/edit-coupon', adminCouponControl.editCoupon_post);
+
+router.get('/coupons/delete-coupon/:couponID', adminCouponControl.deleteCoupon_get)
+
+
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)

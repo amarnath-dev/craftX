@@ -5,6 +5,7 @@ const userAddressControl = require('../controllers/userAddressControl');
 const userCartControl = require('../controllers/userCartControl');
 const userProductControl = require('../controllers/userProductControl')
 const userOrderControl = require('../controllers/userOrderControl');
+const userCouponControl = require('../controllers/userCouponControl');
 const {checkAuth} = require('../middlewares/authMiddleware');
 
 
@@ -96,6 +97,9 @@ router.get('/profile/my-orders/cancel-order', userOrderControl.user_orderCancel_
 
 
 router.post('/verify-payment',userOrderControl.verifyPayment_post)
+
+
+router.post('/my-cart/check-out/get-coupon',userCouponControl.userCoupon_post);
 
 router.get('/logout', userControllers.logout_get)
 

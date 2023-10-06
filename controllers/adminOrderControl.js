@@ -12,9 +12,6 @@ function formatDate(date) {
 }
 
 
-
-
-
 module.exports.adminOrders_get = async (req, res) => {
     try {
         const allOrders = await Order.find().populate('userID');
@@ -76,8 +73,7 @@ module.exports.adminOrders_get = async (req, res) => {
                     payment_method: order.payment_method,
                 });
             }
-            console.log("Order Details from backend------------------------------")
-            console.log(orderDetails);
+        
             return res.render('admin/order-management', { orderDetails });
         } else {
             return res.status(400).json({ error: "All Orders fetch Failed" });
