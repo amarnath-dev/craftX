@@ -176,7 +176,7 @@
 
                                             <label class="form-check-label" for="flexCheckDefault"
                                                 style="margin-left: 5px;">
-                                                Deliver to this Address
+                                                <strong style="color: #414243;">Deliver to this Address</strong>
                                             </label>
                                         </div>
 
@@ -187,7 +187,6 @@
                                         </a>
                                         <hr>
                                     </div>
-                                    {{!-- //Cash on delivery choose radio --}}
                                 </div>
                                 {{/each}}
                                 {{/if}}
@@ -307,7 +306,7 @@
                                         </div>
 
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="Cash On Delivery"
+                                            <input class="form-check-input" type="radio" value="Cash On Delivery"
                                                 id="flexCheckDefault1" name="paymentType">
                                             <label class="form-check-label" for="flexCheckDefault1"
                                                 style="margin-left: 5px">
@@ -316,15 +315,17 @@
                                         </div>
 
 
-
                                         <div class="form-check mt-3">
-                                            <input class="form-check-input" type="checkbox" value="Pay Online"
+                                            <input class="form-check-input" type="radio" value="Pay Online"
                                                 id="flexCheckDefault2" name="paymentType">
                                             <label class="form-check-label" for="flexCheckDefault2"
                                                 style="margin-left: 5px">
                                                 Pay Online
                                             </label>
                                         </div>
+
+
+
 
 
                                         <div class="row mb-md-5 mt-3">
@@ -472,7 +473,15 @@
 
         purchaseBtn.click(async function () {
             const selectedCheckbox = $('input[name="userAddress"]:checked');
-            const paymentCheckboxes = $('input[name="paymentType"]');
+            const paymentCheckboxes = $('input[name="paymentType"]:checked');
+
+            if (selectedCheckbox.length === 0) {
+                Swal.fire({
+                    title: "Select a Delivery Address",
+                    text: "Please Select a Delivery Address",
+                });
+            }
+
 
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
@@ -485,7 +494,6 @@
                         paymentType.push($(this).val());
                     }
                 });
-
 
                 Swal.fire({
                     title: 'Confirm Order',

@@ -10,6 +10,7 @@ const Payment = require("../models/paymentModel");
 const crypto = require("crypto");
 const { generateUniqueID } = require('../helpers/codUniquePaymntID');
 const Coupon = require("../models/couponModel");
+const { checkProductStock } = require('../helpers/checkProductStock');
 
 
 module.exports.purachasePage_get = async (req, res) => {
@@ -38,7 +39,6 @@ module.exports.purachasePage_get = async (req, res) => {
 
 //This was the single product Purchase route 
 // now both cartCheck out and single product buying merged into one route 
-
 module.exports.purachasePage_post = async (req, res) => {
 
     const token = req.cookies.jwt;
@@ -132,12 +132,18 @@ module.exports.checkOut_editproduct_post = async (req, res) => {
 
 
 module.exports.cartCheck_out_get = async (req, res) => {
+
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
+    //Checking the has enough stock
+    // const checkStockCount = await checkProductStock(userID);
+    // if (checkStockCount === 1) {
+    //     return res.status(400).json({ error: "Some Products are out of stock" });
+    // }
+
 
     const cartCount = await getCartCount(userID);
-
 
     try {
 
@@ -173,8 +179,6 @@ module.exports.cartCheck_out_get = async (req, res) => {
         const allCoupons = await Coupon.find();
 
 
-
-
         if (cartList.length > 0 && allCoupons) {
 
             res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, allCoupons, message: 'Cart fetched successfully' });
@@ -199,6 +203,8 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     //Single Product Buy
     if (req.body.productID) {
+
+        console.log("Inside single product buying page");
 
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
@@ -231,6 +237,24 @@ module.exports.user_confirmOrder = async (req, res) => {
             }
 
             const newOrder = new Order(orderData);
+
+            //decrementing the count
+            if (newOrder) {
+                console.log("Inside stock count decrement function");
+                for (const item of newOrder.orderItems) {
+                    const proID = item.productID;
+                    const proQty = item.quantity;
+
+                    const prod = await Product.findById(proID);
+                    if (prod) {
+                        console.log("Inside decrement section");
+                        prod.stock -= proQty;
+                        await prod.save()
+                    } else {
+                        console.log("Product Finding for stock updation Failed");
+                    }
+                }
+            }
 
             newOrder.save()
                 .then(async savedOrder => {
@@ -306,9 +330,12 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     } else {
 
+
+        console.log("Inside cart multiple product buying page");
+
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
-       
+
         const paymentMethod = paymentType.join(', ');
 
         try {
@@ -365,6 +392,24 @@ module.exports.user_confirmOrder = async (req, res) => {
 
 
             const newOrder = new Order(orderData);
+
+            //decrementing the count
+            if (newOrder) {
+                console.log("Inside stock count decrement function");
+                for (const item of newOrder.orderItems) {
+                    const proID = item.productID;
+                    const proQty = item.quantity;
+
+                    const prod = await Product.findById(proID);
+                    if (prod) {
+                        console.log("Inside decrement section");
+                        prod.stock -= proQty;
+                        await prod.save()
+                    } else {
+                        console.log("Product Finding for stock updation Failed");
+                    }
+                }
+            }
 
             newOrder.save()
                 .then(async savedOrder => {
@@ -435,6 +480,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                     console.error('Error saving order:', error);
                     res.status(500).json({ error: "Internal Server Error" });
                 });
+
 
         } catch (error) {
             console.log(error);

@@ -1,14 +1,13 @@
 {{>new-user-header}}
 
-
 <section class="py-5">
     <div class="container">
         <div class="row gx-5">
             <aside class="col-lg-6">
                 {{#each productDetails}}
                 {{#each this.primaryImage}}
-                <div class="border rounded-4 mb-3 d-flex justify-content-center position-relative product">
-                    <div class="image-container">
+                <div class="mb-3 d-flex justify-content-center position-relative product">
+                    <div class="image-container rounded-4 primary-image">
                         <img style="max-width: 100%;" src="/uploads/{{this}}" />
                     </div>
                 </div>
@@ -16,12 +15,13 @@
 
                 <div class="d-flex" style="margin-left: 150px">
                     {{#each this.secondaryImage}}
-                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image"
-                        href="#" class="item-thumb">
+                    <a data-fslightbox="mygallery" class="border mx-1 rounded-2 secondary-image" data-type="image"
+                        class="item-thumb" data-id="{{@index}}">
                         <img width="60" height="60" class="rounded-2" src="/uploads/{{this}}" />
                     </a>
                     {{/each}}
                 </div>
+
                 {{/each}}
             </aside>
 
@@ -60,8 +60,7 @@
                     <hr />
                 </div>
                 <a href="/check-out/{{productDetails._id}}" class="btn btn-warning shadow-0"> Buy now </a>
-
-                <a href="/add-to-cart/{{productDetails._id}}" class="btn btn-primary shadow-0"> <i
+                <a onclick="addToCart('{{productDetails._id}}')" class="btn btn-primary shadow-0"> <i
                         class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
                 <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i
                         class="me-1 fa fa-heart fa-lg"></i> Save </a>
@@ -71,8 +70,93 @@
     </div>
 </section>
 
-
 {{>new-user-footer}}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const productContainers = document.querySelectorAll(".product");
+        const secondaryImages = document.querySelectorAll(".secondary-image");
+        const primaryImage = document.querySelector(".primary-image img");
+
+        // Function to handle image swapping
+        function swapImage(clickedImageSrc) {
+            primaryImage.src = clickedImageSrc;
+        }
+
+        secondaryImages.forEach((image) => {
+            image.addEventListener("click", function () {
+
+                const clickedImageSrc = this.querySelector("img").src;
+                swapImage(clickedImageSrc);
+            });
+        });
+
+
+        productContainers.forEach((container) => {
+            const imageContainer = container.querySelector(".image-container");
+
+            container.addEventListener("mousemove", (e) => {
+                const { left, top, width, height } = container.getBoundingClientRect();
+                const x = (e.clientX - left) / width;
+                const y = (e.clientY - top) / height;
+                const image = imageContainer.querySelector("img");
+
+                image.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+            });
+
+            container.addEventListener("mouseleave", () => {
+                const image = imageContainer.querySelector("img");
+                image.style.transformOrigin = "center center";
+            });
+        });
+    });
+
+
+
+    function addToCart(prodID) {
+        $.ajax({
+            url: '/add-to-cart/' + prodID,
+            method: 'get',
+            success: (response) => {
+                if (response.status) {
+                    let count = $('#count-badge').html()
+                    count = parseInt(count) + 1;
+                    $('#count-badge').html(count);
+                    Swal.fire({
+                        title: "Item Added",
+                        text: "Item has been Added to the Cart",
+                        icon: "success",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Product Alredy Exists",
+                        text: "The product alredy exists in the Cart",
+                    });
+                }
+            }
+        });
+    }
+
+</script>
+
+
+
+
+
+
+
+
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- csngindte id of the cart adding --}}
+{{!-- fdsgdfshghdf --}}
+{{!-- fdsgdfshghdf --}}
 
 
 <style>
@@ -121,32 +205,3 @@
         color: #3b71ca !important;
     }
 </style>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const productContainers = document.querySelectorAll(".product");
-
-        productContainers.forEach((container) => {
-            const imageContainer = container.querySelector(".image-container");
-
-            container.addEventListener("mousemove", (e) => {
-                const { left, top, width, height } = container.getBoundingClientRect();
-                const x = (e.clientX - left) / width;
-                const y = (e.clientY - top) / height;
-                const image = imageContainer.querySelector("img");
-
-             
-                image.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-            });
-
-            container.addEventListener("mouseleave", () => {
-                const image = imageContainer.querySelector("img");
-
-               
-                image.style.transformOrigin = "center center";
-            });
-        });
-    });
-
-</script>

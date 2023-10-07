@@ -3,7 +3,9 @@
 const { decodeJwt } = require('../helpers/jwtDecode');
 const User = require('../models/userModel');
 const mongoose = require('mongoose');
-const { getCartCount } = require('../helpers/cart-product-count')
+const { getCartCount } = require('../helpers/cart-product-count');
+const Product = require('../models/productModel');
+const {cartCountCheck} = require('../helpers/checkUserCartCount');
 
 
 
@@ -25,13 +27,12 @@ module.exports.usercart_post = async (req, res) => {
                     try {
                         await User.findOneAndUpdate(
                             { _id: userID, "cart.product_id": productID },
-                            { $inc: { "cart.$.count": 1 } }
+                            { $inc: { "cart.$.count": 0 } }
                         );
                     } catch (error) {
                         console.log("Count update failed");
                         return res.status(401).json({ error: "Count Update Failed" });
                     }
-
                     return res.redirect('/my-cart');
                 }
             }
@@ -98,8 +99,8 @@ module.exports.mycart_get = async (req, res) => {
         }
 
         if (cartList.length > 0) {
-            console.log("This is product total amount", totalAmount);
-            console.log(cartList);
+            // console.log("This is product total amount", totalAmount);
+            // console.log(cartList);
             res.render('user/my-cart', { cartList, cartCount, totalAmount, message: 'Cart fetched successfully' });
         } else {
             res.render('user/my-cart', { message: 'Cart is empty or fetch failed' });
@@ -115,9 +116,9 @@ module.exports.mycart_get = async (req, res) => {
 module.exports.remove_product_get = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
-    console.log(userID);
+    // console.log(userID);
     const productID = req.params.productID;
-    console.log(productID)
+    // console.log(productID)
 
     try {
 
@@ -153,13 +154,26 @@ module.exports.usercartInc_get = async (req, res) => {
     const userID = await decodeJwt(token)
     const productID = req.params.productID;
 
-    try {
-        await User.findOneAndUpdate(
-            { _id: userID, "cart.product_id": productID },
-            { $inc: { "cart.$.count": 1 } }
-        );
+    //Get the current cart Count and return if count > 5
+    const cartCount = await cartCountCheck(userID, productID);
+    if(cartCount) {
+        if(cartCount > 4) {
+            res.json({message: "Reached Limit"});
+            return;
+        }
+    }
 
-        res.json({ status: true });
+    try {
+        const checkStock = await Product.findById(productID);
+        if (checkStock.stock > 0) {
+            await User.findOneAndUpdate(
+                { _id: userID, "cart.product_id": productID },
+                { $inc: { "cart.$.count": 1 } }
+            );
+            res.json({ status: true });
+        } else {
+            res.json({status: false});
+        }
     } catch (error) {
         console.log("Count update failed");
         return res.status(401).json({ error: "Count Update Failed" });
@@ -168,7 +182,7 @@ module.exports.usercartInc_get = async (req, res) => {
 
 
 module.exports.usercartDec_get = async (req, res) => {
-    console.log("User cart dec called");
+    // console.log("User cart dec called");
 
     const token = req.cookies.jwt;
     const userID = await decodeJwt(token)

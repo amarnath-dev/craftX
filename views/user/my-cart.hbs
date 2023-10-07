@@ -1,90 +1,4 @@
-<section>
-    <header>
-        <!-- Jumbotron -->
-        <div class="p-3 text-center bg-white border-bottom">
-            <div class="container">
-                <div class="row gy-3">
-                    <!-- Left elements -->
-                    <div class="col-lg-2 col-sm-4 col-4">
-                        <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-                            <img src="" />
-
-                        </a>
-
-                    </div>
-                    <!-- Left elements -->
-
-                    <!-- Center elements -->
-                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-                        <div class="d-flex float-end">
-                            <a href="/profile" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                                <i class="fas fa-user-alt m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Profile</p>
-                            </a>
-
-                            <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i
-                                    class="fas fa-heart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Wishlist</p>
-                            </a>
-
-                            <a href="/my-cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
-
-                                <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">My cart</p>
-
-                            </a>
-                            <div>
-                                <span class="badge" id="count-badge">{{getProductCount}}</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-lg-5 col-md-12 col-12">
-                        <div class="input-group float-center">
-                            <div class="form-outline">
-                                <input type="search" id="form1" class="form-control" placeholder="Search" />
-
-                            </div>
-                            <button type="button" class="btn btn-primary shadow-0">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Jumbotron -->
-
-        <!-- Heading -->
-        {{!-- <div style="background-color: rgb(148, 243, 243);">
-            <div class="container py-4">
-                <!-- Breadcrumb -->
-                <nav class="d-flex">
-                    <h6 class="mb-0">
-                        <a href="" class="text-dark-50">Home</a>
-                        <span class="text-dark-50 mx-2"> > </span>
-                        <a href="" class="text-dark-50">Library</a>
-                        <span class="text-dark-50 mx-2"> > </span>
-                        <a href="" class="text-dark"><u>Data</u></a>
-                    </h6>
-                </nav>
-                <!-- Breadcrumb -->
-            </div>
-        </div> --}}
-        <!-- Heading -->
-
-        
-    </header>
-</section>
-
-
-
-
+{{>new-user-header}}
 
 
 <section class="h-100 gradient-custom">
@@ -92,6 +6,14 @@
         <div class="row d-flex justify-content-center my-4">
             <div class="col-md-8">
                 <div class="card mb-4">
+
+                     
+                    {{#if error}}
+                    <div class="alert alert-danger">
+                        {{error}}
+                    </div>
+                    {{/if}}
+
                     <div class="card-header py-3">
                         <h5 class="mb-0">Cart - {{cartCount}} items</h5>
                     </div>
@@ -220,24 +142,21 @@
 
                         <a href="/my-cart/check-out" target="_blank">
                             <button type="button" class="btn bg-info-subtle btn-lg btn-block">
-                                Go to checkout
+                                Go to Checkout
                             </button>
                         </a>
 
                     </div>
                 </div>
             </div>
-
-
         </div>
-
         {{/unless}}
         {{/if}}
     </div>
 </section>
 
 
-{{>user-footer}}
+{{>new-user-footer}}
 
 
 <script>
@@ -274,11 +193,24 @@
             method: 'get',
             success: (response) => {
                 if (response.status) {
-                    console.log(response.status)
                     location.reload();
+                } else {
+                    Swal.fire({
+                        title: "Out of Stock",
+                        text: "Product is Out of Stock",
+                    }).then(() => {
+                        console.log("Product is Out of Stock");
+                    });
+                }
+
+                if (response.message) {
+                    Swal.fire({
+                        title: "Reched Max Limit",
+                        text: "We're sorry! Only 5 unit(s) allowed in each order",
+                    });
                 }
             }
-        })
+        });
     }
 
 
@@ -296,7 +228,6 @@
     }
 
 </script>
-
 
 
 <style>

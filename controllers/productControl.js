@@ -68,7 +68,7 @@ module.exports.products_get = async (req, res) => {
 
 
 module.exports.adminaddproduct_get = async (req, res) => {
-  
+
     const categoryNames = await getAllCategoryNames();
 
     res.render("admin/newproduct", { categoryNames });
@@ -82,10 +82,8 @@ module.exports.adminaddproduct_post = async (req, res) => {
         const primaryImage = req.files['primaryImage'];
         const secondaryImages = req.files['images'];
 
-       //Selecting Only the png format images
-        const primaryImageNames = primaryImage
-            .filter(file => file.mimetype === 'image/png') 
-            .map(file => file.filename);
+        //here it only takes second postion image(which is the cropped image )
+        const primaryImageNames = primaryImage.length >= 2 ? [primaryImage[1].filename] : [];
 
         const secondaryImageNames = secondaryImages.map(file => file.filename);
 
@@ -106,7 +104,7 @@ module.exports.adminaddproduct_post = async (req, res) => {
             return res.status(400).send("Product creation failed");
         }
         // res.redirect(302, '/admin/products');
-        return res.status(200).json({message: "Product Created Successfully"});
+        return res.status(200).json({ message: "Product Created Successfully" });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ error: 'Internal server error' });
