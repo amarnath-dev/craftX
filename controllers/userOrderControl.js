@@ -514,6 +514,7 @@ module.exports.user_orderdetails_get = async (req, res) => {
                     quantity: orderItem.quantity,
                     unitPrice: orderItem.unitPrice,
                     primaryImages: orderItem.productID.primaryImage,
+                    _id: orderItem._id,
                 })),
             address: order.address,
         }));
@@ -536,20 +537,32 @@ module.exports.user_orderdetails_get = async (req, res) => {
 
 module.exports.user_orderCancel_get = async (req, res) => {
 
-    const productID = req.query.productID;
     const orderID = new mongoose.Types.ObjectId(req.query.orderID);
+
+    const productID = req.query.productID;
+
+    const uniqueID = req.query.uniqueID;
 
     try {
         const order = await Order.findById(orderID);
 
+        const orderItemToCancel = order.orderItems.find(item => item._id.toString() === uniqueID);
 
-        const orderItemToCancel = order.orderItems.find(item => item.productID.toString() === productID);
-
-
+ 
         if (orderItemToCancel) {
             orderItemToCancel.is_Canceled = true;
 
             await order.save();
+
+            const proID = orderItemToCancel.productID;
+            const quantity = orderItemToCancel.quantity;
+
+            try {
+                const decrement = await Product.findByIdAndUpdate(proID, {$inc: {stock: quantity}});
+            } catch (error) {
+                console.log(error);
+                return res.status(400).json({error: "Product Not Found in database"});
+            }
 
             return res.status(200).json({ message: "Order Cancel Successful" });
         } else {
@@ -597,4 +610,10 @@ module.exports.verifyPayment_post = async (req, res) => {
     } else {
         return res.status(400).json({ error: "Payment Failed" });
     }
+}
+
+
+
+module.exports.userThankyoupage_get = (req,res) => {
+    res.render('user/orderCompleteTnxPage');
 }

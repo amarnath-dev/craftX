@@ -104,7 +104,7 @@ router.post('/my-cart/check-out/get-coupon',userCouponControl.userCoupon_post);
 router.get('/logout', userControllers.logout_get)
 
 
-
+router.get('/thank-you', userOrderControl.userThankyoupage_get);
 
 
 module.exports = router;

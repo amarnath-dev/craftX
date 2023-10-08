@@ -325,9 +325,6 @@
                                         </div>
 
 
-
-
-
                                         <div class="row mb-md-5 mt-3">
                                             <div class="col">
                                                 <button type="button" id="purchaseButton"
@@ -373,7 +370,6 @@
 
     </div>
 </div>
-
 
 
 
@@ -504,7 +500,6 @@
                     cancelButtonText: 'No, cancel',
                 }).then((result) => {
                     if (result.isConfirmed) {
-
                         $.ajax({
                             type: 'POST',
                             url: '/check-out',
@@ -517,7 +512,7 @@
                                         text: 'Your Order Has been Placed Successfully.',
                                         icon: 'success',
                                     }).then(() => {
-                                        location.assign('/profile/my-orders');
+                                        location.assign('/thank-you');
                                     });
 
                                 } else {
@@ -549,8 +544,8 @@
                     verifyPayment(response, order)
                 },
                 "prefill": {
-                    "name": "Gaurav Kumar",
-                    "email": "gaurav.kumar@example.com",
+                    "name": "Amarnath AS",
+                    "email": "amarnath@example.com",
                     "contact": "9000090000"
                 },
                 "notes": {
@@ -598,8 +593,6 @@
                 alert(response.error.metadata.order_id);
                 alert(response.error.metadata.payment_id);
             });
-
-
         }
     });
 

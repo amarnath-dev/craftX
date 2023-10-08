@@ -1,11 +1,10 @@
-
 {{>new-user-header}}
 
 {{#if orderDetails}}
 {{#each orderDetails}}
-<input type="text" name="orderID" value="{{this._id}}" hidden>
 {{#each this.orderItems}}
 {{#unless this.is_Canceled}}
+<input type="text" name="orderID" value="{{../this._id}}" hidden>
 <div class="card shadow-0 border rounded-3 d-flex mt-2">
     <div class="card-body" style="width: 700px; height: 220px; margin-left: 300px">
         <div class="row">
@@ -19,16 +18,18 @@
             </div>
             <div class="col-md-8">
                 <h6>{{this.productName}}</h6>
-
                 <p>Quantity: {{this.quantity}}</p>
                 <p>Unit Price: Rs.{{this.unitPrice}}</p>
 
-            
+                {{!-- Taking the id which is each products unique id in orderItems array --}}
+                <input type="text" value="{{this._id}}" name="proUniqueID" hidden id="">
+
                 <button class="btn border border-dark status-button" data-status="{{this.orderStatus}}"
                     id="statusBtn-{{this._id}}">
                     <small>{{this.orderStatus}}</small>
                 </button>
 
+                 <input type="text" value="{{this.productID}}" hidden name="" id="">
 
 
                 <div class="d-flex flex-row mt-3">
@@ -58,8 +59,11 @@
 
     $(document).ready(function () {
         $('.cancel-button').click(function () {
+
             const productID = $(this).data('product-id');
+
             const orderID = $('input[name="orderID"]').val();
+            const proUniqueID = document.querySelector('input[name="proUniqueID"]').value;
 
             Swal.fire({
                 title: 'Confirm Cancel',
@@ -71,7 +75,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/profile/my-orders/cancel-order/?productID=${productID}&orderID=${orderID}`,
+                        url: `/profile/my-orders/cancel-order/?productID=${productID}&orderID=${orderID}&uniqueID=${proUniqueID}`,
                         method: 'GET',
                         success: function (data) {
                             if (data.message) {
