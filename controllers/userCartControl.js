@@ -27,7 +27,7 @@ module.exports.usercart_post = async (req, res) => {
                     try {
                         await User.findOneAndUpdate(
                             { _id: userID, "cart.product_id": productID },
-                            { $inc: { "cart.$.count": 0 } }
+                            { $inc: { "cart.$.count": 1 } }
                         );
                     } catch (error) {
                         console.log("Count update failed");
@@ -60,8 +60,6 @@ module.exports.usercart_post = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
-
 
 
 module.exports.mycart_get = async (req, res) => {
@@ -99,12 +97,12 @@ module.exports.mycart_get = async (req, res) => {
         }
 
         if (cartList.length > 0) {
-            // console.log("This is product total amount", totalAmount);
-            // console.log(cartList);
+            console.log("This is the cart List",cartList);
             res.render('user/my-cart', { cartList, cartCount, totalAmount, message: 'Cart fetched successfully' });
         } else {
             res.render('user/my-cart', { message: 'Cart is empty or fetch failed' });
         }
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal Server Error" });

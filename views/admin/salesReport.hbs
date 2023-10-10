@@ -1,35 +1,12 @@
-{{>new-user-header}}
+{{>admin-navbar}}
 
 
 <section class="mt-4">
 
     <div class="container-fluid">
         <div class="row">
+        {{>admin-left-menue}}
 
-            <div class="col-md-4" style="width: 250px;">
-                <div class="list-group">
-                    <li class="list-group-item"><a href="/admin/products"> <i
-                                class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
-                    <li class="list-group-item"><a href=""><i class="fa-regular fa-user side-bar-icon"></i>Customers</a>
-                    </li>
-                    <li class="list-group-item"><a href=""><i
-                                class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a></li>
-                    <li class="list-group-item"><a href="category"><i
-                                class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
-                    <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
-                                style="transform: rotate(90deg);"></i>Sales Report</a></li>
-                    <li class="list-group-item"><a href=""><i
-                                class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage
-                            Coupon</a></li>
-                    <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
-                            Manage</a></li>
-                </div>
-
-                <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
-                    <a href="logout" class="btn border-primary-subtle">Log Out</a>
-                    <a href="/admin/home" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
-                </div>
-            </div>
 
             <div class="col-md-8" style="width: 1000px;">
                 <section class="category d-flex mt-2">
@@ -38,57 +15,59 @@
                             <h3 class="h3 text-second fw-bold mb-3">Sales</h3>
 
                             {{!-- Filter Button --}}
-                          
-                            <div>
-                                <a href="" class="btn border border-dark" id="itemsBtn">Filter</a>
-                            </div>
-                     
 
+                            {{!-- <div>
+                                <a href="" class="btn border border-dark" id="itemsBtn">Filter</a>
+                            </div> --}}
 
                             {{!-- Filter Items DIV --}}
-                            <form action="/admin/sales-report/filter"  method="post">
-                                <div class="card border border-dark"
-                                    style="background-color: rgb(234, 240, 238); width: 800px; height: 100px"
-                                    id="itemsContainer">
-                                    <div class="card-body">
-                                        <div class="d-flex">
+                            <div id="filterFormContainer">
+                                <form action="/admin/sales-report/filter" method="post">
+                                    <div class="card border border-dark"
+                                        style="background-color: rgb(234, 240, 238); width: 800px; height: 100px"
+                                        id="itemsContainer">
+                                        <div class="card-body">
+                                            <div class="d-flex">
 
-                                            <small>From </small>
-                                            <input type="date" name="from_Date" style="height: 30px; margin-left: 10px">
+                                                <small>From </small>
+                                                <input type="date" name="from_Date"
+                                                    style="height: 30px; margin-left: 10px">
 
 
-                                            <small>To</small>
-                                            <input type="date" name="to_Date" style="height: 30px; margin-left: 10px">
+                                                <small>To</small>
+                                                <input type="date" name="to_Date"
+                                                    style="height: 30px; margin-left: 10px">
 
-                                            <div class="d-flex" style="margin-left: 20px;">
+                                                <div class="d-flex" style="margin-left: 20px;">
 
-                                                <div class="form-check" style="margin-left: 20px;">
-                                                    <input type="radio" class="form-check-input" id="radio1"
-                                                        name="payment_method" value="Cash On Delivery">
-                                                    COD
-                                                    <label class="form-check-label" for="radio1"></label>
+                                                    <div class="form-check" style="margin-left: 20px;">
+                                                        <input type="radio" class="form-check-input" id="radio1"
+                                                            name="payment_method" value="Cash On Delivery">
+                                                        COD
+                                                        <label class="form-check-label" for="radio1"></label>
+                                                    </div>
+                                                    <div class="form-check" style="margin-left: 20px;">
+                                                        <input type="radio" class="form-check-input" id="radio2"
+                                                            name="payment_method" value="Pay Online">
+                                                        Online
+                                                        <label class="form-check-label" for="radio2"></label>
+                                                    </div>
+
+                                                    <div style="margin-left: 30px;">
+
+                                                        <input type="number" name="from_amount" id="inputBox1">
+
+                                                        <input type="number" name="to_amount" id="inputBox2"
+                                                            class="mt-2">
+
+                                                    </div>
                                                 </div>
-                                                <div class="form-check" style="margin-left: 20px;">
-                                                    <input type="radio" class="form-check-input" id="radio2"
-                                                        name="payment_method" value="Pay Online">
-                                                    Online
-                                                    <label class="form-check-label" for="radio2"></label>
-                                                </div>
-
-                                                <div style="margin-left: 30px;">
-
-                                                    <input type="number" name="from_amount" id="inputBox1">
-
-                                                    <input type="number" name="to_amount" id="inputBox2" class="mt-2">
-
-                                                </div>
-
+                                                <button type="submit" class="btn border border-dark">Apply</button>
                                             </div>
-                                            <button type="submit" class="btn border border-dark">Apply</button>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
 
 
@@ -146,6 +125,17 @@
     </div>
     </div>
 </section>
+
+<script>
+
+    {{!-- $('#filterFormContainer').hide()
+    $('#itemsBtn').on().click(function () {
+        $('#filterFormContainer').slideToggle();
+    }) --}}
+
+
+
+</script>
 
 
 <style>

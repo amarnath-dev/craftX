@@ -7,7 +7,7 @@
             <div class="col-md-8">
                 <div class="card mb-4">
 
-                     
+
                     {{#if error}}
                     <div class="alert alert-danger">
                         {{error}}
@@ -28,12 +28,13 @@
                             <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
 
                                 {{#each this.prod_detail.primaryImage}}
-                                <a href="/view-product/{{this.prod_detail._id}}">
+                                <a href="/view-product/{{../this.prod_detail._id}}">
                                     <div class="bg-image hover-overlay hover-zoom ripple rounded "
                                         data-mdb-ripple-color="light">
                                         <img src="/uploads/{{this}}" class="w-100" alt="Product Image" />
                                     </div>
                                 </a>
+                                <input type="text" id="productQuantity" value="{{../this.prod_detail.stock}}" hidden>
                                 {{/each}}
 
                             </div>
@@ -73,6 +74,7 @@
                                     <div class="form-outline">
                                         <input id="form1" min="0" name="quantity" value="{{cart.count}}" type="number"
                                             class="form-control increment mt-3" disabled max="4" />
+                                        <input type="text" id="currentQuantity" value="{{cart.count}}" hidden>
                                         <label class="form-label" for="form1"
                                             style="margin-left: 20px;">Quantity</label>
                                     </div>
@@ -140,11 +142,10 @@
                         </ul>
 
 
-                        <a href="/my-cart/check-out" target="_blank">
-                            <button type="button" class="btn bg-info-subtle btn-lg btn-block">
-                                Go to Checkout
-                            </button>
-                        </a>
+                        <button type="button" onclick="getCheckOut()" class="btn bg-info-subtle btn-lg btn-block">
+                            Go to Checkout
+                        </button>
+
 
                     </div>
                 </div>
@@ -221,10 +222,31 @@
             method: 'get',
             success: (response) => {
                 if (response.status) {
+
                     location.reload();
                 }
             }
         })
+    }
+
+
+    function getCheckOut() {
+        const stockCount = document.getElementById('productQuantity').value;
+        const currentQuantity = document.getElementById('currentQuantity').value;
+        console.log(stockCount);
+        console.log(currentQuantity);
+
+        if (stockCount < currentQuantity) {
+            Swal.fire({
+                title: "Out Of Stcok",
+                text: "Some Products Are In Out of Stock",
+                icon: "error",
+            }).then(() => {
+                location.reload()
+            });
+        } else {
+            location.assign('/my-cart/check-out');
+        }
     }
 
 </script>

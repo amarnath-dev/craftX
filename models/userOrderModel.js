@@ -72,6 +72,10 @@ const orderSchema = new mongoose.Schema({
     totalOrderProducts: {
         type: Number,
     },
+    payment_status: {
+        type: String,
+        default: 'pending',
+    },
 });
 
 

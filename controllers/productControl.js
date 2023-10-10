@@ -65,8 +65,6 @@ module.exports.products_get = async (req, res) => {
 
 
 
-
-
 module.exports.adminaddproduct_get = async (req, res) => {
 
     const categoryNames = await getAllCategoryNames();
@@ -79,6 +77,8 @@ module.exports.adminaddproduct_post = async (req, res) => {
     try {
         const { product_name, category_name, color, stock, description, prod_price } = req.body;
 
+        console.log("This is the category id", category_name);
+
         const primaryImage = req.files['primaryImage'];
         const secondaryImages = req.files['images'];
 
@@ -86,6 +86,14 @@ module.exports.adminaddproduct_post = async (req, res) => {
         const primaryImageNames = primaryImage.length >= 2 ? [primaryImage[1].filename] : [];
 
         const secondaryImageNames = secondaryImages.map(file => file.filename);
+
+        //Taking the category Name because front end category name is not name its _id
+        const product = await Category.findById(category_name);
+        if (product) {
+            var productName = product.name;
+        } else {
+            console.log('Product not found');
+        }
 
         const newProduct = new Product({
             name: product_name,
@@ -96,6 +104,7 @@ module.exports.adminaddproduct_post = async (req, res) => {
             price: prod_price,
             primaryImage: primaryImageNames,
             secondaryImage: secondaryImageNames,
+            catName: productName,
         });
 
         const savedProduct = await newProduct.save();
@@ -116,12 +125,12 @@ module.exports.adminaddproduct_post = async (req, res) => {
 module.exports.admineditproduct_get = async (req, res) => {
     try {
         const productData = await Product.findById(req.params.productId);
-        console.log(productData);
 
         if (!productData) {
             return res.status(401).send("Data Fetch Failed");
         }
 
+        console.log("This is the product data", productData);
         res.render('admin/editproduct', { message: "Data Fetch Successful", product: productData });
     } catch (error) {
         console.log(error.message);

@@ -13,20 +13,29 @@ const Coupon = require("../models/couponModel");
 const { checkProductStock } = require('../helpers/checkProductStock');
 
 
+
+
 module.exports.purachasePage_get = async (req, res) => {
+
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
     const productID = req.params.productID;
 
     try {
         const userAddress = await Address.find({ userId: userID });
-        console.log(userAddress)
+        // console.log(userAddress)
 
         const productDetails = await Product.find({ _id: productID });
-        console.log(productDetails);
+        // console.log(productDetails);
+
+
+        //Getting all coupons
+        const allCoupons = await Coupon.find();
+
 
         if (userAddress && productDetails) {
-            return res.render('user/order-summary', { userAddress, productDetails });
+            console.log("This is product Details", productDetails);
+            return res.render('user/order-summary', { userAddress, productDetails, allCoupons });
         } else {
             return res.status(401).json({ error: "User Coudn't find" });
         }
@@ -36,6 +45,13 @@ module.exports.purachasePage_get = async (req, res) => {
         res.status(500).json({ error: "Internal server Error" });
     }
 }
+
+
+
+
+
+
+
 
 //This was the single product Purchase route 
 // now both cartCheck out and single product buying merged into one route 
@@ -133,6 +149,8 @@ module.exports.checkOut_editproduct_post = async (req, res) => {
 
 module.exports.cartCheck_out_get = async (req, res) => {
 
+    console.log("Inside cart check out handler")
+
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
@@ -146,7 +164,6 @@ module.exports.cartCheck_out_get = async (req, res) => {
     const cartCount = await getCartCount(userID);
 
     try {
-
         const userAddress = await Address.find({ userId: userID });
 
         let cartList = await User.aggregate([
@@ -180,7 +197,6 @@ module.exports.cartCheck_out_get = async (req, res) => {
 
 
         if (cartList.length > 0 && allCoupons) {
-
             res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, allCoupons, message: 'Cart fetched successfully' });
         } else {
             res.render('user/cart-check-out', { message: 'Cart is empty or fetch failed' });
@@ -200,14 +216,15 @@ module.exports.user_confirmOrder = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
-
     //Single Product Buy
     if (req.body.productID) {
-
         console.log("Inside single product buying page");
 
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
+        const appliedCouponID = req.body.appliedCouponID;
+        let totalAmount = req.body.totalAmount;
+   
 
         const productID = new mongoose.Types.ObjectId(req.body.productID);
 
@@ -217,15 +234,29 @@ module.exports.user_confirmOrder = async (req, res) => {
             const userAddress = await Address.findOne({ _id: addressID });
 
             const productDetails = await Product.findOne({ _id: productID });
-
             // console.log("This is product details", productDetails);
 
             let orderData = {};
 
+
+            //Apply the discount amount
+            if (appliedCouponID) {
+                try {
+                    const getCoupon = await Coupon.findById(appliedCouponID);
+                    const discountValue = getCoupon.discount_value;
+                    totalAmount = totalAmount - (totalAmount * discountValue / 100);
+
+                } catch (error) {
+                    console.log(error);
+                    return res.status(400).json({ error: "Discount Coupon Get Failed" })
+                }
+            }
+
+
             if (userAddress && productDetails) {
                 orderData = {
                     userID: userID,
-                    orderAmount: productDetails.price,
+                    orderAmount: totalAmount,
                     orderItems: {
                         productID: productDetails._id,
                         quantity: 1,
@@ -238,23 +269,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
             const newOrder = new Order(orderData);
 
-            //decrementing the count
-            if (newOrder) {
-                console.log("Inside stock count decrement function");
-                for (const item of newOrder.orderItems) {
-                    const proID = item.productID;
-                    const proQty = item.quantity;
-
-                    const prod = await Product.findById(proID);
-                    if (prod) {
-                        console.log("Inside decrement section");
-                        prod.stock -= proQty;
-                        await prod.save()
-                    } else {
-                        console.log("Product Finding for stock updation Failed");
-                    }
-                }
-            }
 
             newOrder.save()
                 .then(async savedOrder => {
@@ -293,7 +307,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                                     payment_ID: response.id,
                                     amount: response.amount,
                                     currency: response.currency,
-                                    payment_method: "",
+                                    payment_method: "Pay Online",
                                     status: response.status,
                                     order_id: response.receipt,
                                     created_at: response.created_at,
@@ -330,11 +344,13 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     } else {
 
-
         console.log("Inside cart multiple product buying page");
+
 
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
+        const appliedCouponID = req.body.appliedCouponID;
+
 
         const paymentMethod = paymentType.join(', ');
 
@@ -377,9 +393,26 @@ module.exports.user_confirmOrder = async (req, res) => {
                 });
             }
 
-            const totalAmount = orderItems.reduce((total, item) => {
+            let totalAmount = orderItems.reduce((total, item) => {
                 return total + item.totalAmount;
             }, 0);
+
+
+            //Apply the discount amount
+            if (appliedCouponID) {
+                try {
+
+                    const getCoupon = await Coupon.findById(appliedCouponID);
+                    const discountValue = getCoupon.discount_value;
+
+                    totalAmount = totalAmount - (totalAmount * discountValue / 100);
+
+                } catch (error) {
+                    console.log(error);
+                    return res.status(400).json({ error: "Discount Coupon Get Failed" })
+                }
+            }
+
 
             const orderData = {
                 userID: userID,
@@ -390,31 +423,12 @@ module.exports.user_confirmOrder = async (req, res) => {
                 payment_method: paymentMethod,
             };
 
-
             const newOrder = new Order(orderData);
 
-            //decrementing the count
-            if (newOrder) {
-                console.log("Inside stock count decrement function");
-                for (const item of newOrder.orderItems) {
-                    const proID = item.productID;
-                    const proQty = item.quantity;
-
-                    const prod = await Product.findById(proID);
-                    if (prod) {
-                        console.log("Inside decrement section");
-                        prod.stock -= proQty;
-                        await prod.save()
-                    } else {
-                        console.log("Product Finding for stock updation Failed");
-                    }
-                }
-            }
 
             newOrder.save()
                 .then(async savedOrder => {
                     if (newOrder.payment_method === "Cash On Delivery") {
-
 
                         const paymentData = {
                             payment_ID: "order_" + generateUniqueID(),
@@ -431,6 +445,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                             const savePaymentData = new Payment(paymentData).save();
 
                             if (savePaymentData) {
+
                                 return res.status(201).json({ success: "Order placed successfully" });
                             }
 
@@ -493,6 +508,7 @@ module.exports.user_confirmOrder = async (req, res) => {
 
 
 module.exports.user_orderdetails_get = async (req, res) => {
+
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
@@ -548,7 +564,7 @@ module.exports.user_orderCancel_get = async (req, res) => {
 
         const orderItemToCancel = order.orderItems.find(item => item._id.toString() === uniqueID);
 
- 
+
         if (orderItemToCancel) {
             orderItemToCancel.is_Canceled = true;
 
@@ -558,10 +574,12 @@ module.exports.user_orderCancel_get = async (req, res) => {
             const quantity = orderItemToCancel.quantity;
 
             try {
-                const decrement = await Product.findByIdAndUpdate(proID, {$inc: {stock: quantity}});
+                const decrement = await Product.findByIdAndUpdate(proID, { $inc: { stock: quantity } });
+                // console.log("This is the Decremeneted item ", decrement);
+
             } catch (error) {
                 console.log(error);
-                return res.status(400).json({error: "Product Not Found in database"});
+                return res.status(400).json({ error: "Product Not Found in database" });
             }
 
             return res.status(200).json({ message: "Order Cancel Successful" });
@@ -576,37 +594,74 @@ module.exports.user_orderCancel_get = async (req, res) => {
 
 
 module.exports.verifyPayment_post = async (req, res) => {
-
-    console.log(req.body);
+    console.log("Inside verify payment function");
 
     const payment = req.body.payment;
     const order = req.body.order;
 
-    let hmac = crypto.createHmac('sha256', 'bfr2tHHzfjafjSdQPPtH8MuY')
+    let hmac = crypto.createHmac('sha256', 'bfr2tHHzfjafjSdQPPtH8MuY');
 
     hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id);
 
     hmac = hmac.digest('hex');
 
-
     if (hmac == payment.razorpay_signature) {
-
         const orderID = new mongoose.Types.ObjectId(order.receipt);
 
         try {
-            const update = await Payment.updateOne({ order_id: orderID }, { $set: { status: 'placed' } })
+            const getPaymentData = await Payment.find({ order_id: orderID });
 
-            if (update) {
-
-
-                return res.status(200).json({ message: "Payment Successfull" });
+            if (!getPaymentData || getPaymentData.length === 0) {
+                return res.status(400).json({ error: "Payment Failed" });
             }
 
+            // Iterate through payment documents
+            for (const paymentDoc of getPaymentData) {
+                const getOrderID = await Order.findById(paymentDoc.order_id);
+
+                if (!getOrderID) {
+                    console.log("Order not found for payment ID: ", paymentDoc._id);
+                    continue; //move to the next payment
+                }
+
+                // Update product stock
+                const productUpdates = getOrderID.orderItems.map(async (item) => {
+                    const productData = item.productID;
+                    const productQuantity = item.quantity;
+
+                    const getDecrement = await Product.findById(productData);
+                    if (getDecrement) {
+                        getDecrement.stock -= productQuantity;
+                        await getDecrement.save();
+                    } else {
+                        console.log("Product Find Failed");
+                    }
+                });
+
+                // Use Promise.all to wait for all product updates to complete
+                await Promise.all(productUpdates);
+
+                // Update both fields in the order document
+                getOrderID.payment_status = "completed";
+                getOrderID.status = "placed";
+                await getOrderID.save();
+
+                // Update the payment status
+                const update = await Payment.updateOne(
+                    { order_id: orderID },
+                    { $set: { status: 'placed' } }
+                );
+
+                if (update) {
+                    return res.status(200).json({ message: "Payment Successful" });
+                }
+            }
+
+            return res.status(400).json({ error: "No valid payment found" });
         } catch (error) {
             console.log(error);
             return res.status(400).json({ error: "Payment Failed" });
         }
-
     } else {
         return res.status(400).json({ error: "Payment Failed" });
     }
@@ -614,6 +669,18 @@ module.exports.verifyPayment_post = async (req, res) => {
 
 
 
-module.exports.userThankyoupage_get = (req,res) => {
+
+module.exports.userThankyoupage_get = (req, res) => {
     res.render('user/orderCompleteTnxPage');
+}
+
+
+module.exports.userOrderFailure_get = (req, res) => {
+    res.render('user/userOrderFailurePage');
+}
+
+module.exports.userPaymentFailure_updations = (req, res) => {
+
+    console.log("Code is inside the payment failed updations section");
+    console.log("This is the payment failure options passed from the front end", req.body);
 }

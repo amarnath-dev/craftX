@@ -6,7 +6,7 @@
 {{#unless this.is_Canceled}}
 <input type="text" name="orderID" value="{{../this._id}}" hidden>
 <div class="card shadow-0 border rounded-3 d-flex mt-2">
-    <div class="card-body" style="width: 700px; height: 220px; margin-left: 300px">
+    <div class="card-body" style="width: 700px; height: 240px; margin-left: 300px">
         <div class="row">
             <div class="col-md-4">
 
@@ -15,11 +15,13 @@
                     <img src="/uploads/{{this}}" alt="" style="width: 100px; height: 100px; margin-top: 25px">
                     {{/each}}
                 </div>
+                
             </div>
             <div class="col-md-8">
                 <h6>{{this.productName}}</h6>
                 <p>Quantity: {{this.quantity}}</p>
-                <p>Unit Price: Rs.{{this.unitPrice}}</p>
+                <small>Unit Price: {{this.unitPrice}}</small>
+                <p style="font-size: large;color: green;font-weight: bold;">Amount Rs.{{../this.orderAmount}}</p>
 
                 {{!-- Taking the id which is each products unique id in orderItems array --}}
                 <input type="text" value="{{this._id}}" name="proUniqueID" hidden id="">

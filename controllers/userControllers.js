@@ -128,6 +128,7 @@ module.exports.get_home = async (req, res) => {
       var getProductCount = getUser.cart.length;
     }
 
+    console.log("This is all products", allproducts);
     res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount });
 
   } catch (error) {

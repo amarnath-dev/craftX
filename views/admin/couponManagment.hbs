@@ -1,45 +1,12 @@
-<section>
-    <nav class="navbar navbar-expand-lg bg-body-dark">
-        <div class="container-fluid" style="height: 50px;">
-            <a class="navbar-brand" href="/admin/home">CraftX</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-        </div>
-    </nav>
-</section>
-<hr>
+{{>admin-navbar}}
 
 <section style="position: relative;">
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4" style="width: 250px;">
-                <div class="list-group">
-                    <li class="list-group-item"><a href="/admin/products"> <i
-                                class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
-                    <li class="list-group-item"><a href="/admin/customers"><i
-                                class="fa-regular fa-user side-bar-icon"></i>Customers</a>
-                    </li>
-                    <li class="list-group-item"><a href=""><i
-                                class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a></li>
-                    <li class="list-group-item"><a href="category"><i
-                                class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
-                    <li class="list-group-item"><a href=""> <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
-                                style="transform: rotate(90deg);"></i>Sales Report</a></li>
-                    <li class="list-group-item"><a href=""><i
-                                class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage Coupon</a></li>
-                    <li class="list-group-item"><a href=""><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
-                            Manage</a></li>
-                </div>
-                <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
-                    <a href="logout" class="btn border-primary-subtle">Log Out</a>
-                    <a href="/admin/home" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
-                </div>
-            </div>
+
+        {{>admin-left-menue}}
+
 
             <div class="col-md-8 " style="width: 1000px;">
 
@@ -78,12 +45,13 @@
                                     <td>{{this.end_date}}</td>
                                     {{#if this.status}}
                                     <td><button disabled
-                                            style="background-color: green; color: white;border-radius: 20px;"
-                                            class="mt-2">Active</button></td>
-                                    {{else}}
-                                    <td><button disabled
                                             style="background-color: red; color: white; border-radius: 20px;"
                                             class="mt-2">Closed</button></td>
+                                    {{else}}
+                                    <td><button disabled
+                                            style="background-color: green; color: white;border-radius: 20px;"
+                                            class="mt-2">Active</button>
+                                    </td>
                                     {{/if}}
 
                                     <td>
@@ -146,7 +114,7 @@
     </form>
 
 </div>
-    
+
 </section>
 
 
@@ -221,13 +189,13 @@
                     url: '/admin/coupons/delete-coupon/' + couponID,
                     method: 'get',
                     success: (response) => {
-                       Swal.fire({
-                        title: 'Delete Successfull',
-                        text: "Coupon has deleted Successfully",
-                        icon: 'success',
-                       }).then(()=> {
-                        location.reload();
-                       })
+                        Swal.fire({
+                            title: 'Delete Successfull',
+                            text: "Coupon has deleted Successfully",
+                            icon: 'success',
+                        }).then(() => {
+                            location.reload();
+                        })
                     }
                 });
             } else {

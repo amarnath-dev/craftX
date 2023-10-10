@@ -76,7 +76,7 @@
     </form>
 
 
-    {{!-- //This is croper container --}}
+    {{!-- This is croper container --}}
     <div class="crop-product card shadow" id="crp-container" style="position: absolute;">
         <div>
             <img src="" id="image" alt="" width="300" height="300px">
@@ -95,7 +95,6 @@
 
 
         $('#primaryImage').on('change', (e) => {
-            console.log("change")
             let container = document.getElementById('crp-container')
             container.style.display = "block"
             let image = document.getElementById('image')
@@ -183,9 +182,6 @@
         });
     });
 </script>
-
-
-
 
 
 

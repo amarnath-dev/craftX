@@ -196,11 +196,8 @@
 
 
                         <div class="col-md-5">
-
                             <div class="card border-0 ">
                                 <div class="card-header card-2">
-
-
 
                                     <div class="card text-white mt-3"
                                         style="max-width: 25rem; background-color: black;">
@@ -246,7 +243,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </a>
                                             <hr>
                                             {{/each}}
@@ -347,10 +343,10 @@
 
 <div id="couponFormsContainer">
     <div class="card-body rounded" id="couponApply" style="position: absolute;">
-
         {{#each allCoupons}}
+        {{#unless this.status}}
         <form id="getCouponDiscount_{{this._id}}">
-            <input type="text" value="{{this._id}}" name="couponID" hidden>
+            <input type="text" hidden value="{{this._id}}" name="couponID">
             <div class="form-group border border-dark rounded">
                 <label class="form-label mt-4" style="margin-left: 10px;">Enter the Coupon Code
                     <strong>{{this.coupon_code}}</strong></label>
@@ -365,9 +361,8 @@
                 <a href="" class="btn" style="margin-left: 320px;">Cancel</a>
             </div>
         </form>
+        {{/unless}}
         {{/each}}
-
-
     </div>
 </div>
 
@@ -377,7 +372,7 @@
 
 
 <script>
-    let couponDiscountAmt;
+    let appliedCouponID;
 
     $(document).ready(() => {
         $('.checkOut-editAddress').hide();
@@ -411,6 +406,7 @@
         const totalAmount = document.getElementById('cartTotalAmount').value;
 
         const couponID = form.querySelector('[name="couponID"]').value;
+        appliedCouponID = couponID;
         const coupon_code = form.querySelector('[name="coupon_code"]').value;
         const discountValue = form.querySelector('[name="discountValue"]').value;
 
@@ -423,7 +419,6 @@
 
             if (result.ok) {
                 const data = await result.json();
-                console.log("Coupon Applied Successfully");
                 console.log("Discounted Amount:", data.discountAmt);
                 couponDiscountAmt = data.discountAmt;
 
@@ -453,7 +448,6 @@
                     text: 'Please check the coupon code and try again.',
                 });
             }
-
         } catch (error) {
             console.log(error);
         }
@@ -478,6 +472,12 @@
                 });
             }
 
+            if (paymentCheckboxes.length === 0) {
+                Swal.fire({
+                    title: "Select a Payment Method",
+                    text: "Please Select a Payment Method",
+                });
+            }
 
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
@@ -504,7 +504,7 @@
                             type: 'POST',
                             url: '/check-out',
                             contentType: 'application/json',
-                            data: JSON.stringify({ orderAddressID, paymentType }),
+                            data: JSON.stringify({ orderAddressID, paymentType, appliedCouponID }),
                             success: function (response) {
                                 if (response.success) {
                                     Swal.fire({
@@ -514,7 +514,6 @@
                                     }).then(() => {
                                         location.assign('/thank-you');
                                     });
-
                                 } else {
                                     razorPayPayment(response);
                                 }
@@ -523,10 +522,8 @@
                                 console.log('AJAX Request Failed');
                             },
                         });
-
                     }
                 })
-
             }
         });
 
@@ -572,10 +569,10 @@
                                 text: 'Your Order Has been Placed Successfully.',
                                 icon: 'success',
                             }).then(() => {
-                                location.assign('/profile/my-orders');
+                                location.assign('/thank-you');
                             });
                         } else {
-                            alert("Payment Failed");
+                            location.assign('/failed')
                         }
                     }
                 });
@@ -585,13 +582,13 @@
             var rzp1 = new Razorpay(options);
             rzp1.open();
             rzp1.on('payment.failed', function (response) {
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
+                location.assign('/failed')
+                //alert(response.error.code);
+                // alert(response.error.description);
+                // alert(response.error.source);
+                // alert(response.error.step);
+                //alert(response.error.reason);
+                //alert(response.error.metadata.payment_id);
             });
         }
     });

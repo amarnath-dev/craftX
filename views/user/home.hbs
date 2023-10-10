@@ -22,12 +22,11 @@
     </button>
   </div>
 
-
 </section>
 
 
 
-<section class="row mt-4">
+<section class="row mt-4" id="productContainer">
   <div class="card-container d-flex mt-3 border">
 
     {{#each allproducts}}
@@ -52,7 +51,10 @@
 
           <button class="btn border border-dark mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
             Cart</button>
-          <a href="/check-out/{{this._id}}" target="_blank" class="btn border-dark mt-4" id="buy-now">Buy Now</a>
+
+          <input type="text" value="{{this._id}}" name="" id="productID" hidden>
+          <a onclick="buyNow('{{this.stock}}', '{{this._id}}')" target="_blank" class="btn border-dark mt-4"
+            id="buy-now">Buy Now</a>
 
         </div>
       </div>
@@ -67,12 +69,12 @@
 
 
 <script>
+
   $(document).ready(() => {
     $('#profile-list').hide()
     $('#profile-icon').on().click(function () {
       $('#profile-list').slideToggle()
     })
-
   })
 
 
@@ -95,11 +97,29 @@
     });
   }
 
+  function buyNow(stock, productID) {
+    if (stock < 1) {
+      Swal.fire({
+        title: "Out Of Stock",
+        text: "Were Sorry! The Product Is Out of Stock",
+        icon: "error",
+      }).then(() => {
+
+      })
+    } else {
+      location.assign('/check-out/' + productID);
+    }
+  }
+
 </script>
 
 
-
 <style>
+  #productContainer {
+    overflow: hidden;
+    max-width: 1275px;
+  }
+
   .card-title {
     text-decoration: none;
   }
@@ -173,7 +193,7 @@
     margin-left: 40px;
 
     &:hover {
-      background-color: rgb(248, 238, 54);
+      background-color: rgb(176, 176, 168);
     }
   }
 </style>

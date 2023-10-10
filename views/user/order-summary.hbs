@@ -1,12 +1,9 @@
-<section>
+<section style="position: relative;">
     <div class=" container-fluid my-5 ">
         <div class="row justify-content-center ">
             <div class="col-xl-10">
                 <div class="card shadow-lg ">
                     <div class="row justify-content-around">
-
-
-
 
                         <div class="col-md-5">
 
@@ -199,20 +196,33 @@
                         </div>
 
 
-
-
-
-
-
-
-
                         <div class="col-md-5">
                             <div class="card border-0 ">
                                 <div class="card-header card-2">
+
+
+
+
+
+                                    <div class="card text-white mt-3"
+                                        style="max-width: 25rem; background-color: black;">
+                                        <button id="couponCheck" style="border: none; height: 50px; padding: 5px;">
+                                            <span>Check For Coupons</span>
+                                        </button>
+                                    </div>
+
+
+
                                     <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER
                                     </p>
                                     <hr class="my-2">
                                 </div>
+
+
+
+
+
+
                                 <div class="card-body pt-0">
                                     {{#each productDetails}}
                                     <div class="row  justify-content-between">
@@ -252,7 +262,7 @@
                                                     <p class="mb-1"><b>Subtotal</b></p>
                                                 </div>
                                                 <div class="flex-sm-col col-auto">
-                                                    <p class="mb-1"><b>Rs.{{this.price}}</b></p>
+                                                    <p class="mb-1" id="subTotalAmt"><b>Rs.{{this.price}}</b></p>
                                                 </div>
                                             </div>
                                             <div class="row justify-content-between">
@@ -268,9 +278,12 @@
                                                     <p class="mt-2" style="font-size: 20px;"><b>Total</b></p>
                                                 </div>
                                                 <div class="flex-sm-col col-auto">
-                                                    <p class="mb-1 mt-2" style="color: green; font-size: 20px;">
+                                                    <p class="mb-1 mt-2" style="color: green; font-size: 20px;"
+                                                        id="totalAmount">
                                                         <b>RS.{{this.price}}</b>
                                                     </p>
+                                                    <input type="text" name="checkoutTotalAmt" value="{{this.price}}"
+                                                        hidden disabled name="" id="cartTotalAmount">
                                                 </div>
                                             </div>
                                             <hr class="my-0">
@@ -324,13 +337,37 @@
 </section>
 
 
+<div id="couponFormsContainer">
+    <div class="card-body rounded" id="couponApply" style="position: absolute;">
 
+        {{#each allCoupons}}
+        <form id="getCouponDiscount_{{this._id}}">
 
+            <input type="text" value="{{this._id}}" hidden name="couponID">
+
+            <div class="form-group border border-dark rounded">
+                <label class="form-label mt-4" style="margin-left: 10px;">Enter the Coupon Code
+                    <strong>{{this.coupon_code}}</strong></label>
+                <small>For <strong> {{this.discount_value}}%</strong> Discount</small>
+                <input type="text" name="discountValue" hidden value="{{this.discount_value}}">
+                <div class="input-group">
+                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code" />
+
+                    <button class="btn btn-primary border" type="submit" style="padding: 10px">Apply</button>
+                </div>
+                <small style="margin-left: 10px;">Apply the Coupon and Enjoy!</small>
+                <a href="" class="btn" style="margin-left: 320px;">Cancel</a>
+            </div>
+        </form>
+        {{/each}}
+    </div>
+</div>
 
 
 
 
 <script>
+    let appliedCouponID;
 
     $(document).ready(() => {
         $('.checkOut-editAddress').hide();
@@ -344,6 +381,74 @@
             const editForm = $(this).closest('.card-body').find('.checkOut-editAddress');
             editForm.hide();
         });
+
+        $('#couponApply').hide();
+        $('#couponCheck').on().click(function () {
+            $('#couponApply').slideToggle();
+        });
+
+    });
+
+
+
+
+    const couponFormsContainer = document.getElementById('couponFormsContainer');
+
+    couponFormsContainer.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const totalAmount = document.getElementById('cartTotalAmount').value;
+        console.log("This is total amount", totalAmount);
+
+        const form = e.target;
+
+        const couponID = form.querySelector('[name="couponID"]').value;
+        appliedCouponID = couponID;
+        const coupon_code = form.querySelector('[name="coupon_code"]').value;
+        const discountValue = form.querySelector('[name="discountValue"]').value;
+
+        try {
+            const result = await fetch('/my-cart/check-out/get-coupon', {
+                method: 'POST',
+                body: JSON.stringify({ couponID, coupon_code, discountValue, totalAmount }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (result.ok) {
+                const data = await result.json();
+                console.log("Discounted Amount:", data.discountAmt);
+                couponDiscountAmt = data.discountAmt;
+
+                //Swal message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Coupon Applied Successfully',
+                    text: `Discounted Amount: ${data.discountAmt}`,
+                });
+
+                const totalAmountElement = document.getElementById('totalAmount');
+                if (totalAmountElement) {
+                    totalAmountElement.textContent = data.discountAmt;
+                }
+
+                const subTotalAmtElement = document.getElementById('subTotalAmt');
+                if (subTotalAmtElement) {
+                    subTotalAmtElement.textContent = data.discountAmt;
+                }
+
+                //UI updation here
+                $('#couponApply').hide();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Coupon Apply Failed',
+                    text: 'Please check the coupon code and try again.',
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
     });
 
 
@@ -355,7 +460,8 @@
 
         purchaseBtn.click(async function () {
             const selectedCheckbox = $('input[name="userAddress"]:checked');
-            const paymentCheckboxes = $('input[name="paymentType"]');
+            const paymentCheckboxes = $('input[name="paymentType"]:checked');
+            const totalAmount = document.getElementById('cartTotalAmount').value;
 
             if (selectedCheckbox.length === 0) {
                 Swal.fire({
@@ -368,7 +474,7 @@
 
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
-                console.log(orderAddressID);
+                //console.log(orderAddressID);
 
                 const paymentType = [];
 
@@ -390,9 +496,8 @@
                             type: 'POST',
                             url: '/check-out',
                             contentType: 'application/json',
-                            data: JSON.stringify({ orderAddressID, paymentType, productID }),
+                            data: JSON.stringify({ orderAddressID, paymentType, productID, appliedCouponID, totalAmount }),
                             success: function (response) {
-
                                 if (response.success) {
                                     Swal.fire({
                                         title: 'Order Placed',
@@ -454,10 +559,10 @@
                                 text: 'Your Order Has been Placed Successfully.',
                                 icon: 'success',
                             }).then(() => {
-                                location.assign('/profile/my-orders');
+                                location.assign('/thank-you');
                             });
                         } else {
-                            alert("Payment Failed");
+                            location.assign('/failed')
                         }
                     }
                 });
@@ -466,40 +571,29 @@
             var rzp1 = new Razorpay(options);
             rzp1.open();
             rzp1.on('payment.failed', function (response) {
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
+                location.assign('/failed')
+                //alert(response.error.code);
+                //alert(response.error.description);
+                //alert(response.error.source);
+                //alert(response.error.step);
+                //alert(response.error.reason);
+                //alert(response.error.metadata.order_id);
+                //alert(response.error.metadata.payment_id);
             });
         }
     });
 
-
-
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
+    #couponApply {
+        top: 220px;
+        left: 700px;
+        width: 400px;
+        background-color: darkcyan;
+    }
+
     .shop {
         font-size: 10px;
     }

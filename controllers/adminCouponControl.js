@@ -77,26 +77,27 @@ module.exports.editCoupon_get = async (req, res) => {
 
 module.exports.editCoupon_post = async (req, res) => {
     const couponID = req.body.couponID;
-
     const status = req.body.status;
+    console.log("This is the current status of the coupon", status);
 
     if (status) {
-        if (status == 'Activate') {
+        if (status === 'Activate') {
             try {
                 const couponStatus = await Coupon.updateOne({ _id: couponID }, {
                     $set: {
-                        status: true,
+                        status: false,
                     }
                 });
             } catch (error) {
                 console.log(error);
                 return res.status(500).json({ error: "Status Upadte Failed" })
             }
-        } else if (status == 'De-Activate') {
+
+        } else if (status === 'De-Activate') {
             try {
                 const couponStatus = await Coupon.updateOne({ _id: couponID }, {
                     $set: {
-                        status: false,
+                        status: true,
                     }
                 });
             } catch (error) {

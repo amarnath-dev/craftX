@@ -106,6 +106,9 @@ router.get('/logout', userControllers.logout_get)
 
 router.get('/thank-you', userOrderControl.userThankyoupage_get);
 
+router.get('/failed', userOrderControl.userOrderFailure_get);
+
+router.get('/payment-failed', userOrderControl.userPaymentFailure_updations)
 
 module.exports = router;
 

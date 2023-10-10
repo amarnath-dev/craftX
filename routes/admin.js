@@ -80,6 +80,7 @@ router.get('/sales-report',adminSalesControl.salesPage_get);
 router.get('/sales-report/getInvoice', adminSalesControl.salesInvoice_get);
 router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 
+
 //sales Filter Router
 router.post('/sales-report/filter', adminSalesControl.salesFilter_get);
 

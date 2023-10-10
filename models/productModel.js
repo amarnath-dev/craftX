@@ -27,9 +27,9 @@ const productSchema = new mongoose.Schema({
         ref: 'Category', 
         required: true,
     },
-    // catName: {
-    //     type: String,
-    // },
+    catName: {
+        type: String,
+    },
     primaryImage: [String],
     secondaryImage: [String],
     
