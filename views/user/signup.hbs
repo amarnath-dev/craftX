@@ -49,10 +49,26 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-check d-flex justify-content-center mb-5">
+                                    <div>
+                                        <a class="btn border border-dark" onclick="applyReferalCode()">Apply
+                                            Referal Code</a>
+                                    </div>
 
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <div class="form-outline flex-fill mb-0" id="referalCode-container">
+                                            <label class="form-label" for="form3Example4cd">Enter the Referal Code
+                                                <small>(If You Have Any.)</small></label>
+                                            <input type="text" id="referalCode" class="form-control"
+                                                name="referalCode" />
+                                            <p id="referal-error" style="color: red;"></p>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-check d-flex justify-content-center mb-5">
                                         <label class="form-check-label" for="form2Example3">
-                                            alredy have an account ? <a href="http://localhost:3000/login">LogIn</a>
+                                            Alredy have an account ? <a href="http://localhost:3000/login">LogIn</a>
                                         </label>
                                     </div>
 
@@ -80,6 +96,7 @@
     const form = document.querySelector('form')
     const emailError = document.getElementById('email-error');
     const phonenumError = document.getElementById('phonenum-error')
+    const referalError = document.getElementById('referal-error');
 
 
     form.addEventListener('submit', async (e) => {
@@ -89,19 +106,20 @@
         const email = form.email.value;
         const password = form.password.value;
         const phonenumber = form.number.value;
+        const referalCode = form.referalCode.value;
 
         emailError.textContent = '';
         phonenumError.textContent = '';
+        referalError.textContent = '';
 
         try {
             const response = await fetch('/signup', {
                 method: 'POST',
-                body: JSON.stringify({ fullname, email, password, phonenumber }),
+                body: JSON.stringify({ fullname, email, password, phonenumber, referalCode }),
                 headers: { 'Content-Type': 'application/json' }
             });
 
             const data = await response.json();
-
 
             if (data.error) {
                 if (data.error == 'Email Alredy Exists') {
@@ -125,4 +143,12 @@
         }
     });
 
+
+    $(document).ready(function () {
+        $('#referalCode-container').hide();
+    })
+
+    function applyReferalCode() {
+        $('#referalCode-container').slideToggle();
+    } 
 </script>

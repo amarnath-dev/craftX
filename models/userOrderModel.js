@@ -67,7 +67,7 @@ const orderSchema = new mongoose.Schema({
     },
     payment_method: {
         type: String,
-        enum: ['Cash On Delivery', 'Pay Online'],
+        enum: ['Cash On Delivery', 'Pay Online', 'wallet payment'],
     },
     totalOrderProducts: {
         type: Number,
@@ -75,6 +75,10 @@ const orderSchema = new mongoose.Schema({
     payment_status: {
         type: String,
         default: 'pending',
+    },
+    is_return: {
+        type: Boolean,
+        default: false,
     },
 });
 

@@ -1,0 +1,215 @@
+{{>admin-navbar}}
+
+<section style="max-width: 1250px; position: relative;">
+
+    <form class="row d-flex justify-content-center" id="newBanneradd" enctype="multipart/form-data">
+        <section class="left-secton col-md-6 p-3 border border-bottom-0">
+            <div class="card p-md-5 p-2 me-md-5">
+                <h5>Choose Banner Image</h5>
+                <span class="fw-normal mb-4 text-success">*file supports only: jpeg,jpg,png,webp</span>
+                <span class="fw-bold">Select the Banner Image</span>
+
+                <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader" name="bannerImage"
+                    class="mb-3" style="margin-top: 5px;" id="bannerImage" />
+
+                <img id="prev" src="" alt="" />
+
+                <input type="hidden" id="result" name="result" value="" />
+
+                <input type="hidden" id="croppedImage" name="croppedImage" value="">
+
+                <div class="d-flex">
+                    <div class="form-group col-md-6 mt-3">
+                        <label for="" class="fw-bold mb-2">Start Date</label>
+                        <input type="date" name="start_date" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6 mt-3">
+                        <label for="" class="fw-bold mb-2">End Date</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="right-section col-md-6  col-md-6 p-4 mt-3">
+            <div class="form-group mb-4">
+                <label for="" class="fw-bold mb-2">Banner Title</label>
+                <input type="text" name="banner_title" class="form-control">
+            </div>
+            <div class="row mb-4">
+                <div class="form-group mb-4">
+                    <label for="" class="fw-bold mb-2">Banner Image Url</label>
+                    <input type="text" name="banner_url" class="form-control">
+                </div>
+
+                <div class="row mb-4">
+                    <div class="form-group mb-4">
+                        <label for="" class="fw-bold mb-2">Banner Link Url</label>
+                        <input type="text" name="banner_link" class="form-control">
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                        <label for="" class="fw-bold mb-2">Position</label>
+                        <input type="number" name="banner_position" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="" class="fw-bold mb-2">Category</label>
+                        <input type="text" name="banner_category" class="form-control">
+                    </div>
+
+
+
+
+                    <div class="form-group mt-3">
+                        <label for="exampleFormControlSelect1">Banner Status</label>
+                        <select class="form-control mt-2" name="banner_status" id="exampleFormControlSelect1">
+                            <option>None</option>
+                            <option>active</option>
+                            <option>inactive</option>
+                        </select>
+                    </div>
+                </div>
+        </section>
+
+        <button type="submit" id="newBanner"
+            class="btn newproduct add-btn py-3 border border-primary bg-primary mt-3 mb-5">Create</button>
+    </form>
+
+
+    {{!-- This is croper container --}}
+    <div class="crop-product card shadow" id="crp-container" style="position: absolute;">
+        <div>
+            <img src="" id="image" alt="" width="300" height="300px">
+            <a href="" class="btn border border-dark mt-3" style="margin-left: 700px;">Cancel</a>
+            <button id="cropImageBtn" class="btn btn-primary mt-3">Crop Image</button>
+        </div>
+            
+    </div>
+
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#bannerImage').on('change', (e) => {
+            let container = document.getElementById('crp-container')
+            container.style.display = "block"
+            let image = document.getElementById('image')
+            let file = e.target.files[0]
+            $('.btn-grp').toggle()
+
+            if (file) {
+                const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+                if (allowedImageTypes.includes(file.type)) {
+
+                    // Create a new FileReader to read the selected image file
+                    var reader = new FileReader(file);
+                    reader.onload = function (event) {
+                        // Set the source of the image element in the Cropper container
+                        document.getElementById('image').src = event.target.result;
+                        // Initialize Cropper.js with the updated image source
+                        
+                        let cropper = new Cropper(image, {
+                            aspectRatio: 19 / 6,
+                            viewMode: 0,
+                            autoCrop: true,
+                            background: false,
+                        })
+
+                        $('#cropImageBtn').on('click', function () {
+                            var cropedImg = cropper.getCroppedCanvas()
+
+                            if (cropedImg) {
+                                cropedImg = cropedImg.toDataURL('image/png')
+
+                                document.getElementById('prev').src = cropedImg
+                                document.getElementById('result').value = cropedImg
+                                container.style.display = "none"
+
+                                $('.btn-grp').toggle()
+                            }
+                            cropper.destroy();
+                        })
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    Swal.fire({
+                        title: 'Invalid File Type',
+                        text: 'Only image files (JPEG, JPG, PNG, WebP) are allowed.',
+                        icon: 'error'
+                    });
+                    // Clear the input to prevent submitting an invalid file
+                    e.target.value = '';
+                }
+            }
+        });
+
+
+        $('.change-file').on('click', function () {
+            let input = document.getElementById('banner-image')
+            input.value = ''
+            input.style.display = 'block'
+        })
+
+
+
+        $('#newBanner').on('click', function (e) {
+            e.preventDefault();
+
+            const form = document.getElementById('newBanneradd');
+            const formData = new FormData(form);
+
+            const base64String = document.getElementById('result').value;
+            const base64Data = base64String.split(',')[1];
+            const binaryData = atob(base64Data);
+            const uint8Array = new Uint8Array(binaryData.length);
+
+            for (let i = 0; i < binaryData.length; i++) {
+                uint8Array[i] = binaryData.charCodeAt(i);
+            }
+
+            const blob = new Blob([uint8Array], { type: 'image/png' });
+            const file = new File([blob], 'image.png', { type: 'image/png' });
+            formData.append('bannerImage', file);
+
+            fetch('/admin/banner/newBanner', {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire({
+                        title: "Banner Added",
+                        text: "Banner Added Successfully",
+                        icon: "success",
+                    }).then(() => {
+                        location.assign('/admin/banner')
+                    });
+                } else {
+                    console.log("Request failed terrible");
+                }
+            }).catch(error => {
+                console.error("Request failed:", error);
+            });
+        });
+    });
+</script>
+
+
+
+<style>
+    .crop-product {
+        top: 80px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        display: none;
+    }
+</style>

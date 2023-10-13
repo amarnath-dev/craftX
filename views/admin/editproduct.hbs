@@ -3,6 +3,7 @@
         <span>Edit Product</span>
         <hr>
     </div>
+    
     <form method="post" class="row d-flex justify-content-center" enctype="multipart/form-data"
         action="/admin/products/editproduct">
 
@@ -16,6 +17,7 @@
                     <img id="imgPrimary" src="/uploads/{{product.primaryImage}}" alt="{{product.name}}"
                         style="width: 50px; height: 40px" class="border border-secondary rounded-1">
                 </div>
+                
                 <span class="fw-bold">Select the Primary Image</span>
                 <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader mt-2" name="primaryImage"
                     onchange="previewImg(event, 'imgPrimary')" />
@@ -114,6 +116,7 @@
         </section>
     </form>
 </section>
+
 
 <script>
 

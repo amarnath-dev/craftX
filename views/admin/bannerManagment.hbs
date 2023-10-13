@@ -1,0 +1,124 @@
+{{>admin-navbar}}
+<section>
+    <form class="d-flex mb-2 mt-3" role="search">
+        <a href="banner/newBanner" class="btn btn-primary" style="width: 220px; margin-left: 1000px">Create a Banner</a>
+    </form>
+    <div class="container-fluid">
+        <div class="row">
+            {{>admin-left-menue}}
+            <div class="col-md-8" style="width: 1000px;">
+                <table style="width: 100%;" id="example" class="table table-striped table-bordered table-sm"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="th-sm">Banner Image</th>
+                            <th class="th-sm">Banner Title</th>
+                            <th class="th-sm">Image URL</th>
+                            <th class="th-sm">Image Link</th>
+                            <th class="th-sm">Position</th>
+                            <th class="th-sm">Start Date</th>
+                            <th class="th-sm">End Date</th>
+                            <th class="th-sm">Status</th>
+                            <th class="th-sm">Delete/Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each allBanner}}
+                        {{#unless this.is_delete}}
+                        <tr>
+                            <td>
+                                <img src="/uploads/{{this.bannerImage}}" alt="{{this.name}}" width="100"
+                                    class="border border-2 rounded-top">
+                            </td>
+                            <td>{{this.title}}</td>
+                            <td>{{this.imageUrl}}</td>
+                            <td>{{this.linkUrl}}</td>
+                            <td>{{this.position}}</td>
+                            <td>{{this.startDate}}</td>
+                            <td>{{this.endDate}}</td>
+                            <td>{{this.status}}</td>
+                            <td>
+                                <!-- Edit and delete buttons for each banner -->
+                                <a href="/admin/banner/editBanner/{{this._id}}" class="ms-3"><i
+                                        class="fa-solid fa-pen"></i></a>
+
+                                <a class="text-danger ms-2" onclick="confirmDelete('{{this._id}}')"><i
+                                        class="fa-solid fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {{/unless}}
+                        {{/each}}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function confirmDelete(bannerId) {
+        console.log("This is banner id", bannerId);
+        Swal.fire({
+            title: "Delete Banner",
+            text: "Are you sure you want to delete the Banner?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/banner/deleteBanner/' + bannerId,
+                    method: 'get',
+                    success: (response) => {
+                        if (response.message) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        margin-right: 20px;
+    }
+
+    .btn2 {
+        border: 1px solid black;
+        color: white;
+        border-radius: 5px;
+        padding: 7px;
+    }
+
+    .backBtn {
+        margin-left: 20px;
+        color: black;
+    }
+
+    .logout_btn {
+        margin-top: 50px;
+        margin-left: 10px;
+        border: 1px solid black;
+        background-color: rgb(231, 126, 126);
+    }
+
+
+    .newCoupon {
+        top: 20px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        border: black 1px solid;
+    }
+</style>

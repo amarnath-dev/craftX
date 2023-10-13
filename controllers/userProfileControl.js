@@ -10,19 +10,19 @@ module.exports.userprofile_get = async (req, res) => {
     try {
         const userID = decodeJwt(token)
 
-
         const user = await User.findOne({ _id: userID });
 
         if (user) {
-            return res.render('user/user-profile', { userDetails: user});
+            console.log("This is user Details", user);
+            return res.render('user/user-profile', { userDetails: user });
         } else {
             return res.status(400).json({ error: "User not found in database" })
         }
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-    res.render('user/user-profile');
 }
 
 
@@ -78,7 +78,7 @@ module.exports.updateprofile_post = async (req, res) => {
 }
 
 
-module.exports.updatePass_post = async (req,res) => {
+module.exports.updatePass_post = async (req, res) => {
     console.log("Reached at upadet password post");
     const token = req.cookies.jwt;
 
@@ -87,44 +87,44 @@ module.exports.updatePass_post = async (req,res) => {
 
     try {
         const userID = decodeJwt(token);
-        
-        const getUser = await User.findOne({ _id: userID });
-       
 
-        if(!getUser) {
-            return res.status(401).json({error: "Coudn't find the User"});
+        const getUser = await User.findOne({ _id: userID });
+
+
+        if (!getUser) {
+            return res.status(401).json({ error: "Coudn't find the User" });
         }
 
-        const unhashedPassword = cryptojs.AES.decrypt(getUser.password,process.env.HASH_KEY).toString(cryptojs.enc.Utf8);
-        
+        const unhashedPassword = cryptojs.AES.decrypt(getUser.password, process.env.HASH_KEY).toString(cryptojs.enc.Utf8);
 
-        if(unhashedPassword === currentPass) {
-           return res.status(200).json({ message: "User Found", userID: getUser._id});
-        } 
 
-        return res.satus(401).json({message: "Data not found"});
+        if (unhashedPassword === currentPass) {
+            return res.status(200).json({ message: "User Found", userID: getUser._id });
+        }
+
+        return res.satus(401).json({ message: "Data not found" });
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: "Internal Server Error"});
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-module.exports.newpass_post  = async (req,res) => {
+module.exports.newpass_post = async (req, res) => {
     const token = req.cookies.jwt;
     const newPass = req.body.password;
     console.log(newPass);
 
     const user = decodeJwt(token);
-    const hashing =   cryptojs.AES.encrypt(req.body.password, process.env.HASH_KEY).toString();
+    const hashing = cryptojs.AES.encrypt(req.body.password, process.env.HASH_KEY).toString();
     try {
-        const update = await User.findOneAndUpdate({_id: user}, {$set: {password: hashing}});
-        if(!update) {
-            return res.satus(401).json({error: "Update Failed"});
+        const update = await User.findOneAndUpdate({ _id: user }, { $set: { password: hashing } });
+        if (!update) {
+            return res.satus(401).json({ error: "Update Failed" });
         }
-        res.status(200).json({message: "Update Successfull"})
+        res.status(200).json({ message: "Update Successfull" })
     } catch (error) {
         console.log(error)
-        res.status(401).json({error: "Internal server Errro"});
+        res.status(401).json({ error: "Internal server Errro" });
     }
 }

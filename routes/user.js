@@ -6,11 +6,11 @@ const userCartControl = require('../controllers/userCartControl');
 const userProductControl = require('../controllers/userProductControl')
 const userOrderControl = require('../controllers/userOrderControl');
 const userCouponControl = require('../controllers/userCouponControl');
-const {checkAuth} = require('../middlewares/authMiddleware');
+const { checkAuth } = require('../middlewares/authMiddleware');
 
 
 //User signUp Routes
-router.get('/',checkAuth, userControllers.get_home);
+router.get('/', checkAuth, userControllers.get_home);
 router.get('/signup', userControllers.get_signup);
 router.post('/signup', userControllers.post_signup);
 
@@ -36,7 +36,7 @@ router.post('/newpassword', userControllers.new_password);
 
 
 //Profile Route
-router.get('/profile',userProfileControl.userprofile_get);
+router.get('/profile', userProfileControl.userprofile_get);
 
 router.get('/profile/update', userProfileControl.updateprofile_get);
 router.post('/profile/update', userProfileControl.updateprofile_post);
@@ -47,9 +47,9 @@ router.post('/profile/update/password/newpass', userProfileControl.newpass_post)
 
 
 //Address management routes
-router.get('/profile/manageaddress',userAddressControl.newAddress_get);
+router.get('/profile/manageaddress', userAddressControl.newAddress_get);
 
-router.post('/profile/manageaddress/addaddress',userAddressControl.newAddress_post);
+router.post('/profile/manageaddress/addaddress', userAddressControl.newAddress_post);
 
 router.get('/profile/manageaddress/edit-address/:addressID', userAddressControl.editaddress_get);
 router.post('/profile/manageaddress/edit-address', userAddressControl.editaddress_post);
@@ -60,11 +60,11 @@ router.get('/profile/manageaddress/delete/:addressID', userAddressControl.delete
 
 
 //Product Details Page
-router.get('/add-to-cart/:productID', userCartControl.usercart_post);
+router.get('/add-to-cart/:productID', userCartControl.usercart_get);
 
 router.get('/my-cart', userCartControl.mycart_get);
 
-router.get('/my-cart/remove/:productID',userCartControl.remove_product_get);
+router.get('/my-cart/remove/:productID', userCartControl.remove_product_get);
 
 router.get('/my-cart/increment/:productID', userCartControl.usercartInc_get);
 router.get('/my-cart/decrement/:productID', userCartControl.usercartDec_get);
@@ -96,10 +96,10 @@ router.get('/profile/my-orders', userOrderControl.user_orderdetails_get)
 router.get('/profile/my-orders/cancel-order', userOrderControl.user_orderCancel_get);
 
 
-router.post('/verify-payment',userOrderControl.verifyPayment_post)
+router.post('/verify-payment', userOrderControl.verifyPayment_post)
 
 
-router.post('/my-cart/check-out/get-coupon',userCouponControl.userCoupon_post);
+router.post('/my-cart/check-out/get-coupon', userCouponControl.userCoupon_post);
 
 router.get('/logout', userControllers.logout_get)
 
@@ -109,6 +109,15 @@ router.get('/thank-you', userOrderControl.userThankyoupage_get);
 router.get('/failed', userOrderControl.userOrderFailure_get);
 
 router.get('/payment-failed', userOrderControl.userPaymentFailure_updations)
+
+//Product Return Routes
+router.get('my-orders/returnItem/:productID', userOrderControl.returnProduct_get);
+router.post('/my-orders/returnItem/:orderId/:productId', userOrderControl.returnProduct_post);
+
+
+
+router.get('/profile/my-orders/getInvoice', userOrderControl.invoicePage_get)
+router.get('/profile/my-orders/postInvoice', userOrderControl.invoicePage_post)
 
 module.exports = router;
 

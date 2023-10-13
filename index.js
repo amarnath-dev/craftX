@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use(express.static('public'));
 
 
+
 app.use(
   session({
     secret: process.env.SESSION_KEY,
@@ -30,6 +31,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+
 
 // Making the connection to MongoDB
 const mongoDBURI = process.env.MONGODB_URI;

@@ -7,6 +7,8 @@ const customersControl = require('../controllers/customersControl');
 const adminOrderControl = require('../controllers/adminOrderControl');
 const adminSalesControl = require('../controllers/adminSalesControl');
 const adminCouponControl = require('../controllers/adminCouponControl');
+const adminBannerControl = require('../controllers/adminBannerControl')
+const adminOrderReturnControl = require('../controllers/adminOrderReturnControl');
 const upload = require('../middlewares/multer');
 const { checkAuthadmin } = require('../middlewares/authMiddleware');
 
@@ -85,7 +87,6 @@ router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 router.post('/sales-report/filter', adminSalesControl.salesFilter_get);
 
 
-
 //Coupons
 router.get('/coupons', adminCouponControl.adminCoupon_get);
 router.post('/coupons/new-coupon', adminCouponControl.newCoupon_post);
@@ -94,7 +95,19 @@ router.post('/coupons/edit-coupon', adminCouponControl.editCoupon_post);
 
 router.get('/coupons/delete-coupon/:couponID', adminCouponControl.deleteCoupon_get)
 
+//Banner Management
+router.get('/banner', adminBannerControl.banner_get);
+router.get('/banner/newBanner', adminBannerControl.newBanner_get);
+router.post('/banner/newBanner',upload.fields([ { name: 'bannerImage' } ]), adminBannerControl.newBanner_post);
+router.get('/banner/editBanner/:bannerId', adminBannerControl.bannerEdit_get);
+router.post('/banner/editBanner',upload.fields([ { name: 'bannerImage' } ]),adminBannerControl.bannerEdit_post);
+router.get('/banner/deleteBanner/:bannerId', adminBannerControl.bannerDelete_get)
 
+
+//Order return Managent
+router.get('/orderReturn', adminOrderReturnControl.adminOrderReturnControl);
+router.get('/orderReturn/approve/:returnReqId', adminOrderReturnControl.orderApprove_get)
+router.get('/orderReturn/reject/:returnReqId', adminOrderReturnControl.orderReject_get)
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)

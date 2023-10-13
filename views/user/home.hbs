@@ -2,27 +2,29 @@
 
 
 <section>
-  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-inner">
-
+      {{#each allBanner}}
+      {{#unless this.is_delete}}
       <a href="">
-        <div class="carousel-item active">
-          <img src="https://drive.google.com/uc?id=1Iapkf4cvpB0PL82hOXvYqxtBd_ZCGB_y" class="d-block w-100" alt="...">
+        <div class="carousel-item {{#if @first}}active{{/if}}">
+          <img src="/uploads/{{this.bannerImage}}" class="d-block w-100" alt="...">
         </div>
       </a>
-
+      {{/unless}}
+      {{/each}}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="carousel-control-next-icon" ariahidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-
 </section>
+
 
 
 

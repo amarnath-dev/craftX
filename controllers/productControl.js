@@ -73,6 +73,7 @@ module.exports.adminaddproduct_get = async (req, res) => {
 }
 
 
+
 module.exports.adminaddproduct_post = async (req, res) => {
     try {
         const { product_name, category_name, color, stock, description, prod_price } = req.body;
@@ -139,8 +140,9 @@ module.exports.admineditproduct_get = async (req, res) => {
 
 
 module.exports.admineditproduct_post = async (req, res) => {
+
     const productID = req.body.productID;
-    console.log(productID);
+   
 
     const { product_name, category_name, color, stock, description, prod_price, status } = req.body;
 
@@ -253,26 +255,27 @@ module.exports.admineditproduct_post = async (req, res) => {
 
 
 
-
 module.exports.admindeleteproduct_post = async (req, res) => {
-    console.log("Admin reached product check");
+
     const deleteID = req.params.productId;
 
+
     try {
-        const deleteProduct = await Product.findByIdAndUpdate({ _id: deleteID },
+        const deleteProduct = await Product.findByIdAndUpdate(deleteID,
             { $set: { is_delete: true } });
-        console.log(deleteProduct);
 
         if (!deleteProduct) {
             return res.status(400).send("Something went Wrong");
         }
 
-        res.redirect('/admin/products');;
+        res.status(200).json({ message: "Product Deleted Successfully" });
     } catch (error) {
         console.log(error.message);
     }
-
 }
+
+
+
 
 module.exports.admin_edit_delete_image_get = async (req, res) => {
 

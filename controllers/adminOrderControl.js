@@ -14,8 +14,7 @@ function formatDate(date) {
 
 module.exports.adminOrders_get = async (req, res) => {
     try {
-        const allOrders = await Order.find().populate('userID');
-   
+        const allOrders = await Order.find().populate('userID').sort({orderDate: -1})
 
         if (allOrders) {
             const orderDetails = [];
@@ -41,7 +40,6 @@ module.exports.adminOrders_get = async (req, res) => {
                     (total, item) => total + item.quantity * item.unitPrice,
                     0
                 );
-
 
                 const customerAddress = {
                     userName: order.address.userName,
@@ -73,11 +71,13 @@ module.exports.adminOrders_get = async (req, res) => {
                     payment_method: order.payment_method,
                 });
             }
-        
+
             return res.render('admin/order-management', { orderDetails });
+
         } else {
             return res.status(400).json({ error: "All Orders fetch Failed" });
         }
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
@@ -86,13 +86,12 @@ module.exports.adminOrders_get = async (req, res) => {
 
 
 
+
 module.exports.adminOrderEdit_get = async (req, res) => {
 
     try {
-
         const orderId = new mongoose.Types.ObjectId(req.query.orderId);
         const productID = new mongoose.Types.ObjectId(req.query.productID);
-
 
         const order = await Order.aggregate([
             {
@@ -142,11 +141,6 @@ module.exports.adminOrderEdit_post = async (req, res) => {
 
     const { orderID, productID, newStatus } = req.body;
 
-     console.log(orderID);
-     console.log(productID);
-     console.log(newStatus);
-         
-
     try {
         await Order.findOneAndUpdate(
             { _id: orderID, 'orderItems.productID': productID },
@@ -159,3 +153,5 @@ module.exports.adminOrderEdit_post = async (req, res) => {
     }
 
 }
+
+

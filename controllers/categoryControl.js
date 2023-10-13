@@ -1,6 +1,6 @@
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
-const {formatDate} = require('../helpers/date-time-format');
+const { formatDate } = require('../helpers/date-time-format');
 
 
 //Get product coutn comes under each category
@@ -62,8 +62,6 @@ module.exports.admincategory_get = async (req, res) => {
     categoriesWithProductCount.forEach((category) => {
       category.formattedDate = formatDate(category.createdon);
     });
-
-
 
 
     res.render('admin/category', {

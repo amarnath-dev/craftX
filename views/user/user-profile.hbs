@@ -131,10 +131,31 @@
                     </div>
                 </div>
 
+                <div class="d-flex border rounded" style="width: 297px;">
+                    <small style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" class="mt-1">My Referal Code : </small>
+                    <input type="text" class="border rounded" value="{{userDetails.referalCode}}" disabled name="referalCode" id="" style="padding-left: 10px;"> 
+                </div>
+
                 <hr>
 
-            </div>
+                <div class="card" style="width: 18rem; height: 15rem;">
+                    {{!-- <img class="card-img-top" src="..." alt="Card image cap"> --}}
+                    <div class="card-body">
+                        <h5 class="card-title">My Wallet</h5>
+                        <hr>
+                        <p class="card-text" style="font-size: 22px;margin-left: 40px;"> Current Balance </p>
+                        <p style="margin-left: 60px; color: green; font-size: 30px;">
+                            RS.<strong>{{userDetails.wallet}}</strong></p>
+                        <a href="/" class="btn btn-primary mt-2" style="margin-left: 60px;">Buy Products!</a>
+                    </div>
 
+
+                </div>
+
+
+
+
+            </div>
         </div>
     </div>
 </section>

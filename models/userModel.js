@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  wallet: {
+    type: Number,
+    default: 0,
+  },
   isVerified: {
     type: Boolean,
     default: false,
@@ -31,8 +35,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  referalCode: {
+    type: String,
+  },
   address: [Address.schema],
-  
+
   cart: [
     {
       product_id: {

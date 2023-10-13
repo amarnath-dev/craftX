@@ -201,7 +201,7 @@
                                 <div class="card-header card-2">
 
 
-
+                                    <span style="color: red; font-size: 24px;" id="errorShow"></span>
 
 
                                     <div class="card text-white mt-3"
@@ -277,14 +277,24 @@
                                                 <div class="col-4">
                                                     <p class="mt-2" style="font-size: 20px;"><b>Total</b></p>
                                                 </div>
+
                                                 <div class="flex-sm-col col-auto">
+
+                                                    <p id="discountPrice" class="mb-1 mt-2"
+                                                        style="color: green; font-size: 16px;">
+                                                        <strike><b>RS.{{this.price}}</b></strike>
+
+
                                                     <p class="mb-1 mt-2" style="color: green; font-size: 20px;"
                                                         id="totalAmount">
                                                         <b>RS.{{this.price}}</b>
                                                     </p>
+
+
                                                     <input type="text" name="checkoutTotalAmt" value="{{this.price}}"
                                                         hidden disabled name="" id="cartTotalAmount">
                                                 </div>
+
                                             </div>
                                             <hr class="my-0">
                                         </div>
@@ -306,13 +316,21 @@
                                         </div>
 
 
-
                                         <div class="form-check mt-3">
                                             <input class="form-check-input" type="radio" value="Pay Online"
                                                 id="flexCheckDefault2" name="paymentType">
                                             <label class="form-check-label" for="flexCheckDefault2"
                                                 style="margin-left: 5px">
                                                 Pay Online
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mt-3">
+                                            <input class="form-check-input" type="radio" value="wallet payment"
+                                                id="flexCheckDefault2" name="paymentType">
+                                            <label class="form-check-label" for="flexCheckDefault2"
+                                                style="margin-left: 5px">
+                                                Pay Using Wallet
                                             </label>
                                         </div>
 
@@ -328,7 +346,6 @@
                                 {{/each}}
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -341,6 +358,8 @@
     <div class="card-body rounded" id="couponApply" style="position: absolute;">
 
         {{#each allCoupons}}
+        {{#unless this.status}}
+        {{#unless this.is_delete}}
         <form id="getCouponDiscount_{{this._id}}">
 
             <input type="text" value="{{this._id}}" hidden name="couponID">
@@ -356,13 +375,28 @@
                     <button class="btn btn-primary border" type="submit" style="padding: 10px">Apply</button>
                 </div>
                 <small style="margin-left: 10px;">Apply the Coupon and Enjoy!</small>
-                <a href="" class="btn" style="margin-left: 320px;">Cancel</a>
+
+                <div class="couponRemoveBtn mb-2">
+                    <a onclick="refreshPage()"
+                        style="background-color: transparent; border: none;margin-left: 370px;"><i
+                            class="fa-solid fa-trash" style="color: black; font-size: 20px;"></i></a>
+                </div>
+
             </div>
         </form>
+        {{/unless}}
+        {{/unless}}
         {{/each}}
     </div>
 </div>
 
+
+{{!-- code for displaying the wallet --}}
+<div style="position: absolute;" id="wallet_price">
+    <span>Wallet Balance :</span>
+    <input type="text" value="{{getUser.wallet}}" id="walletAmount" disabled class="border border-dark rounded"
+        style="width: 120px; font-size: 20px; color: green;">
+</div>
 
 
 
@@ -371,6 +405,9 @@
 
     $(document).ready(() => {
         $('.checkOut-editAddress').hide();
+        $('#discountPrice').hide();
+        $('.couponRemoveBtn').hide();
+
 
         $('.editBtn').on('click', function () {
             const editForm = $(this).closest('.card-body').find('.checkOut-editAddress');
@@ -393,12 +430,14 @@
 
 
     const couponFormsContainer = document.getElementById('couponFormsContainer');
+    const errorShow = document.getElementById('errorShow');
 
     couponFormsContainer.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        errorShow.textContent = '';
+
         const totalAmount = document.getElementById('cartTotalAmount').value;
-        console.log("This is total amount", totalAmount);
 
         const form = e.target;
 
@@ -406,6 +445,11 @@
         appliedCouponID = couponID;
         const coupon_code = form.querySelector('[name="coupon_code"]').value;
         const discountValue = form.querySelector('[name="discountValue"]').value;
+
+        if (!coupon_code) {
+            errorShow.textContent = "Please Select Enter a Coupon Code"
+            return;
+        }
 
         try {
             const result = await fetch('/my-cart/check-out/get-coupon', {
@@ -418,6 +462,9 @@
                 const data = await result.json();
                 console.log("Discounted Amount:", data.discountAmt);
                 couponDiscountAmt = data.discountAmt;
+
+                //Now show the Delete Btn
+                $('.couponRemoveBtn').show();
 
                 //Swal message
                 Swal.fire({
@@ -437,6 +484,7 @@
                 }
 
                 //UI updation here
+                $('#discountPrice').show();
                 $('#couponApply').hide();
             } else {
                 Swal.fire({
@@ -445,13 +493,10 @@
                     text: 'Please check the coupon code and try again.',
                 });
             }
-
         } catch (error) {
             console.log(error);
         }
     });
-
-
 
 
     //Check Out Router
@@ -463,6 +508,23 @@
             const paymentCheckboxes = $('input[name="paymentType"]:checked');
             const totalAmount = document.getElementById('cartTotalAmount').value;
 
+            //Using this in a higher scope so belove code can access it
+            const paymentType = [];
+
+            paymentCheckboxes.each(function () {
+                if ($(this).prop('checked')) {
+                    paymentType.push($(this).val());
+                }
+            });
+
+
+            if (paymentCheckboxes.length === 0) {
+                Swal.fire({
+                    title: "Select a Payment Method",
+                    text: "Please Select a Payment Method",
+                });
+            }
+
             if (selectedCheckbox.length === 0) {
                 Swal.fire({
                     title: "Select a Delivery Address",
@@ -470,19 +532,12 @@
                 });
             }
 
+
             var productID = $('#productId').val();
 
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
-                //console.log(orderAddressID);
 
-                const paymentType = [];
-
-                paymentCheckboxes.each(function () {
-                    if ($(this).prop('checked')) {
-                        paymentType.push($(this).val());
-                    }
-                });
                 Swal.fire({
                     title: 'Confirm Order',
                     text: 'Are you sure you want to confirm the order?',
@@ -492,6 +547,22 @@
                     cancelButtonText: 'No, cancel',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        if (paymentType.includes("wallet payment")) {
+
+                            const totalAmount = parseInt(document.getElementById('cartTotalAmount').value);
+                            const walletAmount = parseInt(document.getElementById('walletAmount').value);
+
+                            if (totalAmount > walletAmount) {
+                                Swal.fire({
+                                    title: "Not Enough Money",
+                                    text: "Please add some money to the wallet and Try Again",
+                                    icon: "warning",
+                                });
+                                return;
+                            }
+                        }
+
+                        //sending the ajax request to the server.
                         $.ajax({
                             type: 'POST',
                             url: '/check-out',
@@ -567,21 +638,23 @@
                     }
                 });
             }
-
             var rzp1 = new Razorpay(options);
             rzp1.open();
             rzp1.on('payment.failed', function (response) {
                 location.assign('/failed')
-                //alert(response.error.code);
-                //alert(response.error.description);
-                //alert(response.error.source);
-                //alert(response.error.step);
-                //alert(response.error.reason);
-                //alert(response.error.metadata.order_id);
-                //alert(response.error.metadata.payment_id);
             });
         }
     });
+
+    //refreshing the page when coupon cancel btn is clicked
+    function refreshPage() {
+        Swal.fire({
+            title: "Remove Coupon",
+            text: "Are You Sure You want to remove the Coupon Benefits?",
+        }).then(() => {
+            location.reload();
+        });
+    }
 
 </script>
 
@@ -723,9 +796,6 @@
         }
     }
 
-
-
-
     input,
     textarea {
         border: 1px solid #eeeeee;
@@ -786,5 +856,10 @@
     input[type="number"] {
         -moz-appearance: textfield;
         -webkit-appearance: none;
+    }
+
+    #wallet_price {
+        top: 500px;
+        left: 900px;
     }
 </style>

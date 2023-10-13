@@ -93,6 +93,7 @@ module.exports.salesInvoice_get = async (req, res) => {
 
 
 module.exports.salesInvoice_post = async (req, res) => {
+    
     const orderID = req.query.orderId;
     const productID = req.query.productID;
 

@@ -3,11 +3,11 @@ const User = require('../models/userModel');
 const Otp = require('../models/otpModel');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const cookie = require('cookie');
-const session = require('express-session');
-const { checkAuth } = require('../middlewares/authMiddleware');
 const Product = require('../models/productModel');
 const { decodeJwt } = require('../helpers/jwtDecode');
+const Banner = require('../models/bannerModel');
+const { generateReferralCode } = require('../helpers/referalCode');
+
 
 //Create the token
 const maxAge = 3 * 24 * 60 * 60;
@@ -17,10 +17,12 @@ const createToken = (id) => {
   });
 }
 
+
 //otp number generating 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
+
 
 // //Email Sending Function (verification using link when user signs up)
 
@@ -62,7 +64,10 @@ const generateOTP = () => {
 // }
 
 
+
 //Sending forgot password Otp Number(email that sends the otp number)
+
+
 const sendEmailotp = async (fullname, email, userID) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -119,6 +124,8 @@ module.exports.get_home = async (req, res) => {
   try {
     const allproducts = await Product.find();
 
+    const allBanner = await Banner.find();
+
     if (!allproducts) {
       return res.status(404).send("No products found");
     }
@@ -128,8 +135,7 @@ module.exports.get_home = async (req, res) => {
       var getProductCount = getUser.cart.length;
     }
 
-    console.log("This is all products", allproducts);
-    res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount });
+    res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount, allBanner });
 
   } catch (error) {
     console.log(error.message);
@@ -153,21 +159,44 @@ module.exports.get_login = (req, res) => {
 module.exports.post_signup = async (req, res) => {
 
   req.session.userEmail = req.body.email;
-  console.log(req.session.userEmail);
 
   const newUser = new User({
     fullname: req.body.fullname,
     email: req.body.email,
     password: cryptojs.AES.encrypt(req.body.password, process.env.HASH_KEY).toString(),
     phonenumber: req.body.phonenumber,
+    referalCode: generateReferralCode(6),
   });
+
+
+  if (req.body.referalCode) {
+
+    try {
+
+      const referredUser = await User.findOne({ referalCode: req.body.referalCode });
+
+      if (referredUser) {
+        const newCartAmount = referredUser.wallet + 100;
+
+        await User.findByIdAndUpdate(referredUser._id, {$set: {wallet: newCartAmount}}, {new: true});
+
+        // return res.status(200).json({ message: "Cart amount increased by 100" });
+      } else {
+
+        // return res.status(404).json({ error: "User not found with the provided referral code" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
 
   try {
 
     try {
       //check for email exists or not 
       const emailCheck = await User.findOne({ email: req.body.email });
-      console.log(emailCheck);
 
       if (emailCheck) {
         return res.status(401).json({ error: 'Email Alredy Exists' });
@@ -180,6 +209,8 @@ module.exports.post_signup = async (req, res) => {
       if (phonenumCheck) {
         return res.status(401).json({ error: 'Phone Number Alredy Exists' });
       }
+
+
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: "Internal sever Error" });
@@ -188,13 +219,15 @@ module.exports.post_signup = async (req, res) => {
 
     const savedUser = await newUser.save();
 
+    req.session.userID = savedUser._id;
+
     //Email sending code
     sendEmailotp(req.body.fullname, req.body.email, savedUser._id);
+
 
     //Create and send a jwt token inside a cookie
     const token = createToken(savedUser._id);
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-    console.log(savedUser);
 
     res.status(200).json({ message: "Login Successfull", userID: savedUser._id })
 
@@ -206,23 +239,25 @@ module.exports.post_signup = async (req, res) => {
 
 
 
-
 // Your route for handling login
 module.exports.post_login = async (req, res) => {
+
   const { email, password } = req.body;
   try {
-    const user = await User.login(email, password);
 
+    const user = await User.login(email, password);
 
     if (user.status == false) {
       return res.status(401).json({ error: 'Account has been Blocked' });
     }
 
-    // res.status(200).json({ message: 'Login successful', user: user.email });
 
     if (user) {
       const token = createToken(user._id);
       res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+
+      //Store the user id in session
+      req.session.userID = user._id;
 
       return res.status(200).json({ user: user.email });
     }
@@ -290,7 +325,6 @@ module.exports.verify_email_get = async (req, res) => {
 }
 
 
-
 module.exports.verify_email_post = async (req, res) => {
 
   const userEmail = req.session.userEmail;
@@ -302,7 +336,7 @@ module.exports.verify_email_post = async (req, res) => {
 
   try {
     const dbOTP = await Otp.findOne({ otp: enteredOTP });
-    console.log("Inside otp verification");
+    // console.log("Inside otp verification");
 
     if (!dbOTP) {
       return res.status(401).send("Invalid OTP");
@@ -324,13 +358,11 @@ module.exports.verify_email_post = async (req, res) => {
 }
 
 
-
-
-
 //Forgot Password Route
 module.exports.get_forgetpass = (req, res) => {
   res.render('user/forgotPass');
 }
+
 
 module.exports.reset_password = async (req, res) => {
   const userEmail = req.body.email;

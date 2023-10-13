@@ -11,6 +11,9 @@ const crypto = require("crypto");
 const { generateUniqueID } = require('../helpers/codUniquePaymntID');
 const Coupon = require("../models/couponModel");
 const { checkProductStock } = require('../helpers/checkProductStock');
+const OrderReturn = require('../models/orderReturnModel');
+const pdf = require("pdf-creator-node");
+const fs = require("fs");
 
 
 
@@ -23,19 +26,17 @@ module.exports.purachasePage_get = async (req, res) => {
 
     try {
         const userAddress = await Address.find({ userId: userID });
-        // console.log(userAddress)
 
         const productDetails = await Product.find({ _id: productID });
-        // console.log(productDetails);
 
-
-        //Getting all coupons
         const allCoupons = await Coupon.find();
+
+        const getUser = await User.findById(userID);
 
 
         if (userAddress && productDetails) {
             console.log("This is product Details", productDetails);
-            return res.render('user/order-summary', { userAddress, productDetails, allCoupons });
+            return res.render('user/order-summary', { userAddress, productDetails, allCoupons, getUser });
         } else {
             return res.status(401).json({ error: "User Coudn't find" });
         }
@@ -149,7 +150,6 @@ module.exports.checkOut_editproduct_post = async (req, res) => {
 
 module.exports.cartCheck_out_get = async (req, res) => {
 
-    console.log("Inside cart check out handler")
 
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
@@ -165,6 +165,8 @@ module.exports.cartCheck_out_get = async (req, res) => {
 
     try {
         const userAddress = await Address.find({ userId: userID });
+
+        const userData = await User.findById(userID);
 
         let cartList = await User.aggregate([
             { $match: { _id: new mongoose.Types.ObjectId(userID) } },
@@ -197,7 +199,7 @@ module.exports.cartCheck_out_get = async (req, res) => {
 
 
         if (cartList.length > 0 && allCoupons) {
-            res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, allCoupons, message: 'Cart fetched successfully' });
+            res.render('user/cart-check-out', { cartList, cartCount, totalAmount, userAddress, allCoupons, userData, message: 'Cart fetched successfully' });
         } else {
             res.render('user/cart-check-out', { message: 'Cart is empty or fetch failed' });
         }
@@ -224,7 +226,7 @@ module.exports.user_confirmOrder = async (req, res) => {
         const paymentType = req.body.paymentType;
         const appliedCouponID = req.body.appliedCouponID;
         let totalAmount = req.body.totalAmount;
-   
+
 
         const productID = new mongoose.Types.ObjectId(req.body.productID);
 
@@ -234,7 +236,6 @@ module.exports.user_confirmOrder = async (req, res) => {
             const userAddress = await Address.findOne({ _id: addressID });
 
             const productDetails = await Product.findOne({ _id: productID });
-            // console.log("This is product details", productDetails);
 
             let orderData = {};
 
@@ -272,7 +273,7 @@ module.exports.user_confirmOrder = async (req, res) => {
 
             newOrder.save()
                 .then(async savedOrder => {
-                    if (newOrder.payment_method == "Cash On Delivery") {
+                    if (newOrder.payment_method === "Cash On Delivery") {
 
                         const paymentData = {
                             payment_ID: generateUniqueID(),
@@ -297,7 +298,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                             return res.status(400).json({ error: "Payment data insertion failed" })
                         }
 
-                    } else if (newOrder.payment_method == "Pay Online") {
+                    } else if (newOrder.payment_method === "Pay Online") {
 
                         //Choosed Online Payment
                         const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
@@ -314,7 +315,6 @@ module.exports.user_confirmOrder = async (req, res) => {
                                     attempts: response.attempts,
                                 }
 
-
                                 try {
                                     const savePaymentData = new Payment(paymentData).save();
 
@@ -327,6 +327,48 @@ module.exports.user_confirmOrder = async (req, res) => {
                                     return res.status(400).json({ error: "Payment Data Saved Failed" })
                                 }
                             });
+
+                    } else if (newOrder.payment_method === "wallet payment") {
+
+                        const paymentData = {
+                            payment_ID: generateUniqueID(),
+                            amount: newOrder.orderAmount,
+                            currency: "INR",
+                            payment_method: "Cash on Delivery",
+                            status: newOrder.orderItems[0].orderStatus,
+                            order_id: newOrder._id,
+                            created_at: newOrder.orderDate,
+                            attempts: 1,
+                        }
+
+
+                        try {
+
+                            const getUserwallet = await User.findById(userID);
+                            const walletAmount = getUserwallet.wallet;
+
+                            const walletUpdate = await User.findByIdAndUpdate(userID, { $set: { wallet: walletAmount - newOrder.orderAmount } }, { new: true });
+
+                            if (walletUpdate) {
+                                const savePaymentData = new Payment(paymentData).save();
+
+                                if (savePaymentData) {
+                                    const response = {
+                                        success: true,
+                                    };
+
+                                    return res.status(200).json(response);
+                                }
+
+                            }
+
+
+
+                        } catch (error) {
+                            console.log(error);
+                            return res.status(500).json({ error: "Single item order wallet data insertion failed" });
+                        }
+
 
                     } else {
                         return res.status(400).json({ error: "Please select an payment Method" });
@@ -473,7 +515,6 @@ module.exports.user_confirmOrder = async (req, res) => {
                                     attempts: response.attempts,
                                 }
 
-
                                 try {
                                     const savePaymentData = new Payment(paymentData).save();
 
@@ -487,6 +528,45 @@ module.exports.user_confirmOrder = async (req, res) => {
                                 }
                             });
 
+                    } else if (newOrder.payment_method === "wallet payment") {
+
+
+                        const paymentData = {
+                            payment_ID: "order_" + generateUniqueID(),
+                            amount: newOrder.orderAmount,
+                            currency: "INR",
+                            payment_method: "wallet payment",
+                            status: newOrder.orderItems[0].orderStatus,
+                            order_id: newOrder._id,
+                            created_at: newOrder.orderDate,
+                            attempts: 1,
+                        }
+
+
+                        try {
+
+                            const getUserwallet = await User.findById(userID);
+                            const walletAmount = getUserwallet.wallet;
+
+                            const walletUpdate = await User.findByIdAndUpdate(userID, { $set: { wallet: walletAmount - newOrder.orderAmount } }, { new: true });
+
+                            if (walletUpdate) {
+                                const savePaymentData = new Payment(paymentData).save();
+
+                                if (savePaymentData) {
+                                    const response = {
+                                        success: true,
+                                    };
+
+                                    return res.status(200).json(response);
+                                }
+
+                            }
+
+                        } catch (error) {
+                            console.log(error);
+                            return res.status(500).json({ error: "wallet payment data save failed" });
+                        }
                     } else {
                         return res.status(400).json({ error: "Please select an payment Method" });
                     }
@@ -514,7 +594,7 @@ module.exports.user_orderdetails_get = async (req, res) => {
 
     try {
 
-        const orders = await Order.find({ userID: userID }).populate('orderItems.productID');
+        const orders = await Order.find({ userID: userID }).populate('orderItems.productID').sort({ orderDate: -1 });
 
         const orderDetails = orders.map(order => ({
             _id: order._id,
@@ -535,7 +615,7 @@ module.exports.user_orderdetails_get = async (req, res) => {
             address: order.address,
         }));
 
-        console.log(orderDetails);
+        console.log("This is order details", orderDetails);
 
         if (orderDetails) {
             return res.render('user/user-order-details', { orderDetails });
@@ -594,7 +674,6 @@ module.exports.user_orderCancel_get = async (req, res) => {
 
 
 module.exports.verifyPayment_post = async (req, res) => {
-    console.log("Inside verify payment function");
 
     const payment = req.body.payment;
     const order = req.body.order;
@@ -668,8 +747,6 @@ module.exports.verifyPayment_post = async (req, res) => {
 }
 
 
-
-
 module.exports.userThankyoupage_get = (req, res) => {
     res.render('user/orderCompleteTnxPage');
 }
@@ -680,7 +757,162 @@ module.exports.userOrderFailure_get = (req, res) => {
 }
 
 module.exports.userPaymentFailure_updations = (req, res) => {
-
     console.log("Code is inside the payment failed updations section");
     console.log("This is the payment failure options passed from the front end", req.body);
+}
+
+
+module.exports.returnProduct_get = (req, res) => {
+    const productId = req.params.productId;
+}
+
+
+module.exports.returnProduct_post = async (req, res) => {
+
+    const token = req.cookies.jwt;
+    const userID = decodeJwt(token);
+
+    const productId = req.params.productId;
+
+    const orderId = req.params.orderId;
+
+    const issueDescription = req.body.issueDescription;
+
+    const returnReason = req.body.returnReason;
+
+    try {
+
+        const saveData = new OrderReturn({
+            orderId: orderId,
+            productId: productId,
+            userID: userID,
+            reason: returnReason,
+            additionalInfo: issueDescription,
+            createdDate: Date.now(),
+        })
+
+        const save = await saveData.save();
+
+        if (save) {
+            const updateStatus = await Order.findByIdAndUpdate(orderId, { $set: { is_return: true } }, { new: true });
+
+            if (updateStatus) {
+                return res.status(200).json({ message: "Return Order Data Saved Successfully" })
+            }
+        } else {
+            return res.status(400).json({ error: "Return Data saved failed" });
+        }
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+module.exports.invoicePage_get = async (req, res) => {
+
+    const orderID = req.query.orderId;
+    const productID = req.params.productId;
+
+    try {
+        const allDetails = await Order.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(orderID) }
+            },
+            {
+                $lookup: {
+                    from: 'payments',
+                    localField: '_id',
+                    foreignField: 'order_id',
+                    as: 'orderPaymentDetails',
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'orderItems.productID',
+                    foreignField: '_id',
+                    as: 'productDetails',
+                }
+            }
+        ]);
+
+        if (allDetails) {
+            console.log("this is all deails from server", allDetails)
+            return res.render('user/order-invoice', { allDetails });
+        } else {
+            return res.status(404).json({ error: "Order not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+module.exports.invoicePage_post = async (req, res) => {
+
+    const orderID = req.query.orderId;
+    const productID = req.query.productID;
+
+    try {
+        const allDetails = await Order.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(orderID) }
+            },
+            {
+                $lookup: {
+                    from: 'payments',
+                    localField: '_id',
+                    foreignField: 'order_id',
+                    as: 'orderPaymentDetails',
+                }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'orderItems.productID',
+                    foreignField: '_id',
+                    as: 'productDetails',
+                }
+            }
+        ]);
+
+
+        const html = fs.readFileSync('./views/pdf/invoice.hbs', "utf8");
+        const options = {
+            format: "A4",
+            orientation: "portrait",
+            border: "10mm",
+            header: {
+                height: "5mm",
+                contents: '<div style="text-align: center;">INVOICE</div>'
+            },
+        };
+
+
+        const document = {
+            html: html,
+            data: {
+                allDetails: allDetails,
+            },
+            path: "./invoice.pdf",
+            type: "file",
+        };
+
+
+        pdf.create(document, options).then((data) => {
+            const pdfStream = fs.createReadStream("invoice.pdf");
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader("Content-Disposition", `attachment; filename=invoice.pdf`);
+            pdfStream.pipe(res);
+            console.log("PDF sent as a download");
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send("Error generating the PDF");
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 }

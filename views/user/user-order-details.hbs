@@ -1,48 +1,86 @@
 {{>new-user-header}}
 
+
+<div>
+    <a href="/" class="btn border border-dark mt-4 btn-primary" style="margin-left: 980px;">Buy Products</a>
+</div>
+
 {{#if orderDetails}}
 {{#each orderDetails}}
 {{#each this.orderItems}}
 {{#unless this.is_Canceled}}
 <input type="text" name="orderID" value="{{../this._id}}" hidden>
-<div class="card shadow-0 border rounded-3 d-flex mt-2">
-    <div class="card-body" style="width: 700px; height: 240px; margin-left: 300px">
-        <div class="row">
-            <div class="col-md-4">
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-10">
+            <div class="row p-2 bg-white border rounded">
 
-                <div>
+                <div class="col-md-3 mt-1">
                     {{#each this.primaryImages}}
-                    <img src="/uploads/{{this}}" alt="" style="width: 100px; height: 100px; margin-top: 25px">
+                    <img class="img-fluid img-responsive rounded product-image mt-3" src="/uploads/{{this}}"
+                        style="width: 100px; height: 100px;margin-left: 20px;">
                     {{/each}}
                 </div>
-                
-            </div>
-            <div class="col-md-8">
-                <h6>{{this.productName}}</h6>
-                <p>Quantity: {{this.quantity}}</p>
-                <small>Unit Price: {{this.unitPrice}}</small>
-                <p style="font-size: large;color: green;font-weight: bold;">Amount Rs.{{../this.orderAmount}}</p>
 
-                {{!-- Taking the id which is each products unique id in orderItems array --}}
-                <input type="text" value="{{this._id}}" name="proUniqueID" hidden id="">
+                <div class="col-md-6 mt-1">
+                    <h5>{{this.productName}}</h5>
+                    <div class="d-flex flex-row">
+                        <div class="ratings mr-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                class="fa fa-star"></i><i class="fa fa-star"></i></div><span>310</span>
+                    </div>
+                    <div class="mt-1 mb-1 spec-1">
+                        <span>Quantity: {{this.quantity}}</span>
+                        <span class="dot"></span>
+                        </span><span><br></span>
+                    </div>
+                    <button class="btn border border-dark status-button mt-2" data-status="{{this.orderStatus}}"
+                        id="statusBtn-{{this._id}}">
+                        <small>{{this.orderStatus}}</small>
+                    </button>
 
-                <button class="btn border border-dark status-button" data-status="{{this.orderStatus}}"
-                    id="statusBtn-{{this._id}}">
-                    <small>{{this.orderStatus}}</small>
-                </button>
+                    <a onclick="returnItem('{{../this._id}}','{{this.productID}}')"
+                        class="returnItem btn border border-dark mt-2" data-product-id="{{this._id}}"
+                        style="display: none;">Return Item</a>
 
-                 <input type="text" value="{{this.productID}}" hidden name="" id="">
+                    <input type="text" value="{{this.productID}}" hidden name="" id="">
+                </div>
+
+                <div class="align-items-center align-content-center col-md-3 border-left">
+                    <div class="d-flex flex-row align-items-center">
+                        <h4 class="mr-1" style="color: green; margin-left: 75px;">{{this.unitPrice}}</h4><span
+                            class="strike-text"></span>
 
 
-                <div class="d-flex flex-row mt-3">
-                    <a href="/view-product/{{this.productID}}">
-                        <button class="btn btn-primary btn-sm" type="button">Details</button>
-                    </a>
+                        {{!-- invoice download route --}}
+                        <div style="margin-left: 50px;" class="invoicePrinticon">
+                            <a id="invoiceLink-{{../this._id}}"
+                                href="/profile/my-orders/getInvoice?orderId={{../this._id}}&productId={{this.productID}}">
+                                <span class="material-symbols-outlined" style="font-size: 30px;">
+                                    print
+                                </span>
+                            </a>
+                        </div>
 
-                    <button class="btn btn-danger btn-sm cancel-button" type="button"
-                        data-product-id="{{this.productID}}" data-order-id="{{this._id}}"
-                        style="margin-left: 40px;">Cancel</button>
 
+                    </div>
+
+
+                    {{!-- Taking the id which is each products unique id in orderItems array --}}
+                    <input type="text" value="{{../this._id}}" name="proUniqueID" hidden id="">
+
+
+                    {{!-- <h6 class="text-success">Free shipping</h6> --}}
+
+                    <div class="d-flex flex-column mt-4 btn btn-sm">
+                        <a href="/view-product/{{this.productID}}">
+                            <button class="btn btn-primary btn-sm" type="button">Details</button>
+                        </a>
+
+
+                        <button class="btn btn-danger btn-sm cancel-button mt-2" type="button"
+                            data-product-id="{{this.productID}}" data-order-id="{{this._id}}">Cancel</button>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,12 +92,68 @@
 {{/if}}
 
 
-{{>user-footer}}
+
+<div style="position: absolute; background-color: rgb(240, 236, 236)" id="returnReasonForm">
+
+    <form id="returnReasonFormsubmit">
+        <h3 class="form-header">Why Are You Returning the Order?</h3>
+        <hr>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="returnReason" value="Product Quality Issue"
+                id="qualityIssue">
+            <label class="form-check-label" for="qualityIssue">
+                Product Quality Issue
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="returnReason" value="Got Damaged When Received the Item"
+                id="damagedOnReceipt">
+            <label class="form-check-label" for="damagedProduct">
+                Got Damaged When Received the Item
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="returnReason" value=" The Color is Not Matching"
+                id="colorMismatch">
+            <label class="form-check-label" for="colorMissmatch">
+                The Color is Not Matching
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="returnReason" value="Product Not Working"
+                id="notWorking">
+            <label class="form-check-label" for="notWorking">
+                Product Not Working
+            </label>
+        </div>
+
+        <div class="form-outline mb-4" id="textAreaInput">
+            <label class="form-label" for="form4Example3">Tell Us More About the Issue</label>
+            <textarea class="form-control" id="issueDescription" name="returnReason" rows="4"></textarea>
+        </div>
+
+        <a href="#" class="returnItem btn border border-dark btn-primary mt-2" id="formSubmitClick"
+            data-product-id="{{this._id}}">Return Item</a>
+
+        <a href="/profile/my-orders" class="returnItem btn border border-dark btn-warning mt-2"
+            id="formSubmitClick">Cancel</a>
+
+    </form>
+</div>
+
+
+{{>new-user-footer}}
 
 
 <script>
 
     $(document).ready(function () {
+        $('.invoicePrinticon').hide();
+        $('.returnText').hide();
         $('.cancel-button').click(function () {
 
             const productID = $(this).data('product-id');
@@ -99,9 +193,81 @@
                 }
             });
         });
-    });
-</script>
 
+
+
+        const statusButtons = $('.status-button');
+        statusButtons.each(function () {
+            const statusValue = $(this).text().trim();
+
+
+            if (statusValue.toLowerCase() === 'delivered') {
+                $(this).siblings('.returnItem').show();
+
+                $('.invoicePrinticon').show();
+            }
+        });
+    });
+
+
+    function returnItem(orderId, productId) {
+        Swal.fire({
+            title: "Return Order",
+            text: "Are you Sure you want to return this product ?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Yes , Return',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                removeOrder(orderId, productId);
+            }
+        })
+    }
+
+    function removeOrder(orderId, productId) {
+        const reasonForm = document.getElementById('returnReasonForm')
+        reasonForm.style.display = 'block';
+
+        $('#formSubmitClick').on('click', function () {
+            submitReasonForm(orderId, productId);
+
+        })
+    }
+
+    function submitReasonForm(orderId, productId) {
+        const returnReason = document.querySelector('input[name="returnReason"]:checked').value;
+        const issueDescription = document.getElementById('issueDescription').value;
+
+        $.ajax({
+            url: '/my-orders/returnItem/' + orderId + '/' + productId,
+            method: "POST",
+            data: {
+                returnReason: returnReason,
+                issueDescription: issueDescription
+            },
+            success: (response) => {
+                if (response.message) {
+                    Swal.fire({
+                        title: "Return Successful",
+                        text: "Product Return Confirmed",
+                        icon: "success",
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
+            },
+            error: (error) => {
+                console.log("Error:", error);
+                Swal.fire({
+                    title: "Return Failed",
+                    text: "There was an error while processing your return request.",
+                    icon: "error",
+                });
+            },
+        });
+    }
+
+</script>
 
 
 
@@ -119,5 +285,33 @@
         padding-bottom: 3px;
         background-color: white;
         border-color: green;
+    }
+
+    #returnReasonForm {
+        width: 700px;
+        top: 100px;
+        left: 300px;
+        display: none;
+    }
+
+    .form-header {
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+
+    #textAreaInput {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 35px;
+    }
+
+    .form-check {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+    #formSubmitClick {
+        margin-bottom: 10px;
+        margin-left: 20px;
     }
 </style>

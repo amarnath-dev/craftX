@@ -5,16 +5,18 @@ const User = require('../models/userModel');
 const mongoose = require('mongoose');
 const { getCartCount } = require('../helpers/cart-product-count');
 const Product = require('../models/productModel');
-const {cartCountCheck} = require('../helpers/checkUserCartCount');
+const { cartCountCheck } = require('../helpers/checkUserCartCount');
 
 
 
-module.exports.usercart_post = async (req, res) => {
-
+module.exports.usercart_get = async (req, res) => {
 
     const token = req.cookies.jwt;
-    const productID = req.params.productID;
     const userID = decodeJwt(token);
+
+    console.log("This is users unique id",userID);
+
+    const productID = req.params.productID;
 
     try {
         const getUser = await User.findById(userID);
@@ -97,12 +99,12 @@ module.exports.mycart_get = async (req, res) => {
         }
 
         if (cartList.length > 0) {
-            console.log("This is the cart List",cartList);
+            console.log("This is the cart List", cartList);
             res.render('user/my-cart', { cartList, cartCount, totalAmount, message: 'Cart fetched successfully' });
         } else {
             res.render('user/my-cart', { message: 'Cart is empty or fetch failed' });
         }
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal Server Error" });
@@ -154,9 +156,9 @@ module.exports.usercartInc_get = async (req, res) => {
 
     //Get the current cart Count and return if count > 5
     const cartCount = await cartCountCheck(userID, productID);
-    if(cartCount) {
-        if(cartCount > 4) {
-            res.json({message: "Reached Limit"});
+    if (cartCount) {
+        if (cartCount > 4) {
+            res.json({ message: "Reached Limit" });
             return;
         }
     }
@@ -170,7 +172,7 @@ module.exports.usercartInc_get = async (req, res) => {
             );
             res.json({ status: true });
         } else {
-            res.json({status: false});
+            res.json({ status: false });
         }
     } catch (error) {
         console.log("Count update failed");

@@ -24,7 +24,7 @@
                 <span class="fw-bold">Select secondary images <br> <span class="fw-normal text-success">*maximum of 3
                         images only accepts</span></span>
                 <input type="file" class="form-control FilUploader" accept=".jpg,.jpeg,.png" name="images" class="mb-3"
-                    multiple style="margin-top: 5px;" />
+                    multiple style="margin-top: 5px;" id="secondaryImages" />
             </div>
             <div class="form-floating my-2 me-md-5">
                 <label class="form-label fw-bold" for="form4Example3">Description</label>
@@ -101,45 +101,82 @@
             let file = e.target.files[0]
             $('.btn-grp').toggle()
             if (file) {
-                // Create a new FileReader to read the selected image file
-                var reader = new FileReader(file);
-                reader.onload = function (event) {
-                    // Set the source of the image element in the Cropper container
-                    document.getElementById('image').src = event.target.result;
-                    // Initialize Cropper.js with the updated image source
-                    let cropper = new Cropper(image, {
-                        aspectRatio: 5 / 5,
-                        viewMode: 0,
-                        autoCrop: true,
-                        background: false,
-                    })
 
-                    $('#cropImageBtn').on('click', function () {
-                        var cropedImg = cropper.getCroppedCanvas()
-                        if (cropedImg) {
-                            cropedImg = cropedImg.toDataURL('image/png')
+                const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-                            document.getElementById('prev').src = cropedImg
-                            document.getElementById('result').value = cropedImg
-                            container.style.display = "none"
+                if (allowedImageTypes.includes(file.type)) {
 
-                            $('.btn-grp').toggle()
-                        }
-                        cropper.destroy();
-                    })
-                };
-                reader.readAsDataURL(file);
+                    // Create a new FileReader to read the selected image file
+                    var reader = new FileReader(file);
+                    reader.onload = function (event) {
+                        // Set the source of the image element in the Cropper container
+                        document.getElementById('image').src = event.target.result;
+                        // Initialize Cropper.js with the updated image source
+                        let cropper = new Cropper(image, {
+                            aspectRatio: 5 / 5,
+                            viewMode: 0,
+                            autoCrop: true,
+                            background: false,
+                        })
+
+                        $('#cropImageBtn').on('click', function () {
+                            var cropedImg = cropper.getCroppedCanvas()
+                            if (cropedImg) {
+                                cropedImg = cropedImg.toDataURL('image/png')
+
+                                document.getElementById('prev').src = cropedImg
+                                document.getElementById('result').value = cropedImg
+                                container.style.display = "none"
+
+                                $('.btn-grp').toggle()
+                            }
+                            cropper.destroy();
+                        })
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    Swal.fire({
+                        title: 'Invalid File Type',
+                        text: 'Only image files (JPEG, JPG, PNG, WebP) are allowed.',
+                        icon: 'error'
+                    });
+                 
+                    e.target.value = '';
+                }
+            }
+        });
+
+
+        $('#secondaryImages').on('change', (e) => {
+            let files = e.target.files;
+            let invalidFiles = [];
+
+            // Check each selected file for allowed image types
+            const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+            for (let i = 0; i < files.length; i++) {
+                if (!allowedImageTypes.includes(files[i].type)) {
+                    invalidFiles.push(files[i].name);
+                }
             }
 
-
-        })
+            if (invalidFiles.length > 0) {
+                // Show a SweetAlert message for invalid file types in secondaryImages
+                Swal.fire({
+                    title: 'Invalid File Type',
+                    text: 'The following files are not allowed: ' + invalidFiles.join(', '),
+                    icon: 'error'
+                });
+                // Clear the input to prevent submitting invalid files
+                e.target.value = '';
+            }
+        });
 
         $('.change-file').on('click', function () {
             let input = document.getElementById('banner-image')
             input.value = ''
             input.style.display = 'block'
         })
-
 
 
         $('#newProduct').on('click', function (e) {
@@ -161,17 +198,17 @@
             const file = new File([blob], 'image.png', { type: 'image/png' });
             formData.append('primaryImage', file);
 
-           fetch('/admin/products/newproduct', {  
+            fetch('/admin/products/newproduct', {
                 method: 'POST',
                 body: formData,
             }).then(response => {
                 if (response.ok) {
                     Swal.fire({
                         title: "Product Added",
-                        text:"Product Added Successfully",
+                        text: "Product Added Successfully",
                         icon: "success",
-                    }).then(()=> {
-                      location.assign('/admin/products')
+                    }).then(() => {
+                        location.assign('/admin/products')
                     });
                 } else {
                     console.log("Request failed terrible");
