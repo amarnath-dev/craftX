@@ -1,91 +1,102 @@
+{{>admin-navbar}}
+
+
 <section>
-   <nav class="navbar navbar-expand-lg bg-primary-subtle">
-      <div class="container-fluid" style="height: 50px;">
-         <a class="navbar-brand" href="">CraftX</a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-         </button>
-         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            {{!-- <form class="d-flex" role="search">
-               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-               <button class="btn btn-outline-success" type="submit" style="margin-right: 10px;">Search</button>
-            </form> --}}
+
+   <div class="container-fluid">
+      <div class="row">
+
+
+         {{>admin-left-menue}}
+
+         <div class="col-md-8 " style="width: 1000px;">
+
+            <section class="category d-flex mt-2">
+               <div class="object-fit-contain mt-3" style="width: 100%;">
+                  <div class="header d-flex justify-content-between">
+                     <h3 class="h3 text-second fw-bold mb-3">DashBoard</h3>
+                  </div>
+
+                  <div class="d-flex mb-4">
+
+                     <div class="card bg-success" style="width: 18rem; height: 8rem;">
+                        <div class="card-body">
+                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                              of
+                              the card's content.</p>
+                        </div>
+                     </div>
+                     <div class="card bg-warning" style="width: 18rem; margin-left: 2rem;" >
+                     
+                        <div class="card-body">
+                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                              of
+                              the card's content.</p>
+                        </div>
+                     </div>
+                     <div class="card bg-primary" style="width: 18rem; margin-left: 2rem;">
+                       
+                        <div class="card-body">
+                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                              of
+                              the card's content.</p>
+                        </div>
+                     </div>
+                     <hr>
+
+                  </div>
+
+                  <div class="canvas-container">
+                     <canvas id="myChart">
+
+                     </canvas>
+                  </div>
+
+               </div>
+            </section>
          </div>
       </div>
-   </nav>
-</section>
-
-
-<section>
-   <div style="width: 800px;">
-      <canvas id="acquisitions">
-      </canvas>
+   </div>
    </div>
 </section>
 
 
-{{>admin-left-menue}}
-
-
 <script>
-   import Chart from 'chart.js/auto'
-
-   (async function () {
-      const data = [
-         { year: 2010, count: 10 },
-         { year: 2011, count: 20 },
-         { year: 2012, count: 15 },
-         { year: 2013, count: 25 },
-         { year: 2014, count: 22 },
-         { year: 2015, count: 30 },
-         { year: 2016, count: 28 },
-      ];
-
-      new Chart(
-         document.getElementById('acquisitions'),
+   const data = {
+      labels: ['January', 'February', 'March', 'April', 'May','June','July','August','September','November','December'],
+      datasets: [
          {
-            type: 'bar',
-            data: {
-               labels: data.map(row => row.year),
-               datasets: [
-                  {
-                     label: 'Acquisitions by year',
-                     data: data.map(row => row.count)
-                  }
-               ]
-            }
-         }
-      );
-   })();
+            label: 'Sample Data',
+            data: [12, 19, 3, 5, 2,10,25,5,8,15,5,8],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+         },
+      ],
+   };
+
+   const config = {
+      type: 'bar',
+      data: data,
+      options: {
+         scales: {
+            y: {
+               beginAtZero: true,
+            },
+         },
+      },
+   };
+
+   const myChart = new Chart(document.getElementById('myChart'), config);
 
 </script>
 
 
-<style>
-   .section {
-      margin-top: 50px;
-      width: 350px;
-   }
 
+
+<style>
    a {
       text-decoration: none;
-      margin-left: 50px;
-   }
-
-   i {
-      margin-right: 25px;
-   }
-
-   .logout_btn {
-      margin-top: 100px;
-      margin-left: 120px;
-      border: 1px solid black;
-      background-color: rgb(231, 126, 126);
-   }
-
-   .collapse {
-      margin-left: 700px;
-      border-radius: 20px;
+      margin-left: 10px;
    }
 </style>
