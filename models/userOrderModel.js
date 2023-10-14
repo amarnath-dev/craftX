@@ -56,6 +56,10 @@ const orderSchema = new mongoose.Schema({
                 type: Boolean,
                 default: false,
             },
+            order_item_date: {
+                type: Date,
+                default: Date.now,
+            },
         },
     ],
     totalProductCount: {

@@ -9,6 +9,7 @@ const adminSalesControl = require('../controllers/adminSalesControl');
 const adminCouponControl = require('../controllers/adminCouponControl');
 const adminBannerControl = require('../controllers/adminBannerControl')
 const adminOrderReturnControl = require('../controllers/adminOrderReturnControl');
+const adminHomeControl = require('../controllers/adminHomeControl');
 const upload = require('../middlewares/multer');
 const { checkAuthadmin } = require('../middlewares/authMiddleware');
 
@@ -78,7 +79,7 @@ router.get('/orders/editOrder', adminOrderControl.adminOrderEdit_get);
 router.post('/orders/editOrder', adminOrderControl.adminOrderEdit_post);
 
 // Sales Report Routes
-router.get('/sales-report',adminSalesControl.salesPage_get);
+router.get('/sales-report', adminSalesControl.salesPage_get);
 router.get('/sales-report/getInvoice', adminSalesControl.salesInvoice_get);
 router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 
@@ -98,9 +99,9 @@ router.get('/coupons/delete-coupon/:couponID', adminCouponControl.deleteCoupon_g
 //Banner Management
 router.get('/banner', adminBannerControl.banner_get);
 router.get('/banner/newBanner', adminBannerControl.newBanner_get);
-router.post('/banner/newBanner',upload.fields([ { name: 'bannerImage' } ]), adminBannerControl.newBanner_post);
+router.post('/banner/newBanner', upload.fields([{ name: 'bannerImage' }]), adminBannerControl.newBanner_post);
 router.get('/banner/editBanner/:bannerId', adminBannerControl.bannerEdit_get);
-router.post('/banner/editBanner',upload.fields([ { name: 'bannerImage' } ]),adminBannerControl.bannerEdit_post);
+router.post('/banner/editBanner', upload.fields([{ name: 'bannerImage' }]), adminBannerControl.bannerEdit_post);
 router.get('/banner/deleteBanner/:bannerId', adminBannerControl.bannerDelete_get)
 
 
@@ -108,6 +109,10 @@ router.get('/banner/deleteBanner/:bannerId', adminBannerControl.bannerDelete_get
 router.get('/orderReturn', adminOrderReturnControl.adminOrderReturnControl);
 router.get('/orderReturn/approve/:returnReqId', adminOrderReturnControl.orderApprove_get)
 router.get('/orderReturn/reject/:returnReqId', adminOrderReturnControl.orderReject_get)
+
+
+router.get('/get-sales-data', adminHomeControl.adminchart_get)
+
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)

@@ -17,39 +17,57 @@
                      <h3 class="h3 text-second fw-bold mb-3">DashBoard</h3>
                   </div>
 
-                  <div class="d-flex mb-4">
-
-                     <div class="card bg-success" style="width: 18rem; height: 8rem;">
-                        <div class="card-body">
-                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                              of
-                              the card's content.</p>
-                        </div>
-                     </div>
-                     <div class="card bg-warning" style="width: 18rem; margin-left: 2rem;" >
-                     
-                        <div class="card-body">
-                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                              of
-                              the card's content.</p>
-                        </div>
-                     </div>
-                     <div class="card bg-primary" style="width: 18rem; margin-left: 2rem;">
-                       
-                        <div class="card-body">
-                           <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                              of
-                              the card's content.</p>
-                        </div>
-                     </div>
-                     <hr>
-
-                  </div>
-
                   <div class="canvas-container">
                      <canvas id="myChart">
 
                      </canvas>
+                  </div>
+
+
+                  <div class="d-flex mt-3">
+                     <div class="card-container">
+                        <h4>Orders Today</h4>
+                        <div class="card bg-success" style="width: 18rem; height: 3rem;">
+                           <div class="card-body"></div>
+                        </div>
+                     </div>
+
+                     <div class="card-container">
+                        <h4 style="margin-left: 30px;">Orders this Month</h4>
+                        <div class="card bg-warning" style="width: 18rem; height: 3rem; margin-left: 2rem;">
+                           <div class="card-body"></div>
+                        </div>
+                     </div>
+
+                     <div class="card-container">
+                        <h4 style="margin-left: 30px;">Orders this Year</h4>
+                        <div class="card bg-primary" style="width: 18rem; height: 3rem; margin-left: 2rem;">
+                           <div class="card-body"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <hr>
+
+
+
+                  <div class="d-flex mb-4 mt-4">
+                     <div class="card bg-success" style="width: 18rem; height: 8rem;">
+                        <div class="card-body">
+                           <h4>Total Amount</h4>
+                        </div>
+                     </div>
+                     <div class="card bg-warning" style="width: 18rem; margin-left: 2rem;">
+                        <div class="card-body">
+                           <h4>Total Amount</h4>
+                        </div>
+                     </div>
+                     <div class="card bg-primary" style="width: 18rem; margin-left: 2rem;">
+
+                        <div class="card-body">
+                           <h4>Total Amount</h4>
+                        </div>
+                     </div>
+                     <hr>
                   </div>
 
                </div>
@@ -62,34 +80,63 @@
 
 
 <script>
-   const data = {
-      labels: ['January', 'February', 'March', 'April', 'May','June','July','August','September','November','December'],
-      datasets: [
-         {
-            label: 'Sample Data',
-            data: [12, 19, 3, 5, 2,10,25,5,8,15,5,8],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-         },
-      ],
-   };
+   $(document).ready(async () => {
+      try {
+         const response = await fetch('/admin/get-sales-data', {
+            method: 'GET',
+         });
 
-   const config = {
-      type: 'bar',
-      data: data,
-      options: {
-         scales: {
-            y: {
-               beginAtZero: true,
+         if (response.ok) {
+            const fetchedData = await response.json();
+            console.log("Fetched data from the server", fetchedData);
+
+            createChart(fetchedData);
+         } else {
+            console.error('Data fetch failed', response.status);
+         }
+      } catch (error) {
+         console.error('Error:', error);
+      }
+   });
+
+
+   function createChart(data) {
+      const chartData = {
+         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+         datasets: [
+            {
+               label: 'Sample Data',
+               data: data,
+               backgroundColor: 'rgba(75, 192, 192, 0.2)',
+               borderColor: 'rgba(75, 192, 192, 1)',
+               borderWidth: 1,
+            },
+         ],
+      };
+
+      const config = {
+         type: 'bar',
+         data: chartData,
+         options: {
+            scales: {
+               y: {
+                  beginAtZero: true,
+               },
             },
          },
-      },
-   };
+      };
 
-   const myChart = new Chart(document.getElementById('myChart'), config);
+      const canvas = document.getElementById('myChart');
+      if (canvas) {
+         const ctx = canvas.getContext('2d');
+         new Chart(ctx, config);
+      } else {
+         console.error('Canvas element not found.');
+      }
+   }
 
 </script>
+
 
 
 
