@@ -28,21 +28,23 @@
                      <div class="card-container">
                         <h4>Orders Today</h4>
                         <div class="card bg-success" style="width: 18rem; height: 3rem;">
-                           <div class="card-body"></div>
+                           <div class="card-body">
+                              <h4 id="todayOrders" class="smallbox" style="color: white;"></h4>
+                           </div>
                         </div>
                      </div>
 
                      <div class="card-container">
                         <h4 style="margin-left: 30px;">Orders this Month</h4>
                         <div class="card bg-warning" style="width: 18rem; height: 3rem; margin-left: 2rem;">
-                           <div class="card-body"></div>
+                           <h4 id="thisMonth" class="smallbox" style="color: white;"></h4>
                         </div>
                      </div>
 
                      <div class="card-container">
                         <h4 style="margin-left: 30px;">Orders this Year</h4>
                         <div class="card bg-primary" style="width: 18rem; height: 3rem; margin-left: 2rem;">
-                           <div class="card-body"></div>
+                           <h4 id="thisYear" class="smallbox" style="color: white;"></h4>
                         </div>
                      </div>
                   </div>
@@ -53,18 +55,20 @@
                   <div class="d-flex mb-4 mt-4">
                      <div class="card bg-success" style="width: 18rem; height: 8rem;">
                         <div class="card-body">
-                           <h4>Total Amount</h4>
+                           <h4>Total Revenue</h4>
+                           <h3 id="totalRevenue" style="color: white;"></h3>
                         </div>
                      </div>
                      <div class="card bg-warning" style="width: 18rem; margin-left: 2rem;">
                         <div class="card-body">
-                           <h4>Total Amount</h4>
+                           <h4>Customers</h4>
+                           <h3 id="totalCustomers" style="color: white;"></h3>
                         </div>
                      </div>
                      <div class="card bg-primary" style="width: 18rem; margin-left: 2rem;">
-
                         <div class="card-body">
-                           <h4>Total Amount</h4>
+                           <h4>Total Products</h4>
+                           <h3 id="totalProducts" style="color: white;"></h3>
                         </div>
                      </div>
                      <hr>
@@ -88,12 +92,33 @@
 
          if (response.ok) {
             const fetchedData = await response.json();
-            console.log("Fetched data from the server", fetchedData);
 
-            createChart(fetchedData);
+            const todayOrders = document.getElementById('todayOrders')
+            todayOrders.textContent = fetchedData.todayOrders;
+
+            const thisMonth = document.getElementById('thisMonth')
+            thisMonth.textContent = fetchedData.thismonthOrders;
+
+            const thisYear = document.getElementById('thisYear')
+            thisYear.textContent = fetchedData.yearlyOrders;
+
+            const totalRevenue = document.getElementById('totalRevenue')
+            totalRevenue.textContent = fetchedData.totalSalesPrice;
+
+            const totalCustomers = document.getElementById('totalCustomers')
+            totalCustomers.textContent = fetchedData.getTotalUsers;
+
+            const totalProducts = document.getElementById('totalProducts')
+            totalProducts.textContent = fetchedData.getTotalProducts;
+
+
+            //function to create chart
+            createChart(fetchedData.monthlyOrders);
+
          } else {
             console.error('Data fetch failed', response.status);
          }
+
       } catch (error) {
          console.error('Error:', error);
       }
@@ -105,7 +130,7 @@
          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
          datasets: [
             {
-               label: 'Sample Data',
+               label: 'Order Data',
                data: data,
                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                borderColor: 'rgba(75, 192, 192, 1)',
@@ -145,5 +170,23 @@
    a {
       text-decoration: none;
       margin-left: 10px;
+   }
+
+   .smallbox {
+      margin-left: 120px;
+   }
+
+   #todayOrders {
+      margin-bottom: 10px;
+   }
+
+
+   #thisMonth {
+      margin-top: 10px;
+
+   }
+
+   #thisYear {
+      margin-top: 10px;
    }
 </style>
