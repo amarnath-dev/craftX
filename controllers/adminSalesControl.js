@@ -3,8 +3,7 @@ const Product = require('../models/productModel');
 const mongoose = require('mongoose')
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
-const path = require('path');
-const { dateFormate } = require('../helpers/date-time-format')
+
 
 module.exports.salesPage_get = async (req, res) => {
 
@@ -52,7 +51,7 @@ module.exports.salesPage_get = async (req, res) => {
 
 module.exports.salesInvoice_get = async (req, res) => {
     const orderID = req.query.orderId;
-    const productID = req.params.productID;
+    // const productID = req.params.productID;
 
     try {
         const allDetails = await Order.aggregate([
@@ -93,7 +92,7 @@ module.exports.salesInvoice_get = async (req, res) => {
 
 
 module.exports.salesInvoice_post = async (req, res) => {
-    
+
     const orderID = req.query.orderId;
     const productID = req.query.productID;
 

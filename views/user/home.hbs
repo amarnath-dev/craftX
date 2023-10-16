@@ -36,7 +36,8 @@
 
     <div class="card border" style="width: 18rem;">
 
-      <a href=""><span class="material-symbols-outlined icon" style="margin-left: 250px;">favorite</span></a>
+      <a href="#" onclick="addtoWishlist('{{this._id}}')"><span class="material-symbols-outlined icon"
+          style="margin-left: 250px;">favorite</span></a>
 
       {{#each this.primaryImage}}
       <a href="/view-product/{{../this._id}}">
@@ -112,6 +113,40 @@
       location.assign('/check-out/' + productID);
     }
   }
+
+
+  function addtoWishlist(productID) {
+
+    $.ajax({
+      url: '/my-wishlist/' + productID,
+      method: 'GET',
+    }).then(response => {
+      if (response.message) {
+        Swal.fire({
+          title: "Product Added",
+          text: "Product Added to Wishlist Successfully",
+          icon: "success",
+        }).the(() => {
+          console.log("Product Get Successfull");
+        })
+      } else if (response.exists) {
+        Swal.fire({
+          title: "Product Alredy Exists",
+          text: "Product is Alredy Present In Wishlist",
+        }).then(() => {
+          console.log("Product Alredy Exists in Wishlist");
+        });
+      } else {
+        Swal.fire({
+          title: "Product Add Failed",
+          text: "Something Went Wrong. Please Try Again",
+          icon: "error",
+        });
+      }
+    })
+  }
+
+
 
 </script>
 

@@ -6,6 +6,7 @@ const userCartControl = require('../controllers/userCartControl');
 const userProductControl = require('../controllers/userProductControl')
 const userOrderControl = require('../controllers/userOrderControl');
 const userCouponControl = require('../controllers/userCouponControl');
+const userWishlistControl = require('../controllers/userWishlistControl')
 const { checkAuth } = require('../middlewares/authMiddleware');
 
 
@@ -115,9 +116,16 @@ router.get('my-orders/returnItem/:productID', userOrderControl.returnProduct_get
 router.post('/my-orders/returnItem/:orderId/:productId', userOrderControl.returnProduct_post);
 
 
-
 router.get('/profile/my-orders/getInvoice', userOrderControl.invoicePage_get)
 router.get('/profile/my-orders/postInvoice', userOrderControl.invoicePage_post)
+
+
+router.get('/my-wishlist/:productID', userWishlistControl.userWishlist_add);
+
+router.get('/wishlist', userWishlistControl.userWishlist_get)
+router.get('/wishlist/removeItem/:productID', userWishlistControl.wishlistDelete_get)
+router.get('/wishlist/move-to-cart/:productID', userWishlistControl.moveToCart_get);
+
 
 module.exports = router;
 

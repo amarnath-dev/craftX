@@ -1,0 +1,147 @@
+{{>new-user-header}}
+
+{{#if getWishlistData}}
+{{#each getWishlistData}}
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-10">
+            <div class="row p-2 bg-white border rounded">
+
+                {{#each this.productDetails}}
+                <div class="col-md-3">
+
+                    <img class="img-fluid img-responsive rounded product-image mt-3 border border-dark"
+                        src="/uploads/{{this.primaryImage}}" style="width: 100px; height: 100px;margin-left: 20px;">
+
+                </div>
+
+                <div class="col-md-6 mt-1">
+                    <h5 style="margin-top: 30px;">{{this.name}}</h5>
+                    <strong>Color: {{this.color}}</strong>
+                </div>
+
+                <div class="align-items-center align-content-center col-md-3 border-left">
+
+                    <button type="button" style="width: 15px;height: 15px; margin-left: 180px;"
+                        class="btn btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Remove item"
+                        onclick="removeItem('{{this._id}}')">
+
+                        <span class="material-symbols-outlined" style="color: black;">delete</span>
+                    </button>
+
+                    <div class="d-flex flex-row align-items-center">
+                        <h4 class="mr-1" style="color: green; margin-left: 35px;">Price: {{this.price}}</h4><span
+                            class="strike-text"></span>
+                    </div>
+
+
+
+                    <button class="btn btn-success btn-sm cancel-button mt-2" type="button"
+                        onclick="moveToCart('{{this._id}}')">Add To Cart</button>
+
+                    <a href="/view-product/{{this._id}}" class="btn btn-primary btn-sm cancel-button mt-2"
+                        type="button">Check Item</a>
+
+
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}
+{{/if}}
+
+{{>new-user-footer}}
+
+
+<script>
+
+    function removeItem(productID) {
+        Swal.fire({
+            title: "Remove Item ?",
+            text: "Are You Sure You Want to Remove the Item",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Remove It!",
+            cancelButtonText: "No, Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/wishlist/removeItem/" + productID,
+                    method: "GET",
+                }).then(response => {
+                    if (response.message) {
+                        Swal.fire({
+                            title: "Prodct Removed",
+                            text: "Product Successfully Removed from Wishlist",
+                            icon: "success",
+                        }).then(() => {
+                            location.reload();
+                            console.log("Product Removed Successfully");
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Product Removed Failed",
+                            text: "Product Remove Failed.Please Try Again",
+                            icon: "warning",
+                        }).then(() => {
+                            console.log("Product Remove Failed");
+                        })
+                    }
+                })
+            }
+        })
+    }
+
+    function moveToCart(productID) {
+        Swal.fire({
+            title: "Move Product to Cart",
+            text: "Are You Want to Move This Product to Cart ?",
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Yes, Move it!",
+            cancelButtonText: "No, Cancel",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/wishlist/move-to-cart/" + productID,
+                    method: "GET",
+                }).then(response => {
+                    if (response.message) {
+                        Swal.fire({
+                            title: "Product Moved",
+                            text: "Product Moved To Cart Successfully",
+                            icon: "success",
+                        }).then(() => {
+                            location.reload();
+                        })
+                    } else if (response.exists) {
+                        Swal.fire({
+                            title: "The Product Exists",
+                            text: "The Product Is Alredy In The Cart",
+                        }).then(() => {
+                            console.log("Product Alredy Exists in the Cart");
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Something Went Wrong",
+                            text: "Please, Try Again",
+                            icon: "error",
+                        });
+                    }
+                })
+            }
+        });
+    }
+
+</script>
+
+
+<style>
+    .card-container {
+        width: 750px;
+        margin-left: 250px;
+
+    }
+</style>
