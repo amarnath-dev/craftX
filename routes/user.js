@@ -7,6 +7,7 @@ const userProductControl = require('../controllers/userProductControl')
 const userOrderControl = require('../controllers/userOrderControl');
 const userCouponControl = require('../controllers/userCouponControl');
 const userWishlistControl = require('../controllers/userWishlistControl')
+const userRatingControl = require('../controllers/userRatingControl')
 const { checkAuth } = require('../middlewares/authMiddleware');
 
 
@@ -126,6 +127,9 @@ router.get('/wishlist', userWishlistControl.userWishlist_get)
 router.get('/wishlist/removeItem/:productID', userWishlistControl.wishlistDelete_get)
 router.get('/wishlist/move-to-cart/:productID', userWishlistControl.moveToCart_get);
 
+//Rating And Reviw Routes
+router.get('/profile/my-orders/rate-product/:productID',userRatingControl.productRatingPage_get)
+router.post('/profile/my-orders/rate-product/:productID',userRatingControl.productRatingPage_post)
 
 module.exports = router;
 

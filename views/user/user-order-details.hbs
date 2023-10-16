@@ -38,20 +38,26 @@
                         <small>{{this.orderStatus}}</small>
                     </button>
 
+
+
+                    {{#unless this.is_return}}
                     <a onclick="returnItem('{{../this._id}}','{{this.productID}}')"
                         class="returnItem btn border border-dark mt-2" data-product-id="{{this._id}}"
                         style="display: none;">Return Item</a>
+                    {{/unless}}
+
 
                     <input type="text" value="{{this.productID}}" hidden name="" id="">
                 </div>
 
                 <div class="align-items-center align-content-center col-md-3 border-left">
                     <div class="d-flex flex-row align-items-center">
-                        <h4 class="mr-1" style="color: green; margin-left: 75px;">{{this.unitPrice}}</h4><span
-                            class="strike-text"></span>
 
+                        <h4 class="mr-1" style="color: green; margin-left: 75px;">{{this.unitPrice}}</h4>
 
                         {{!-- invoice download route --}}
+                        {{#if this.is_Delivered }}
+                        {{#unless this.is_return}}
                         <div style="margin-left: 50px;" class="invoicePrinticon">
                             <a id="invoiceLink-{{../this._id}}"
                                 href="/profile/my-orders/getInvoice?orderId={{../this._id}}&productId={{this.productID}}">
@@ -60,25 +66,33 @@
                                 </span>
                             </a>
                         </div>
-
-
+                        {{/unless}}
+                        {{/if}}
                     </div>
 
 
                     {{!-- Taking the id which is each products unique id in orderItems array --}}
-                    <input type="text" value="{{../this._id}}" name="proUniqueID" hidden id="">
+                    <input type="text" value="{{./this._id}}" name="proUniqueID" hidden id="">
 
-
-                    {{!-- <h6 class="text-success">Free shipping</h6> --}}
+                    {{#if this.is_return}}
+                    <div>
+                        <h6 class="text-danger orderCancelText" style="margin-left: 55px;">Order Returned</h6>
+                    </div>
+                    {{/if}}
 
                     <div class="d-flex flex-column mt-4 btn btn-sm">
                         <a href="/view-product/{{this.productID}}">
                             <button class="btn btn-primary btn-sm" type="button">Details</button>
                         </a>
 
+                        <div class="mt-2">
+                            <a href="/profile/my-orders/rate-product/{{this.productID}}">Rate and Review </a>
+                        </div>
 
+                        {{#unless this.is_Delivered}}
                         <button class="btn btn-danger btn-sm cancel-button mt-2" type="button"
                             data-product-id="{{this.productID}}" data-order-id="{{this._id}}">Cancel</button>
+                        {{/unless}}
 
                     </div>
                 </div>
@@ -152,12 +166,10 @@
 <script>
 
     $(document).ready(function () {
-        $('.invoicePrinticon').hide();
         $('.returnText').hide();
         $('.cancel-button').click(function () {
 
             const productID = $(this).data('product-id');
-
             const orderID = $('input[name="orderID"]').val();
             const proUniqueID = document.querySelector('input[name="proUniqueID"]').value;
 
@@ -203,8 +215,6 @@
 
             if (statusValue.toLowerCase() === 'delivered') {
                 $(this).siblings('.returnItem').show();
-
-                $('.invoicePrinticon').show();
             }
         });
     });
@@ -225,13 +235,13 @@
     }
 
     function removeOrder(orderId, productId) {
+
         const reasonForm = document.getElementById('returnReasonForm')
         reasonForm.style.display = 'block';
 
         $('#formSubmitClick').on('click', function () {
             submitReasonForm(orderId, productId);
-
-        })
+        });
     }
 
     function submitReasonForm(orderId, productId) {
@@ -266,6 +276,10 @@
             },
         });
     }
+
+
+
+
 
 </script>
 

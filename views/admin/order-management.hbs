@@ -5,7 +5,7 @@
 
   <div class="container-fluid">
     <div class="row">
-     {{>admin-left-menue}}
+      {{>admin-left-menue}}
       {{!-- //Displaying the details --}}
 
       <div class="col-md-8" style="width: 1000px;">
@@ -33,6 +33,7 @@
               <tbody>
                 {{#each orderDetails}}
                 {{#each orderItems}}
+                {{#unless this.is_Canceled}}
                 <tr>
                   <td>{{../customerName}}</td>
                   <td style="font-weight: bold;">{{this.productName}} (Quantity: {{this.quantity}})</td>
@@ -66,6 +67,7 @@
                   </td> --}}
 
                 </tr>
+                {{/unless}}
                 {{/each}}
                 {{/each}}
               </tbody>
@@ -75,8 +77,6 @@
           </div>
         </section>
       </div>
-
-
     </div>
   </div>
   </div>

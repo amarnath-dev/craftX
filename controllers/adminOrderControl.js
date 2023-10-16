@@ -13,8 +13,9 @@ function formatDate(date) {
 
 
 module.exports.adminOrders_get = async (req, res) => {
+
     try {
-        const allOrders = await Order.find().populate('userID').sort({orderDate: -1})
+        const allOrders = await Order.find().populate('userID').sort({ orderDate: -1 })
 
         if (allOrders) {
             const orderDetails = [];
@@ -32,6 +33,7 @@ module.exports.adminOrders_get = async (req, res) => {
                             quantity: orderItem.quantity,
                             unitPrice: orderItem.unitPrice,
                             orderStatus: orderItem.orderStatus,
+                            is_Canceled: orderItem.is_Canceled,
                         });
                     }
                 }
@@ -71,6 +73,8 @@ module.exports.adminOrders_get = async (req, res) => {
                     payment_method: order.payment_method,
                 });
             }
+
+            console.log("This is all order daetais", orderDetails);
 
             return res.render('admin/order-management', { orderDetails });
 
@@ -122,9 +126,8 @@ module.exports.adminOrderEdit_get = async (req, res) => {
         }
 
 
-        console.log(order)
-        console.log(product)
-
+        // console.log(order)
+        // console.log(product)
 
         return res.render('admin/admin-order-edit', { order, product });
 
@@ -134,24 +137,37 @@ module.exports.adminOrderEdit_get = async (req, res) => {
     }
 }
 
-
 module.exports.adminOrderEdit_post = async (req, res) => {
-
-    console.log("Enterd into the admin order edit section");
-
     const { orderID, productID, newStatus } = req.body;
 
     try {
-        await Order.findOneAndUpdate(
-            { _id: orderID, 'orderItems.productID': productID },
-            { $set: { 'orderItems.$.orderStatus': newStatus } }
-        );
+
+        const order = await Order.findOne({ _id: orderID });
+
+        if (!order) {
+            return res.status(400).json({ error: "Order not found" });
+        }
+
+        const orderItem = order.orderItems.find(item => item.productID.toString() === productID);
+
+        if (!orderItem) {
+            return res.status(400).json({ error: "Item not found in the order" });
+        }
+
+        orderItem.orderStatus = newStatus;
+
+        if (newStatus === "delivered") {
+            orderItem.is_Delivered = true;
+        } else {
+            orderItem.is_Delivered = false;
+        }
+
+        await order.save();
+
         res.json({ success: true });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-
-}
-
-
+};

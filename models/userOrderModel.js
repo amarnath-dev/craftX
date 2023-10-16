@@ -40,10 +40,6 @@ const orderSchema = new mongoose.Schema({
                 enum: ['processing', 'shipped', 'out for delivery', 'delivered', 'canceled'],
                 default: 'processing',
             },
-            // totalAmount: {
-            //     type: Number,
-            //     required: true,
-            // },
             discount: {
                 code: String,
                 type: {
@@ -59,6 +55,14 @@ const orderSchema = new mongoose.Schema({
             order_item_date: {
                 type: Date,
                 default: Date.now,
+            },
+            is_return: {
+                type: Boolean,
+                default: false,
+            },
+            is_Delivered: {
+                type: Boolean,
+                default: false,
             },
         },
     ],
@@ -79,10 +83,6 @@ const orderSchema = new mongoose.Schema({
     payment_status: {
         type: String,
         default: 'pending',
-    },
-    is_return: {
-        type: Boolean,
-        default: false,
     },
 });
 

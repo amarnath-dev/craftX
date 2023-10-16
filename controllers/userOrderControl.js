@@ -611,6 +611,8 @@ module.exports.user_orderdetails_get = async (req, res) => {
                     unitPrice: orderItem.unitPrice,
                     primaryImages: orderItem.productID.primaryImage,
                     _id: orderItem._id,
+                    is_Delivered: orderItem.is_Delivered,
+                    is_return: orderItem.is_return,
                 })),
             address: order.address,
         }));
@@ -631,11 +633,16 @@ module.exports.user_orderdetails_get = async (req, res) => {
 
 
 
+
+
 module.exports.user_orderCancel_get = async (req, res) => {
 
     const orderID = new mongoose.Types.ObjectId(req.query.orderID);
+    // console.log("This is the order Id", orderID)
 
     const productID = req.query.productID;
+    // console.log("This is product ID", productID)
+
 
     const uniqueID = req.query.uniqueID;
 
@@ -654,6 +661,7 @@ module.exports.user_orderCancel_get = async (req, res) => {
             const quantity = orderItemToCancel.quantity;
 
             try {
+
                 const decrement = await Product.findByIdAndUpdate(proID, { $inc: { stock: quantity } });
                 // console.log("This is the Decremeneted item ", decrement);
 
@@ -671,6 +679,8 @@ module.exports.user_orderCancel_get = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
 
 
 module.exports.verifyPayment_post = async (req, res) => {
@@ -794,11 +804,19 @@ module.exports.returnProduct_post = async (req, res) => {
         const save = await saveData.save();
 
         if (save) {
-            const updateStatus = await Order.findByIdAndUpdate(orderId, { $set: { is_return: true } }, { new: true });
 
-            if (updateStatus) {
+            const getOrder = await Order.findById(orderId);
+            getOrder.orderItems.forEach((orderItem) => {
+                orderItem.is_return = true;
+
+            })
+
+            const saveData = await getOrder.save();
+
+            if (saveData) {
                 return res.status(200).json({ message: "Return Order Data Saved Successfully" })
             }
+
         } else {
             return res.status(400).json({ error: "Return Data saved failed" });
         }

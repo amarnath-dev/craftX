@@ -1,0 +1,125 @@
+{{>new-user-header}}
+
+
+<section class="d-flex d-flex justify-content-center mt-5">
+    <div class="card  main-container" style="width: 50rem;">
+
+        <form>
+            <div class="card-body">
+                <h5 class="card-title">Rate this Product</h5>
+
+                <div class="rating">
+                    <span class="star" data-rating="1">&#9733;</span>
+                    <span class="star" data-rating="2">&#9733;</span>
+                    <span class="star" data-rating="3">&#9733;</span>
+                    <span class="star" data-rating="4">&#9733;</span>
+                    <span class="star" data-rating="5">&#9733;</span>
+                </div>
+                <div class="selected-rating mt-2">0 stars</div>
+                <hr>
+
+                {{!-- Product ID --}}
+                <input type="text" value="{{getProduct._id}}" hidden name="" id="">
+
+                <div class="form-group">
+                    <label for="comment">
+                        <h5>Review this product</h5>
+                    </label>
+                    <textarea class="form-control mt-2 border" name="ratingDescription" rows="5"
+                        id="ratingDescription"></textarea>
+                </div>
+
+                <div>
+                    <a class="btn border border-dark mt-4">Back</a>
+                    <a onclick="rateProduct('{{this._id}}')" class="btn btn-primary mt-4">Submit</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<script>
+
+
+    const stars = document.querySelectorAll('.star');
+    const selectedRating = document.querySelector('.selected-rating');
+    let userRating = 0;
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const rating = star.getAttribute('data-rating');
+            selectedRating.textContent = rating + ' stars';
+            userRating = parseInt(rating);
+            stars.forEach(s => {
+                if (s.getAttribute('data-rating') <= rating) {
+                    s.style.color = '#f1c40f';
+                } else {
+                    s.style.color = '#ccc';
+                }
+            });
+        });
+    });
+
+
+    function rateProduct(productID) {
+        const ratingDescription = document.getElementById('ratingDescription').value;
+
+        console.log("This is rating description", ratingDescription)
+        console.log("This is stars count", userRating
+        )
+        $.ajax({
+            url: '/profile/my-orders/rate-product',
+            method: 'POST',
+            data: { productID, ratingDescription, userRating }
+            success: (response => {
+                if (response.message) {
+                    Swal.fire({
+                        title: "Review Posted Successfully",
+                        text: "Thank You For the Valueble Review",
+                        icon: "success",
+                    }).then(() => {
+                        location.assign("/profile/my-orders")
+                    })
+                } else {
+                    Swal.fire({
+                        title: "Something Went Wrong",
+                        texst: "Please Try Again",
+                        icon: "error",
+                    }).then(() => {
+                        console.log("Error Posting Review");
+                    });
+                }
+            })
+        })
+    }
+
+</script>
+
+
+
+<style>
+    .checked {
+        color: orange;
+    }
+
+    .main-container {
+        height: 400px;
+    }
+
+    .rating {
+        font-size: 0;
+    }
+
+    .star {
+        display: inline-block;
+        font-size: 24px;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s;
+    }
+
+    .star:hover {
+        color: #f1c40f;
+    }
+</style>

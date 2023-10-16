@@ -36,7 +36,7 @@ module.exports.adminOrderReturnControl = async (req, res) => {
         ]);
 
         if (getReturnOrders) {
-            console.log("This is all return order details", getReturnOrders);
+            // console.log("This is all return order details", getReturnOrders);
 
             res.render('admin/orderReturn', { getReturnOrders });
         }
