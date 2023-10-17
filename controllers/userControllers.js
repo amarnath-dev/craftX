@@ -122,6 +122,7 @@ module.exports.get_home = async (req, res) => {
   }
 
   try {
+
     const allproducts = await Product.find();
 
     const allBanner = await Banner.find();
@@ -135,14 +136,15 @@ module.exports.get_home = async (req, res) => {
       var getProductCount = getUser.cart.length;
     }
 
+    console.log("This is all products", allproducts);
     res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount, allBanner });
 
   } catch (error) {
     console.log(error.message);
     res.status(400).send("Canno't fetch Products");
   }
-
 };
+
 
 //user sign in control
 module.exports.get_signup = (req, res) => {
@@ -178,7 +180,7 @@ module.exports.post_signup = async (req, res) => {
       if (referredUser) {
         const newCartAmount = referredUser.wallet + 100;
 
-        await User.findByIdAndUpdate(referredUser._id, {$set: {wallet: newCartAmount}}, {new: true});
+        await User.findByIdAndUpdate(referredUser._id, { $set: { wallet: newCartAmount } }, { new: true });
 
         // return res.status(200).json({ message: "Cart amount increased by 100" });
       } else {

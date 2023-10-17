@@ -1,0 +1,219 @@
+{{>admin-navbar}}
+
+
+<section style="position: relative;">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            {{>admin-left-menue}}
+
+            <div class="col-md-8 " style="width: 1000px;">
+
+                <section class="category d-flex mt-2">
+                    <div class="object-fit-contain mt-3" style="width: 100%;">
+                        <div class="header d-flex justify-content-between">
+                            <h3 class="h3 text-second fw-bold mb-3">Category Offer</h3>
+                        </div>
+                        <div class="mb-2">
+                            <a class="btn border border-dark" style="margin-left: 850px;" id="createOfferBtn">Create
+                                Offer</a>
+                        </div>
+                        <table style="width: 100%;" id="customerTable"
+                            class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="th-sm">Category Name
+                                    </th>
+                                    <th class="th-sm">Offer Title
+                                    </th>
+                                    <th class="th-sm">Discount Value
+                                    </th>
+                                    <th class="th-sm">Start Date
+                                    </th>
+                                    <th class="th-sm">End Date
+                                    </th>
+                                    <th class="th-sm">Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {{#each allData}}
+                                {{#unless this.is_Delete}}
+                                <tr>
+                                    <td>{{this.category_name}}</td>
+                                    <td>{{this.offer_title}}</td>
+                                    <td>{{this.discount}}</td>
+                                    <td>{{this.startDate}}</td>
+                                    <td>{{this.endDate}}</td>
+                                    {{#if this.is_Deleted}}
+                                    <td style="color: rgb(227, 51, 51);">Blocked</td>
+                                    {{else}}
+                                    <td style="color: green;">Active</td>
+                                    {{/if}}
+                                    <td>{{this.createdAt}}</td>
+                                    <td>
+                                        <a onclick="return confirm('Are you sure you want to delete {{this.name}}?')"
+                                            href="/admin//admin/categoryOffer/{{this._id}}" class="text-danger ms-2"><i
+                                                class="fa-solid fa-trash"></i></a>
+                                    </td>
+                                </tr>
+
+                                {{/unless}}
+                                {{/each}}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+<section style="width: 650px; position:absolute" id="form-container">
+    <form class="border border-dark rounded">
+
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Offer Title</label>
+            <input type="text" class="form-control" name="offerTitle" id="offerTitle" placeholder="Painting">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Offer Value</label>
+            <input type="number" class="form-control" name="offerValue" id="offerValue">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Select Category</label>
+            <select class="form-control" name="category" id="category">
+                <option>None</option>
+                <option>Painting</option>
+                <option>Statue</option>
+                <option>Accessories</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="">Start Date</label>
+            <input class="mt-3" type="date" name="startDate" id="startDate">
+        </div>
+
+        <div>
+            <label for="">End Date</label>
+            <input class="mt-3" type="date" name="endDate" id="endDate">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1" class="mt-2">Offer Description(Optional)</label>
+            <textarea class="form-control mt-3" id="offerDescription" rows="3"></textarea>
+        </div>
+
+        <div class="d-flex">
+            <a class="btn border border-dark mt-2" type="submit" onclick="getofferData()"
+                style="margin-left: 450px;">Submit</a>
+            <a class="btn btn-danger border border-dark mt-2" style="margin-left: 20px;" id="offerFormHide">Cancel</a>
+
+        </div>
+
+    </form>
+</section>
+
+
+<script>
+
+    $('#form-container').hide();
+    $('#createOfferBtn').on('click', function () {
+        $('#form-container').show();
+    })
+
+    $('#offerFormHide').on('click', function () {
+        $('#form-container').hide();
+    })
+
+    function getofferData() {
+        const offerTitle = $('#offerTitle').val();
+        const offerValue = $('#offerValue').val();
+        const category = $('#category').val();
+        const startDate = $('#startDate').val();
+        const endDate = $('#endDate').val();
+        const offerDescription = $('#offerDescription').val();
+
+        const offerData = {
+            offerTitle: offerTitle,
+            offerValue: offerValue,
+            category: category,
+            startDate: startDate,
+            endDate: endDate,
+            offerDescription: offerDescription
+        };
+
+        $.ajax({
+            url: '/admin/categoryOffer',
+            method: 'POST',
+            data: offerData,
+            success: function (response) {
+                console.log("This is the message from the server", response.message)
+                if (response.message) {
+                    Swal.fire({
+                        title: "Offer Created",
+                        text: "Offer Created Successfully",
+                        icon: "success"
+                    }).then(() => {
+                        location.reload()
+                    })
+                }
+            },
+            error: function (error) {
+                Swal.fire({
+                    title: "Something Went Wrong",
+                    text: "Something Went Wrong Please Try Again",
+                    icon: "error",
+                }).then(() => {
+                    console.error(error);
+                })
+            }
+        });
+    }
+
+</script>
+
+
+
+<style>
+    #form-container {
+        top: 130px;
+        left: 350px;
+        background-color: snow;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        margin-right: 20px;
+    }
+
+    .btn2 {
+        border: 1px solid black;
+        color: white;
+        border-radius: 5px;
+        padding: 7px;
+    }
+
+    .backBtn {
+        margin-left: 20px;
+        color: black;
+    }
+
+    .logout_btn {
+        margin-top: 50px;
+        margin-left: 10px;
+        border: 1px solid black;
+        background-color: rgb(231, 126, 126);
+    }
+</style>

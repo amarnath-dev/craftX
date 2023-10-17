@@ -129,7 +129,7 @@ router.get('/wishlist/move-to-cart/:productID', userWishlistControl.moveToCart_g
 
 //Rating And Reviw Routes
 router.get('/profile/my-orders/rate-product/:productID',userRatingControl.productRatingPage_get)
-router.post('/profile/my-orders/rate-product/:productID',userRatingControl.productRatingPage_post)
+router.post('/profile/my-orders/rate-product',userRatingControl.productRatingPage_post)
 
 module.exports = router;
 

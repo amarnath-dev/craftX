@@ -48,18 +48,21 @@
       <div class="card-body">
         <a href="/view-product/{{this._id}}" class="card-title">{{this.name}}</a>
         <br>
-        <small class="card-text fw-bold" style="color: red; margin-left: 110px; font-size: 20px;">{{this.price}}</small>
+
+        {{!-- Show the Rating --}}
+        <small><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}} )</small>
+
+        <small class="card-text fw-bold" style="color: red; margin-left: 80px; font-size: 20px;">{{this.price}}</small>
 
         <div class="d-flex">
-
           <button class="btn border border-dark mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
             Cart</button>
 
           <input type="text" value="{{this._id}}" name="" id="productID" hidden>
           <a onclick="buyNow('{{this.stock}}', '{{this._id}}')" target="_blank" class="btn border-dark mt-4"
             id="buy-now">Buy Now</a>
-
         </div>
+
       </div>
     </div>
     {{/unless}}
@@ -75,9 +78,9 @@
 
   $(document).ready(() => {
     $('#profile-list').hide()
-    $('#profile-icon').on().click(function () {
-      $('#profile-list').slideToggle()
-    })
+    $('#profile-icon').click(function () {
+      $('#profile-list').slideToggle();
+    });
   })
 
 
@@ -115,6 +118,7 @@
   }
 
 
+
   function addtoWishlist(productID) {
 
     $.ajax({
@@ -126,7 +130,7 @@
           title: "Product Added",
           text: "Product Added to Wishlist Successfully",
           icon: "success",
-        }).the(() => {
+        }).then(() => {
           console.log("Product Get Successfull");
         })
       } else if (response.exists) {
@@ -232,5 +236,27 @@
     &:hover {
       background-color: rgb(176, 176, 168);
     }
+  }
+
+  .checked {
+    color: orange;
+  }
+
+  .main-container {
+    height: 400px;
+  }
+
+  .rating {
+    font-size: 0;
+  }
+
+  .star {
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+    color: #f1c40f;
+    margin-top: 5px;
   }
 </style>

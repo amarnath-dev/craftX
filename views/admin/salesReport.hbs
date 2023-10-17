@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
         <div class="row">
-        {{>admin-left-menue}}
+            {{>admin-left-menue}}
 
 
             <div class="col-md-8" style="width: 1000px;">
@@ -70,7 +70,8 @@
                             </div>
                         </div>
 
-
+                        {{!-- Report Invoice Excel Download --}}
+                        <button id="btnExcel" class="btn btn-success border mb-2">Download Report</button>
 
                         <table style="width: 100%;" id="customerTable"
                             class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
@@ -128,10 +129,35 @@
 
 <script>
 
-    {{!-- $('#filterFormContainer').hide()
-    $('#itemsBtn').on().click(function () {
-        $('#filterFormContainer').slideToggle();
-    }) --}}
+    $(document).ready(function () {
+        $("#btnExcel").click(function () {
+            console.log("clicked")
+            let table = document.getElementById("customerTable");
+            console.log(table)
+
+
+            // Find the column index of the Invoice column.
+            const invoiceColumnIndex = Array.from(table.querySelectorAll("th")).findIndex(th => th.textContent === "Invoice");
+
+            if (invoiceColumnIndex !== -1) {
+                // Remove the Invoice column from the table.
+                let rows = table.getElementsByTagName("tr");
+                for (let i = 0; i < rows.length; i++) {
+                    rows[i].deleteCell(invoiceColumnIndex);
+                }
+            }
+
+            // Convert the modified table to Excel.
+            TableToExcel.convert(table, {
+                name: 'salesreport.xlsx',
+                sheet: {
+                    name: 'salesreport'
+                }
+            });
+        });
+
+    });
+
 
 
 

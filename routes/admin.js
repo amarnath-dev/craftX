@@ -10,6 +10,7 @@ const adminCouponControl = require('../controllers/adminCouponControl');
 const adminBannerControl = require('../controllers/adminBannerControl')
 const adminOrderReturnControl = require('../controllers/adminOrderReturnControl');
 const adminHomeControl = require('../controllers/adminHomeControl');
+const adminOfferControl = require('../controllers/adminOfferControl');
 const upload = require('../middlewares/multer');
 const { checkAuthadmin } = require('../middlewares/authMiddleware');
 
@@ -18,9 +19,9 @@ const { checkAuthadmin } = require('../middlewares/authMiddleware');
 router.get('/', checkAuthadmin, adminControllers.adminhome_get);
 
 //Admin SignUp Management
-
 // router.get("/signup", adminControllers.adminsignup_get); 
 // router.post("/signup", adminControllers.adminsignup_post); 
+
 router.get('/login', adminControllers.adminlogin_get);
 router.post("/login", adminControllers.adminlogin_post);
 
@@ -113,6 +114,10 @@ router.get('/orderReturn/reject/:returnReqId', adminOrderReturnControl.orderReje
 
 router.get('/get-sales-data', adminHomeControl.adminchart_get)
 
+
+//Category Offer
+router.get('/categoryOffer', adminOfferControl.categoryOfferpage_get);
+router.post('/categoryOffer', adminOfferControl.categoryOfferpage_post);
 
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)

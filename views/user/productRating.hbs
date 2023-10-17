@@ -4,43 +4,40 @@
 <section class="d-flex d-flex justify-content-center mt-5">
     <div class="card  main-container" style="width: 50rem;">
 
-        <form>
-            <div class="card-body">
-                <h5 class="card-title">Rate this Product</h5>
+        <div class="card-body">
+            <h5 class="card-title">Rate this Product</h5>
 
-                <div class="rating">
-                    <span class="star" data-rating="1">&#9733;</span>
-                    <span class="star" data-rating="2">&#9733;</span>
-                    <span class="star" data-rating="3">&#9733;</span>
-                    <span class="star" data-rating="4">&#9733;</span>
-                    <span class="star" data-rating="5">&#9733;</span>
-                </div>
-                <div class="selected-rating mt-2">0 stars</div>
-                <hr>
-
-                {{!-- Product ID --}}
-                <input type="text" value="{{getProduct._id}}" hidden name="" id="">
-
-                <div class="form-group">
-                    <label for="comment">
-                        <h5>Review this product</h5>
-                    </label>
-                    <textarea class="form-control mt-2 border" name="ratingDescription" rows="5"
-                        id="ratingDescription"></textarea>
-                </div>
-
-                <div>
-                    <a class="btn border border-dark mt-4">Back</a>
-                    <a onclick="rateProduct('{{this._id}}')" class="btn btn-primary mt-4">Submit</a>
-                </div>
+            <div class="rating">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
             </div>
-        </form>
+            <div class="selected-rating mt-2">0 stars</div>
+            <hr>
+
+            {{!-- Product ID --}}
+            <input type="text" value="{{getProduct._id}}" hidden name="" id="">
+
+            <div class="form-group">
+                <label for="comment">
+                    <h5>Review this product</h5>
+                </label>
+                <textarea class="form-control mt-2 border" name="ratingDescription" rows="5"
+                    id="ratingDescription"></textarea>
+            </div>
+
+            <div>
+                <a class="btn border border-dark mt-4">Back</a>
+                <button onclick="rateProduct('{{getProduct._id}}')" class="btn btn-primary mt-4">Submit</button>
+            </div>
+        </div>
     </div>
 </section>
 
 
 <script>
-
 
     const stars = document.querySelectorAll('.star');
     const selectedRating = document.querySelector('.selected-rating');
@@ -65,33 +62,51 @@
     function rateProduct(productID) {
         const ratingDescription = document.getElementById('ratingDescription').value;
 
-        console.log("This is rating description", ratingDescription)
-        console.log("This is stars count", userRating
-        )
+        console.log(productID)
+        console.log(ratingDescription)
+        console.log(userRating)
+
+        // Ensure that the user has selected a rating
+        if (userRating === 0) {
+            Swal.fire({
+                title: "Please Select a Rating",
+                text: "You must select a rating before submitting your review.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        if (!ratingDescription) {
+            Swal.fire({
+                title: "Please Enter the Review ",
+                text: "You must enter a review before submitting",
+                icon: "warning",
+            });
+            return;
+        }
+
         $.ajax({
             url: '/profile/my-orders/rate-product',
             method: 'POST',
-            data: { productID, ratingDescription, userRating }
+            data: { productID, userRating, ratingDescription },
             success: (response => {
                 if (response.message) {
                     Swal.fire({
                         title: "Review Posted Successfully",
-                        text: "Thank You For the Valueble Review",
+                        text: "Thank You For the Valuable Review",
                         icon: "success",
                     }).then(() => {
-                        location.assign("/profile/my-orders")
-                    })
+                        location.assign("/profile/my-orders");
+                    });
                 } else {
                     Swal.fire({
                         title: "Something Went Wrong",
-                        texst: "Please Try Again",
+                        text: "Please Try Again",
                         icon: "error",
-                    }).then(() => {
-                        console.log("Error Posting Review");
                     });
                 }
             })
-        })
+        });
     }
 
 </script>

@@ -31,7 +31,7 @@
                         {{productDetails.name}}
                     </h4>
                     <div class="d-flex flex-row my-3">
-                        <div class="text-warning mb-1 me-2">
+                        {{!-- <div class="text-warning mb-1 me-2">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -40,9 +40,22 @@
                             <span class="ms-1">
                                 4.5
                             </span>
-                        </div>
-                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
-                        <span class="text-success ms-2">In stock</span>
+                        </div> --}}
+
+                        {{#if productDetails.in_Stock}}
+                        <span class="text-muted">
+                            <i class="fa fa-star star"></i>( {{productDetails.rating}} )</i>
+                            <span class="text-success ms-2"><i class="fas fa-shopping-basket fa-sm mx-1"></i>In
+                                stock</span>
+                        </span>
+                        {{else}}
+                        <span class="text-muted">
+                            <i class="fas fa-shopping-basket fa-sm mx-1"></i>
+                            <span class="text-danger ms-2">Our Of stock</span>
+                        </span>
+                        {{/if}}
+
+
                     </div>
 
                     <div class="mb-3">
@@ -64,6 +77,21 @@
                         class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
                 <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i
                         class="me-1 fa fa-heart fa-lg"></i> Save </a>
+
+                {{#if productRating}}
+                <div class="mt-3">
+                    <h5>Ratings and Reviews</h5>
+                    <hr>
+                    {{#each productRating}}
+                    {{!-- Show the Rating --}}
+                    <small><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}}
+                        )</small>
+                    <h6>{{this.description}}</h6>
+                    <hr>
+                    {{/each}}
+
+                </div>
+                {{/if}}
         </div>
         </main>
     </div>
@@ -190,5 +218,15 @@
 
     .icon-hover:hover i {
         color: #3b71ca !important;
+    }
+
+    .star {
+        display: inline-block;
+        font-size: 24px;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s;
+        color: #f1c40f;
+        margin-top: 5px;
     }
 </style>

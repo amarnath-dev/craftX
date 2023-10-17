@@ -23,8 +23,8 @@ const productSchema = new mongoose.Schema({
         type: Number,
     },
     category_name: {
-        type: mongoose.Schema.ObjectId, 
-        ref: 'Category', 
+        type: mongoose.Schema.ObjectId,
+        ref: 'Category',
         required: true,
     },
     catName: {
@@ -32,13 +32,20 @@ const productSchema = new mongoose.Schema({
     },
     primaryImage: [String],
     secondaryImage: [String],
-    
-    is_delete : {
+    is_delete: {
         type: Boolean,
         default: false,
     },
-},{timestamps: true});
-  
+    rating: {
+        type: Number,
+    },
+    in_Stock: {
+        type: Boolean,
+        default: true,
+    },
+
+}, { timestamps: true });
+
 
 const Product = mongoose.model('product', productSchema);
 module.exports = Product;

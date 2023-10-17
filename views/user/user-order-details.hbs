@@ -85,9 +85,12 @@
                             <button class="btn btn-primary btn-sm" type="button">Details</button>
                         </a>
 
+
+                        {{#if is_Delivered}}
                         <div class="mt-2">
                             <a href="/profile/my-orders/rate-product/{{this.productID}}">Rate and Review </a>
                         </div>
+                        {{/if}}
 
                         {{#unless this.is_Delivered}}
                         <button class="btn btn-danger btn-sm cancel-button mt-2" type="button"
