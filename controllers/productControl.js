@@ -75,10 +75,11 @@ module.exports.adminaddproduct_get = async (req, res) => {
 
 
 module.exports.adminaddproduct_post = async (req, res) => {
+
     try {
         const { product_name, category_name, color, stock, description, prod_price } = req.body;
 
-        console.log("This is the category id", category_name);
+        // console.log("This is the category id", category_name);
 
         const primaryImage = req.files['primaryImage'];
         const secondaryImages = req.files['images'];
@@ -142,9 +143,10 @@ module.exports.admineditproduct_get = async (req, res) => {
 module.exports.admineditproduct_post = async (req, res) => {
 
     const productID = req.body.productID;
-   
 
-    const { product_name, category_name, color, stock, description, prod_price, status } = req.body;
+
+    const { product_name, category_name, color, stock, description, prod_price, status, category_ID } = req.body;
+
 
     const primaryImage = req.files['primaryImage'];
     const secondaryImages = req.files['images'];
@@ -167,7 +169,7 @@ module.exports.admineditproduct_post = async (req, res) => {
 
             const updatedProduct = {
                 name: product_name,
-                category_name,
+                category_name: new mongoose.Types.ObjectId(category_ID),
                 color,
                 stock,
                 description,
@@ -175,6 +177,7 @@ module.exports.admineditproduct_post = async (req, res) => {
                 status: status,
                 primaryImage: primaryImageNames,
                 secondaryImage: oldSecondaryImages.concat(secondaryImageNames), // Combine old and new secondary images
+                catName: category_name,
             };
 
             const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
@@ -187,13 +190,14 @@ module.exports.admineditproduct_post = async (req, res) => {
         } else if (!primaryImage && !secondaryImages) {
             const updatedProduct = {
                 name: product_name,
-                category_name,
+                category_name: new mongoose.Types.ObjectId(category_ID),
                 color,
                 stock,
                 description,
                 price: prod_price,
                 status: status,
                 secondaryImage: oldSecondaryImages, // Use the old secondary images
+                catName: category_name,
             };
 
             const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
@@ -209,7 +213,7 @@ module.exports.admineditproduct_post = async (req, res) => {
 
                 const updatedProduct = {
                     name: product_name,
-                    category_name,
+                    category_name: new mongoose.Types.ObjectId(category_ID),
                     color,
                     stock,
                     description,
@@ -217,6 +221,7 @@ module.exports.admineditproduct_post = async (req, res) => {
                     status: status,
                     primaryImage: primaryImageNames,
                     secondaryImage: oldSecondaryImages, // Use the old secondary images
+                    catName: category_name,
                 };
 
                 const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
@@ -232,13 +237,14 @@ module.exports.admineditproduct_post = async (req, res) => {
 
                 const updatedProduct = {
                     name: product_name,
-                    category_name,
+                    category_name: new mongoose.Types.ObjectId(category_ID),
                     color,
                     stock,
                     description,
                     price: prod_price,
                     status: status,
                     secondaryImage: oldSecondaryImages.concat(secondaryImageNames), // Combine old and new secondary images
+                    catName: category_name,
                 };
 
                 const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });

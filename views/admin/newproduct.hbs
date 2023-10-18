@@ -93,7 +93,6 @@
 
     $(document).ready(function () {
 
-
         $('#primaryImage').on('change', (e) => {
             let container = document.getElementById('crp-container')
             container.style.display = "block"
@@ -106,12 +105,9 @@
 
                 if (allowedImageTypes.includes(file.type)) {
 
-                    // Create a new FileReader to read the selected image file
                     var reader = new FileReader(file);
                     reader.onload = function (event) {
-                        // Set the source of the image element in the Cropper container
                         document.getElementById('image').src = event.target.result;
-                        // Initialize Cropper.js with the updated image source
                         let cropper = new Cropper(image, {
                             aspectRatio: 5 / 5,
                             viewMode: 0,
@@ -140,7 +136,7 @@
                         text: 'Only image files (JPEG, JPG, PNG, WebP) are allowed.',
                         icon: 'error'
                     });
-                 
+
                     e.target.value = '';
                 }
             }
@@ -211,12 +207,16 @@
                         location.assign('/admin/products')
                     });
                 } else {
+
+
+
                     console.log("Request failed terrible");
                 }
             }).catch(error => {
                 console.error("Request failed:", error);
             });
         });
+        
     });
 </script>
 

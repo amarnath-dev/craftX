@@ -44,7 +44,6 @@
                                 <p>Color: {{this.prod_detail.color}}</p>
 
                                 <p class="">
-
                                     <strong style="color: green; font-size: 20px;">{{this.prod_detail.price}}</strong>
                                 </p>
 
@@ -72,9 +71,16 @@
                                     </button>
 
                                     <div class="form-outline">
-                                        <input id="form1" min="0" name="quantity" value="{{cart.count}}" type="number"
-                                            class="form-control increment mt-3" disabled max="4" />
+
+
+                                        <input id="cartCount_{{this.prod_detail._id}}" min="0" name="quantity"
+                                            value="{{cart.count}}" type="number" class="form-control increment mt-3"
+                                            disabled max="4" />
+
+
+
                                         <input type="text" id="currentQuantity" value="{{cart.count}}" hidden>
+
                                         <label class="form-label" for="form1"
                                             style="margin-left: 20px;">Quantity</label>
                                     </div>
@@ -83,6 +89,7 @@
                                         onclick="countInc('{{this.prod_detail._id}}')">
                                         <i class="fas fa-plus"></i>
                                     </button>
+
                                 </div>
                             </div>
                         </div>
@@ -136,8 +143,13 @@
 
                                     </strong>
                                 </div>
-                                <span><strong
-                                        style="color: green; font-size: 20px; font-weight: bold">Rs.{{totalAmount}}</strong></span>
+
+                                <span>
+                                    <strong style="color: green; font-size: 20px; font-weight: bold"
+                                        id="pricePlace">Rs.{{totalAmount}}</strong>
+                                </span>
+
+
                             </li>
                         </ul>
 
@@ -189,12 +201,14 @@
     }
 
     function countInc(prodID) {
+
         $.ajax({
             url: '/my-cart/increment/' + prodID,
             method: 'get',
             success: (response) => {
                 if (response.status) {
-                    location.reload();
+                    $('#pricePlace').text('RS. ' + response.totalAmount);
+                    $('#cartCount_' + prodID).val(response.currentCartCount);
                 } else {
                     Swal.fire({
                         title: "Out of Stock",
@@ -216,14 +230,13 @@
 
 
     function countDec(prodID) {
-        console.log("Function Called")
         $.ajax({
             url: '/my-cart/decrement/' + prodID,
             method: 'get',
             success: (response) => {
                 if (response.status) {
-
-                    location.reload();
+                    $('#pricePlace').text('RS. ' + response.totalAmount);
+                    $('#cartCount_' + prodID).val(response.currentCartCount);
                 }
             }
         })
@@ -233,8 +246,7 @@
     function getCheckOut() {
         const stockCount = document.getElementById('productQuantity').value;
         const currentQuantity = document.getElementById('currentQuantity').value;
-        console.log(stockCount);
-        console.log(currentQuantity);
+
 
         if (stockCount < currentQuantity) {
             Swal.fire({
@@ -253,7 +265,8 @@
 
 
 <style>
-    #form1 {
+    .increment {
         padding-left: 45px;
     }
+    
 </style>

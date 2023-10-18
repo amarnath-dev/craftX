@@ -1,28 +1,29 @@
 <div class="col-md-4" style="width: 250px; margin-top: 35px;">
     <div class="list-group">
-        <li class="list-group-item"><a href="/admin/products">
+        <li class="list-group-item"><a href="/admin/products" class="nav-link">
                 <i class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
-        <li class="list-group-item"><a href="/admin/customers"><i
+        <li class="list-group-item"><a href="/admin/customers" class="nav-link"><i
                     class="fa-regular fa-user side-bar-icon"></i>Customers</a>
         </li>
-        <li class="list-group-item"><a href="/admin/orders"><i
-                    class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a>
+        <li class="list-group-item"><a href="/admin/orders" class="nav-link">
+                <i class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a>
         </li>
-        <li class="list-group-item"><a href="/admin/category"><i
-                    class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
-        <li class="list-group-item"><a href="/admin/sales-report"> <i
-                    class="fa-solid fa-arrow-up-from-bracket side-bar-icon" style="transform: rotate(90deg);"></i>Sales
+        <li class="list-group-item"><a href="/admin/category" class="nav-link">
+                <i class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
+        <li class="list-group-item"><a href="/admin/sales-report" class="nav-link">
+                <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon" style="transform: rotate(90deg);"></i>Sales
                 Report</a></li>
-        <li class="list-group-item"><a href="/admin/coupons"><i
-                    class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage
+        <li class="list-group-item"><a href="/admin/coupons" class="nav-link">
+                <i class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage
                 Coupon</a></li>
-        <li class="list-group-item"><a href="/admin/banner"><i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
+        <li class="list-group-item"><a href="/admin/banner" class="nav-link">
+                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
                 Manage</a></li>
-        <li class="list-group-item"><a href="/admin/orderReturn"><i
-                    class="fa-solid fa-font-awesome side-bar-icon"></i>Product Return</a></li>
+        <li class="list-group-item"><a href="/admin/orderReturn" class="nav-link">
+                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Product Return</a></li>
 
-        <li class="list-group-item"><a href="/admin/categoryOffer"><i
-                    class="fa-solid fa-font-awesome side-bar-icon"></i>Category Offer</a></li>
+        <li class="list-group-item"><a href="/admin/categoryOffer" class="nav-link">
+                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Category Offer</a></li>
     </div>
 
     <div class="btn-container d-flex justify-content-center align-items-inline mt-5">
@@ -32,3 +33,44 @@
 
     </div>
 </div>
+
+
+<style>
+    .active-link {
+        background-color: #83888f;
+        color: #fff;
+    }
+
+    .nav-link {
+        color: #000;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .nav-link:hover {
+        background-color: #f0f0f0;
+    }
+
+    .nav-link.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+</style>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach(function (link) {
+            const linkPath = link.getAttribute("href");
+
+            if (currentPath === linkPath) {
+                link.classList.add("active-link");
+            }
+        });
+    });
+
+
+</script>

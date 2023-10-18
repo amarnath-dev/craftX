@@ -14,7 +14,7 @@ module.exports.usercart_get = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
-    console.log("This is users unique id",userID);
+    console.log("This is users unique id", userID);
 
     const productID = req.params.productID;
 
@@ -147,20 +147,15 @@ module.exports.remove_product_get = async (req, res) => {
     }
 }
 
-
 module.exports.usercartInc_get = async (req, res) => {
-
     const token = req.cookies.jwt;
-    const userID = await decodeJwt(token)
+    const userID = await decodeJwt(token);
     const productID = req.params.productID;
 
-    //Get the current cart Count and return if count > 5
+    // Get the current cart Count and return if count > 5
     const cartCount = await cartCountCheck(userID, productID);
-    if (cartCount) {
-        if (cartCount > 4) {
-            res.json({ message: "Reached Limit" });
-            return;
-        }
+    if (cartCount && cartCount > 4) {
+        return res.json({ message: "Reached Limit" });
     }
 
     try {
@@ -170,7 +165,20 @@ module.exports.usercartInc_get = async (req, res) => {
                 { _id: userID, "cart.product_id": productID },
                 { $inc: { "cart.$.count": 1 } }
             );
-            res.json({ status: true });
+
+            const user = await User.findById(userID);
+            const cart = user.cart;
+
+            let totalAmount = 0;
+            for (const item of cart) {
+                const product = await Product.findById(item.product_id);
+                totalAmount += product.price * item.count;
+            }
+
+            const currentCartCount = await cartCountCheck(userID, productID);
+
+            return res.json({ status: true, totalAmount, currentCartCount });
+
         } else {
             res.json({ status: false });
         }
@@ -181,8 +189,8 @@ module.exports.usercartInc_get = async (req, res) => {
 }
 
 
+
 module.exports.usercartDec_get = async (req, res) => {
-    // console.log("User cart dec called");
 
     const token = req.cookies.jwt;
     const userID = await decodeJwt(token)
@@ -190,9 +198,7 @@ module.exports.usercartDec_get = async (req, res) => {
 
     try {
         const getUser = await User.findOne({ _id: userID });
-        console.log(getUser);
         const getItem = getUser.cart.find((item) => item.product_id == productID);
-        console.log(getItem);
 
         if (getItem.count > 1) {
             await User.findOneAndUpdate(
@@ -200,7 +206,19 @@ module.exports.usercartDec_get = async (req, res) => {
                 { $inc: { "cart.$.count": -1 } }
             );
 
-            res.json({ status: true });
+            const user = await User.findById(userID);
+            const cart = user.cart;
+
+            let totalAmount = 0;
+            for (const item of cart) {
+                const product = await Product.findById(item.product_id);
+                totalAmount += product.price * item.count;
+            }
+
+            const currentCartCount = await cartCountCheck(userID, productID);
+
+            return res.json({ status: true, totalAmount, currentCartCount });
+
         } else {
             console.log("Cant Decrement")
             return;

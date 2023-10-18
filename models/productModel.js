@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
     },
     category_name: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true,
     },

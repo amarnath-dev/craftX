@@ -1,9 +1,9 @@
-<section class="new-product p-md-5">
+<section class="new-product p-md-5" style="position: relative;">
     <div class="h3 fw-bold text-second px-4 py-2">
         <span>Edit Product</span>
         <hr>
     </div>
-    
+
     <form method="post" class="row d-flex justify-content-center" enctype="multipart/form-data"
         action="/admin/products/editproduct">
 
@@ -17,10 +17,16 @@
                     <img id="imgPrimary" src="/uploads/{{product.primaryImage}}" alt="{{product.name}}"
                         style="width: 50px; height: 40px" class="border border-secondary rounded-1">
                 </div>
-                
+
                 <span class="fw-bold">Select the Primary Image</span>
+
                 <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader mt-2" name="primaryImage"
-                    onchange="previewImg(event, 'imgPrimary')" />
+                    onchange="previewImg(event, 'imgPrimary')" id="primaryImage" />
+
+                <img id="prev" src="" alt="" />
+
+                <input type="hidden" id="result" name="result" value="" />
+
                 <span class="fw-bold mt-3">Select secondary images <br> <span
                         class="fw-normal text-success"></span></span>
 
@@ -39,8 +45,9 @@
 
                     <img id="imgSecondary{{@index}}" src="/uploads/{{this}}" alt="{{product.name}}"
                         style="width: 50px; margin-right: 10px" class="border border-secondary rounded-1">
+
                     <input type="file" accept=".jpg,.jpeg,.png" class="form-control FilUploader" name="images"
-                        class="mb-3" onchange="previewImg(event, 'imgSecondary{{@index}}')" />
+                        class="mb-3" onchange="previewImg(event, 'imgSecondary{{@index}}')" id="secondaryImages" />
 
                     {{!-- Image delete button --}}
                     <a href="/admin/products/editproduct/deleteImage/{{this}}/{{../product._id}}">
@@ -49,6 +56,7 @@
                             <i class="fas fa-trash"></i>
                         </span>
                     </a>
+
                 </div>
 
                 {{/each}}
@@ -64,6 +72,7 @@
                 <div class="form-group col-md-6">
                     <label for="" class="fw-bold mb-2">Category</label>
                     <input type="text" name="category_name" class="form-control" value="{{product.catName}}">
+                    <input type="text" name="category_ID" value="{{product.category_name}}" id="" hidden>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="" class="fw-bold mb-2">Color</label>
@@ -109,16 +118,109 @@
             </div>
 
 
+
             <button type="submit" class="btn newproduct add-btn py-3 border border-primary bg-primary mt-5"
                 style="width: 100%;">Update</button>
 
 
         </section>
     </form>
+
+
+    {{!-- This is croper container --}}
+    <div class="crop-product card shadow" id="crp-container" style="position: absolute;">
+        <div>
+            <img src="" id="image" alt="" width="300" height="300px">
+            <a href="" class="btn border border-dark mt-3" style="margin-left: 700px;">Cancel</a>
+            <button id="cropImageBtn" class="btn btn-primary mt-3">Crop Image</button>
+        </div>
+            
+    </div>
+
 </section>
 
 
 <script>
+
+
+    $('#primaryImage').on('change', (e) => {
+
+        let container = document.getElementById('crp-container')
+        container.style.display = "block"
+        let image = document.getElementById('image')
+        let file = e.target.files[0]
+        $('.btn-grp').toggle()
+        if (file) {
+
+            const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+            if (allowedImageTypes.includes(file.type)) {
+
+                var reader = new FileReader(file);
+                reader.onload = function (event) {
+                    document.getElementById('image').src = event.target.result;
+                    let cropper = new Cropper(image, {
+                        aspectRatio: 5 / 5,
+                        viewMode: 0,
+                        autoCrop: true,
+                        background: false,
+                    })
+
+                    $('#cropImageBtn').on('click', function () {
+                        var cropedImg = cropper.getCroppedCanvas()
+                        if (cropedImg) {
+                            cropedImg = cropedImg.toDataURL('image/png')
+
+                            document.getElementById('prev').src = cropedImg
+                            document.getElementById('result').value = cropedImg
+                            container.style.display = "none"
+
+                            $('.btn-grp').toggle()
+                        }
+                        cropper.destroy();
+                    })
+                };
+                reader.readAsDataURL(file);
+            } else {
+                Swal.fire({
+                    title: 'Invalid File Type',
+                    text: 'Only image files (JPEG, JPG, PNG, WebP) are allowed.',
+                    icon: 'error'
+                });
+
+                e.target.value = '';
+            }
+        }
+    });
+
+
+    $('#secondaryImages').on('change', (e) => {
+        let files = e.target.files;
+        let invalidFiles = [];
+
+        // Check each selected file for allowed image types
+        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        for (let i = 0; i < files.length; i++) {
+            if (!allowedImageTypes.includes(files[i].type)) {
+                invalidFiles.push(files[i].name);
+            }
+        }
+
+        if (invalidFiles.length > 0) {
+            // Show a SweetAlert message for invalid file types in secondaryImages
+            Swal.fire({
+                title: 'Invalid File Type',
+                text: 'The following files are not allowed: ' + invalidFiles.join(', '),
+                icon: 'error'
+            }).then(() => {
+                // Clear the input to prevent submitting invalid files
+                e.target.value = '';
+                location.reload();
+            })
+        }
+    });
+
 
 
     // Function to update image preview
@@ -140,12 +242,11 @@
         $("#" + imgId).parent().remove();
     }
 
-    $(document).ready(function () {
-        $("#addImageButton").on("click", function () {
-            const imageContainer = $("#imageContainer");
-            const lastIndex = imageContainer.find(".img").length;
+    $("#addImageButton").on("click", function () {
+        const imageContainer = $("#imageContainer");
+        const lastIndex = imageContainer.find(".img").length;
 
-            const newImageElement = `
+        const newImageElement = `
                 <div class="img d-flex mt-4">
                     <img id="imgSecondary${lastIndex}" src="" alt=""
                         style="width: 50px; margin-right: 10px" class="border border-secondary rounded-1">
@@ -159,8 +260,7 @@
                     </span>
                 </div>`;
 
-            imageContainer.append(newImageElement);
-        });
+        imageContainer.append(newImageElement);
     });
 
 
@@ -172,4 +272,20 @@
         imgPreview.src = image;
     }
 
+
+
+
 </script>
+
+
+<style>
+    .crop-product {
+        top: 150px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        display: none;
+    }
+</style>
