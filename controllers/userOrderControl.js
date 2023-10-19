@@ -10,10 +10,14 @@ const Payment = require("../models/paymentModel");
 const crypto = require("crypto");
 const { generateUniqueID } = require('../helpers/codUniquePaymntID');
 const Coupon = require("../models/couponModel");
-const { checkProductStock } = require('../helpers/checkProductStock');
 const OrderReturn = require('../models/orderReturnModel');
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
+const { newformatDate } = require('../helpers/dateFormat')
+const { checkReturnExpired } = require('../helpers/checkReturnExpiry')
+const { walletPurchaseDec } = require('../helpers/walletPurchaseDec')
+const { walletPurchaseTitle } = require('../helpers/walletPurchaseTitle');
+const Wallet = require("../models/walletHistoryModel");
 
 
 
@@ -353,6 +357,20 @@ module.exports.user_confirmOrder = async (req, res) => {
                                 const savePaymentData = new Payment(paymentData).save();
 
                                 if (savePaymentData) {
+
+                                    const saveData = new Wallet({
+                                        userID: userID,
+                                        transaction_amount: newOrder.orderAmount,
+                                        transaction_title: walletPurchaseTitle(newOrder.orderAmount),
+                                        transaction_des: walletPurchaseDec(newOrder.orderAmount),
+                                    })
+
+                                    const save = await saveData.save();
+
+                                    if (!save) {
+                                        return res.status(400).json({ error: "wallet payment data save failed" });
+                                    }
+
                                     const response = {
                                         success: true,
                                     };
@@ -554,6 +572,19 @@ module.exports.user_confirmOrder = async (req, res) => {
                                 const savePaymentData = new Payment(paymentData).save();
 
                                 if (savePaymentData) {
+
+                                    const saveData = new Wallet({
+                                        userID: userID,
+                                        transaction_amount: newOrder.orderAmount,
+                                        transaction_title: generateTitle(newOrder.orderAmount),
+                                        transaction_des: walletPurchaseDec(newOrder.orderAmount),
+                                    })
+
+                                    const save = await saveData.save();
+                                    if (!save) {
+                                        return res.status(400).json({ error: "wallet data save failed" });
+                                    }
+
                                     const response = {
                                         success: true,
                                     };
@@ -596,6 +627,7 @@ module.exports.user_orderdetails_get = async (req, res) => {
 
         const orders = await Order.find({ userID: userID }).populate('orderItems.productID').sort({ orderDate: -1 });
 
+
         const orderDetails = orders.map(order => ({
             _id: order._id,
             orderState: order.orderState,
@@ -613,11 +645,15 @@ module.exports.user_orderdetails_get = async (req, res) => {
                     _id: orderItem._id,
                     is_Delivered: orderItem.is_Delivered,
                     is_return: orderItem.is_return,
+                    order_item_date: newformatDate(orderItem.order_item_date),
+                    return_expired: checkReturnExpired(orderItem.order_item_date),
                 })),
             address: order.address,
         }));
 
         console.log("This is order details", orderDetails);
+
+
 
         if (orderDetails) {
             return res.render('user/user-order-details', { orderDetails });

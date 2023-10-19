@@ -8,6 +8,7 @@ const userOrderControl = require('../controllers/userOrderControl');
 const userCouponControl = require('../controllers/userCouponControl');
 const userWishlistControl = require('../controllers/userWishlistControl')
 const userRatingControl = require('../controllers/userRatingControl')
+const userWalletControl = require('../controllers/userWalletControl');
 const { checkAuth } = require('../middlewares/authMiddleware');
 
 
@@ -83,7 +84,6 @@ router.get('/my-cart/check-out', userOrderControl.cartCheck_out_get);
 
 router.post('/check-out', userOrderControl.user_confirmOrder);
 
-
 //Single Order Routes(Buy Now)
 router.get('/check-out/:productID', userOrderControl.purachasePage_get);
 
@@ -128,8 +128,12 @@ router.get('/wishlist/removeItem/:productID', userWishlistControl.wishlistDelete
 router.get('/wishlist/move-to-cart/:productID', userWishlistControl.moveToCart_get);
 
 //Rating And Reviw Routes
-router.get('/profile/my-orders/rate-product/:productID',userRatingControl.productRatingPage_get)
-router.post('/profile/my-orders/rate-product',userRatingControl.productRatingPage_post)
+router.get('/profile/my-orders/rate-product/:productID', userRatingControl.productRatingPage_get)
+router.post('/profile/my-orders/rate-product', userRatingControl.productRatingPage_post)
+
+//Wallet add money
+router.get('/profile/add-money/:paymentAmount', userWalletControl.walletaddmoney_get)
+router.get('/profile/wallet-history', userWalletControl.wallestHistory_get)
 
 module.exports = router;
 

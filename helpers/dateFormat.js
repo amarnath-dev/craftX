@@ -9,4 +9,4 @@ function newformatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-module.exports = {newformatDate};
+module.exports = { newformatDate };

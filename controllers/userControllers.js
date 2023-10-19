@@ -7,6 +7,9 @@ const Product = require('../models/productModel');
 const { decodeJwt } = require('../helpers/jwtDecode');
 const Banner = require('../models/bannerModel');
 const { generateReferralCode } = require('../helpers/referalCode');
+const Wallet = require('../models/walletHistoryModel');
+const { generateDescription } = require('../helpers/generateDescription')
+const { generateTitle } = require('../helpers/generateTitle');
 
 
 //Create the token
@@ -161,6 +164,7 @@ module.exports.get_login = (req, res) => {
 module.exports.post_signup = async (req, res) => {
 
   req.session.userEmail = req.body.email;
+  const referalAmount = parseInt(100);
 
   const newUser = new User({
     fullname: req.body.fullname,
@@ -181,6 +185,20 @@ module.exports.post_signup = async (req, res) => {
         const newCartAmount = referredUser.wallet + 100;
 
         await User.findByIdAndUpdate(referredUser._id, { $set: { wallet: newCartAmount } }, { new: true });
+
+        const saveData = new Wallet({
+          userID: newUser._id,
+          transaction_amount: referalAmount,
+          transaction_title: generateTitle(referalAmount),
+          transaction_des: generateDescription(referalAmount),
+
+        })
+
+        const save = await saveData.save()
+
+        if (!save) {
+          return res.status(400).json({ error: "Wallet data creation Failed" });
+        }
 
         // return res.status(200).json({ message: "Cart amount increased by 100" });
       } else {

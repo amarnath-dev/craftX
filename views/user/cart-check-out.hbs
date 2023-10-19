@@ -353,6 +353,7 @@
 
 
 <div id="couponFormsContainer">
+
     <div class="card-body rounded" id="couponApply" style="position: absolute;">
         {{#each allCoupons}}
         {{#unless this.status}}
@@ -366,13 +367,16 @@
                 <small>For <strong> {{this.discount_value}}%</strong> Discount</small>
                 <input type="text" name="discountValue" hidden value="{{this.discount_value}}">
                 <div class="input-group">
-                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code" />
+                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code"
+                        style="display: none;" />
 
-                    <button class="btn btn-primary border" type="submit" style="padding: 10px">Apply</button>
+                    <button class="btn btn-primary border" type="submit"
+                        style="padding: 10px; display:none">Apply</button>
+
+                    <a class="btn border border-dark mb-1 iamAnchor" style="margin-left: 320px;"
+                        onclick="showCouponInput(this)">Apply</a>
+
                 </div>
-                <small style="margin-left: 10px;">Apply the Coupon and Enjoy!</small>
-                {{!-- <a href="" class="btn" style="margin-left: 320px;">Cancel</a> --}}
-
 
                 <div class="couponRemoveBtn mb-2">
                     <a onclick="refreshPage()"
@@ -652,6 +656,16 @@
         }).then(() => {
             location.reload();
         });
+    }
+
+    function showCouponInput(link) {
+        var $form = $(link).closest('form');
+
+        $form.find('input[name="coupon_code"]').show();
+        $form.find('button[type="submit"]').show();
+
+        $(link).hide()
+
     }
 
 

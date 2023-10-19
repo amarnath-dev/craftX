@@ -41,10 +41,23 @@
 
 
                     {{#unless this.is_return}}
+                    {{#unless this.return_expired}}
                     <a onclick="returnItem('{{../this._id}}','{{this.productID}}')"
                         class="returnItem btn border border-dark mt-2" data-product-id="{{this._id}}"
                         style="display: none;">Return Item</a>
                     {{/unless}}
+                    {{/unless}}
+
+
+                    {{#if this.is_Delivered}}
+                    {{#unless this.return_expired}}
+                    <div>
+                        <small>Order Date : {{this.order_item_date}}</small>
+                        <br>
+                        <small>Note : Return Policy Is Only Available Within 2 Weeks From Order Date</small>
+                    </div>
+                    {{/unless}}
+                    {{/if}}
 
 
                     <input type="text" value="{{this.productID}}" hidden name="" id="">
@@ -69,6 +82,7 @@
                         {{/unless}}
                         {{/if}}
                     </div>
+
 
 
                     {{!-- Taking the id which is each products unique id in orderItems array --}}

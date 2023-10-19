@@ -131,7 +131,7 @@
             //function to create chart
             createChart(fetchedData.monthlyOrders);
             createSecondChart(fetchedData.usersArray);
-            createThirdChart(fetchedData.thismonthRevenue)
+            createThirdChart(fetchedData.monthlyRevenues)
 
          } else {
             console.error('Data fetch failed', response.status);
@@ -222,34 +222,16 @@
    }
 
    //this is third data
-   function createThirdChart(thirdData) {
 
-      console.log("This is third data", thirdData);
-
+   function createThirdChart(monthlyRevenues) {
 
       const data = {
-         labels: ["January", "February", "March", "April", "May", "June"],
+         labels: ["July", "August", "September", "October","November", "December"], // Use dynamic month labels
          datasets: [{
             label: 'Monthly Revenue',
-            data: thirdData,
-            backgroundColor: [
-               'rgba(255, 99, 132, 0.2)',
-               'rgba(255, 159, 64, 0.2)',
-               'rgba(255, 205, 86, 0.2)',
-               'rgba(75, 192, 192, 0.2)',
-               'rgba(54, 162, 235, 0.2)',
-               'rgba(153, 102, 255, 0.2)',
-               'rgba(201, 203, 207, 0.2)'
-            ],
-            borderColor: [
-               'rgb(255, 99, 132)',
-               'rgb(255, 159, 64)',
-               'rgb(255, 205, 86)',
-               'rgb(75, 192, 192)',
-               'rgb(54, 162, 235)',
-               'rgb(153, 102, 255)',
-               'rgb(201, 203, 207)'
-            ],
+            data: monthlyRevenues, 
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgb(75, 192, 192)',
             borderWidth: 1
          }]
       };
@@ -263,7 +245,7 @@
                   beginAtZero: true
                }
             }
-         },
+         }
       };
 
       const canvas = document.getElementById('multipleBarChart');
@@ -274,6 +256,9 @@
          console.error('Canvas element not found.');
       }
    }
+
+
+
 
 
 
