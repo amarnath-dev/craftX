@@ -119,6 +119,9 @@ router.get('/get-sales-data', adminHomeControl.adminchart_get)
 router.get('/categoryOffer', adminOfferControl.categoryOfferpage_get);
 router.post('/categoryOffer', adminOfferControl.categoryOfferpage_post);
 
+//Product Offer Remove
+router.get('/admin/products/removeOffer/:productID', productControl.removeOffer_get)
+
 //Log out
 router.get('/logout', adminauthControl.adminlogout_get)
 

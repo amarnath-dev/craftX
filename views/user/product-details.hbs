@@ -54,13 +54,15 @@
                             <span class="text-danger ms-2">Our Of stock</span>
                         </span>
                         {{/if}}
-
-
                     </div>
+
+                    {{#if productDetails.is_Offer}}
+                    <small><strike><strong style="font-size: 15px;">{{productDetails.old_Price}}</strong></strike> <strong style="color: green;">{{productDetails.offer_discount}} % Discount</strong></small>
+                    {{/if}}
 
                     <div class="mb-3">
                         <span class="h5">{{productDetails.price}}</span>
-                        <span class="text-muted">/per box</span>
+                        <span class="text-muted">/per Item</span>
                     </div>
 
                     <p>

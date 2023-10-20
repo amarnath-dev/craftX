@@ -132,7 +132,7 @@ module.exports.admineditproduct_get = async (req, res) => {
             return res.status(401).send("Data Fetch Failed");
         }
 
-        console.log("This is the product data", productData);
+        // console.log("This is the product data", productData);
         res.render('admin/editproduct', { message: "Data Fetch Successful", product: productData });
     } catch (error) {
         console.log(error.message);
@@ -140,19 +140,21 @@ module.exports.admineditproduct_get = async (req, res) => {
 }
 
 
+
 module.exports.admineditproduct_post = async (req, res) => {
 
     const productID = req.body.productID;
 
+    const product_offer = parseInt(req.body.product_offer);
 
-    const { product_name, category_name, color, stock, description, prod_price, status, category_ID } = req.body;
+    const prod_price = parseInt(req.body.prod_price);
 
+    const { product_name, category_name, color, stock, description, status, category_ID } = req.body;
 
     const primaryImage = req.files['primaryImage'];
     const secondaryImages = req.files['images'];
 
     try {
-        // Retrieve the existing product from the database
         const existingProduct = await Product.findById(productID);
 
         if (!existingProduct) {
@@ -176,18 +178,60 @@ module.exports.admineditproduct_post = async (req, res) => {
                 price: prod_price,
                 status: status,
                 primaryImage: primaryImageNames,
-                secondaryImage: oldSecondaryImages.concat(secondaryImageNames), // Combine old and new secondary images
+                secondaryImage: oldSecondaryImages.concat(secondaryImageNames),
                 catName: category_name,
             };
 
-            const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
 
-            if (!product) {
-                return res.status(400).send("Edit Failed");
+            //Adding the product Offer
+            if (product_offer > 0) {
+
+                const newPrice = prod_price - (prod_price * (product_offer / 100));
+
+                const updatedProductwithOffer = {
+                    name: product_name,
+                    category_name: new mongoose.Types.ObjectId(category_ID),
+                    color,
+                    stock,
+                    description,
+                    price: newPrice,
+                    status: status,
+                    primaryImage: primaryImageNames,
+                    secondaryImage: oldSecondaryImages.concat(secondaryImageNames),
+                    catName: category_name,
+                    old_Price: prod_price,
+                    offer_price: newPrice,
+                    offer_discount: product_offer,
+                    is_Offer: true,
+                };
+
+
+                const product = await Product.findByIdAndUpdate(productID, updatedProductwithOffer, { new: true });
+
+                if (!product) {
+                    return res.status(400).send("Edit Failed");
+                }
+
+
+                res.redirect(302, '/admin/products');
+
+            } else {
+
+                const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
+
+
+                if (!product) {
+                    return res.status(400).send("Edit Failed");
+                }
+
+                res.redirect(302, '/admin/products');
             }
 
-            res.redirect(302, '/admin/products');
         } else if (!primaryImage && !secondaryImages) {
+
+            console.log("Code comes at here because there is no primary image and secondary image");
+
+
             const updatedProduct = {
                 name: product_name,
                 category_name: new mongoose.Types.ObjectId(category_ID),
@@ -196,19 +240,56 @@ module.exports.admineditproduct_post = async (req, res) => {
                 description,
                 price: prod_price,
                 status: status,
-                secondaryImage: oldSecondaryImages, // Use the old secondary images
+                secondaryImage: oldSecondaryImages,
                 catName: category_name,
             };
 
-            const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
 
-            if (!product) {
-                return res.status(400).send("Edit Failed");
+            //Adding the product Offer
+            if (product_offer > 0) {
+
+                console.log("Code is inside exicuting the product offer avilable");
+
+                const newPrice = prod_price - (prod_price * (product_offer / 100));
+
+                const updatedProductwithOffer = {
+                    name: product_name,
+                    category_name: new mongoose.Types.ObjectId(category_ID),
+                    color,
+                    stock,
+                    description,
+                    price: newPrice,
+                    status: status,
+                    secondaryImage: oldSecondaryImages,
+                    catName: category_name,
+                    old_Price: prod_price,
+                    offer_price: newPrice,
+                    offer_discount: product_offer,
+                    is_Offer: true,
+                };
+
+                const product = await Product.findByIdAndUpdate(productID, updatedProductwithOffer, { new: true });
+
+                if (!product) {
+                    return res.status(400).send("Edit Failed");
+                }
+
+
+                res.redirect(302, '/admin/products');
+
+            } else {
+                const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
+
+                if (!product) {
+                    return res.status(400).send("Edit Failed");
+                }
+
+                res.redirect(302, '/admin/products');
             }
 
-            res.redirect(302, '/admin/products');
         } else {
             if (primaryImage) {
+
                 const primaryImageNames = primaryImage.map(file => file.filename);
 
                 const updatedProduct = {
@@ -220,17 +301,54 @@ module.exports.admineditproduct_post = async (req, res) => {
                     price: prod_price,
                     status: status,
                     primaryImage: primaryImageNames,
-                    secondaryImage: oldSecondaryImages, // Use the old secondary images
+                    secondaryImage: oldSecondaryImages,
                     catName: category_name,
                 };
 
-                const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
 
-                if (!product) {
-                    return res.status(400).send("Edit Failed");
+                //Adding the product Offer
+                if (product_offer > 0) {
+
+                    const newPrice = prod_price - (prod_price * (product_offer / 100));
+
+                    const updatedProductwithOffer = {
+                        name: product_name,
+                        category_name: new mongoose.Types.ObjectId(category_ID),
+                        color,
+                        stock,
+                        description,
+                        price: newPrice,
+                        status: status,
+                        primaryImage: primaryImageNames,
+                        secondaryImage: oldSecondaryImages,
+                        catName: category_name,
+                        old_Price: prod_price,
+                        offer_price: newPrice,
+                        offer_discount: product_offer,
+                        is_Offer: true,
+                    };
+
+                    const product = await Product.findByIdAndUpdate(productID, updatedProductwithOffer, { new: true });
+
+                    if (!product) {
+                        return res.status(400).send("Edit Failed");
+                    }
+
+
+                    res.redirect(302, '/admin/products');
+
+                } else {
+
+                    const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
+
+                    if (!product) {
+                        return res.status(400).send("Edit Failed");
+                    }
+
+                    res.redirect(302, '/admin/products');
+
                 }
 
-                res.redirect(302, '/admin/products');
             } else {
                 // No new primary image, but there are new secondary images
                 const secondaryImageNames = secondaryImages.map(file => file.filename);
@@ -243,20 +361,56 @@ module.exports.admineditproduct_post = async (req, res) => {
                     description,
                     price: prod_price,
                     status: status,
-                    secondaryImage: oldSecondaryImages.concat(secondaryImageNames), // Combine old and new secondary images
+                    secondaryImage: oldSecondaryImages.concat(secondaryImageNames),
                     catName: category_name,
                 };
 
-                const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
+                //Adding the product Offer
+                if (product_offer > 0) {
 
-                res.redirect(302, '/admin/products');
+                    const newPrice = prod_price - (prod_price * (product_offer / 100));
+
+                    const updatedProduct = {
+                        name: product_name,
+                        category_name: new mongoose.Types.ObjectId(category_ID),
+                        color,
+                        stock,
+                        description,
+                        price: newPrice,
+                        status: status,
+                        secondaryImage: oldSecondaryImages.concat(secondaryImageNames),
+                        catName: category_name,
+                        old_Price: prod_price,
+                        offer_price: newPrice,
+                        offer_discount: product_offer,
+                        is_Offer: true,
+                    };
+
+                    const product = await Product.findByIdAndUpdate(productID, updatedProductwithOffer, { new: true });
+
+                    if (!product) {
+                        return res.status(400).send("Edit Failed");
+                    }
+
+
+                    res.redirect(302, '/admin/products');
+                } else {
+                    const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
+
+                    if (!product) {
+                        return res.status(400).send("Edit Failed");
+                    }
+                    res.redirect(302, '/admin/products');
+                }
             }
         }
+
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
 
 
 
@@ -312,6 +466,36 @@ module.exports.admin_edit_delete_image_get = async (req, res) => {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
+}
 
 
+module.exports.removeOffer_get = async (req, res) => {
+
+    const productID = req.params.productID;
+
+    try {
+
+        const getProduct = await Product.findById(productID);
+        const oldPrice = getProduct.old_Price;
+
+        const getUpdate = await Product.findByIdAndUpdate(productID, {
+            $set: {
+                price: oldPrice,
+                is_Offer: false,
+                offer_discount: parseInt(0),
+                offer_price: parseInt(0),
+                old_Price: parseInt(0),
+            }
+        }, { new: true });
+
+        if (!getUpdate) {
+            return res.status(400).json({ error: "Offer Upadate Failed" })
+        }
+
+        return res.status(200).json({ message: "Offer Upadate Successfull" });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ error: "Internal server error" })
+    }
 }

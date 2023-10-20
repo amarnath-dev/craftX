@@ -95,10 +95,9 @@
                         {{/if}}
                     </select>
 
-
-
                 </div>
             </div>
+
             <div class="row mb-4">
                 <div class="form-group col-md-6">
                     <label for="" class="fw-bold mb-2">Price</label>
@@ -106,7 +105,20 @@
                 </div>
             </div>
 
-            <div class="form-floating my-2 me-md-5">
+            {{!-- Product offer container --}}
+            <div class="offerContainer d-flex">
+                <div class="row mb-4">
+                    <div class="form-group col-md-8">
+                        <label for="" class="fw-bold mb-2">Add Offer</label>
+
+                        <input type="number" name="product_offer" class="form-control">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class=" form-floating my-2 me-md-5">
                 <label class="form-label fw-bold" for="form4Example3">Description</label>
                 <br>
                 <textarea class="form-control mt-4 text-area" rows="5" name="description"
@@ -271,8 +283,6 @@
         let imgPreview = document.getElementById(imgId);
         imgPreview.src = image;
     }
-
-
 
 
 </script>

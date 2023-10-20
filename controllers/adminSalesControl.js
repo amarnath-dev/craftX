@@ -160,6 +160,7 @@ module.exports.salesInvoice_post = async (req, res) => {
 
 
 module.exports.salesFilter_get = async (req, res) => {
+    
     let { from_Date, to_Date, from_amount, to_amount, payment_method } = req.body;
 
     try {
@@ -214,7 +215,9 @@ module.exports.salesFilter_get = async (req, res) => {
         if (totalSales) {
             totalSales.forEach((detail) => detail.dateFormatted = new Date(detail.orderDate).toLocaleDateString());
         }
+
         return res.render('admin/salesReport', { totalSales });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });

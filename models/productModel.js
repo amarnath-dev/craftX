@@ -43,6 +43,19 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    is_Offer: {
+        type: Boolean,
+        default: false,
+    },
+    offer_discount: {
+        type: Number
+    },
+    offer_price: {
+        type: Number
+    },
+    old_Price: {
+        type: Number,
+    },
 
 }, { timestamps: true });
 
