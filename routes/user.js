@@ -13,7 +13,7 @@ const { checkAuth } = require('../middlewares/authMiddleware');
 
 
 //User signUp Routes
-router.get('/', checkAuth, userControllers.get_home);
+router.get('/', userControllers.get_home);
 router.get('/signup', userControllers.get_signup);
 router.post('/signup', userControllers.post_signup);
 
@@ -39,7 +39,7 @@ router.post('/newpassword', userControllers.new_password);
 
 
 //Profile Route
-router.get('/profile', userProfileControl.userprofile_get);
+router.get('/profile', checkAuth, userProfileControl.userprofile_get);
 
 router.get('/profile/update', userProfileControl.updateprofile_get);
 router.post('/profile/update', userProfileControl.updateprofile_post);
@@ -63,9 +63,9 @@ router.get('/profile/manageaddress/delete/:addressID', userAddressControl.delete
 
 
 //Product Details Page
-router.get('/add-to-cart/:productID', userCartControl.usercart_get);
+router.get('/add-to-cart/:productID',checkAuth, userCartControl.usercart_get);
 
-router.get('/my-cart', userCartControl.mycart_get);
+router.get('/my-cart', checkAuth, userCartControl.mycart_get);
 
 router.get('/my-cart/remove/:productID', userCartControl.remove_product_get);
 
@@ -74,7 +74,7 @@ router.get('/my-cart/decrement/:productID', userCartControl.usercartDec_get);
 
 
 //Product Details
-router.get('/view-product/:productID', userProductControl.productDetails_get);
+router.get('/view-product/:productID', checkAuth, userProductControl.productDetails_get);
 
 
 router.post('/check-out/edit-address', userOrderControl.checkOut_editproduct_post);
@@ -85,7 +85,7 @@ router.get('/my-cart/check-out', userOrderControl.cartCheck_out_get);
 router.post('/check-out', userOrderControl.user_confirmOrder);
 
 //Single Order Routes(Buy Now)
-router.get('/check-out/:productID', userOrderControl.purachasePage_get);
+router.get('/check-out/:productID', checkAuth, userOrderControl.purachasePage_get);
 
 
 // This was separate payment process route for single productDetails_get
@@ -103,7 +103,7 @@ router.post('/verify-payment', userOrderControl.verifyPayment_post)
 
 router.post('/my-cart/check-out/get-coupon', userCouponControl.userCoupon_post);
 
-router.get('/logout', userControllers.logout_get)
+router.get('/logout', checkAuth, userControllers.logout_get)
 
 
 router.get('/thank-you', userOrderControl.userThankyoupage_get);
@@ -123,7 +123,7 @@ router.get('/profile/my-orders/postInvoice', userOrderControl.invoicePage_post)
 
 router.get('/my-wishlist/:productID', userWishlistControl.userWishlist_add);
 
-router.get('/wishlist', userWishlistControl.userWishlist_get)
+router.get('/wishlist', checkAuth, userWishlistControl.userWishlist_get)
 router.get('/wishlist/removeItem/:productID', userWishlistControl.wishlistDelete_get)
 router.get('/wishlist/move-to-cart/:productID', userWishlistControl.moveToCart_get);
 

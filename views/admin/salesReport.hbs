@@ -22,21 +22,26 @@
 
                             {{!-- Filter Items DIV --}}
                             <div id="filterFormContainer">
+
                                 <form action="/admin/sales-report/filter" method="post">
                                     <div class="card border border-dark"
                                         style="background-color: rgb(234, 240, 238); width: 800px; height: 100px"
                                         id="itemsContainer">
                                         <div class="card-body">
+
                                             <div class="d-flex">
 
                                                 <small>From </small>
+
                                                 <input type="date" name="from_Date"
                                                     style="height: 30px; margin-left: 10px">
 
-
                                                 <small>To</small>
+
                                                 <input type="date" name="to_Date"
                                                     style="height: 30px; margin-left: 10px">
+
+
 
                                                 <div class="d-flex" style="margin-left: 20px;">
 
@@ -61,11 +66,14 @@
                                                             class="mt-2">
 
                                                     </div>
+
+
                                                 </div>
 
                                                 <button type="submit" class="btn border border-dark">Apply</button>
 
                                             </div>
+
                                         </div>
                                     </div>
                                 </form>
@@ -83,8 +91,6 @@
                                     <th class="th-sm">Product Name</th>
                                     <th class="th-sm">Order Date</th>
                                     <th class="th-sm">Amount</th>
-
-
                                     <th class="th-sm">Payment Method</th>
                                     <th class="th-sm">Quantity</th>
                                     <th class="th-sm">Invoice</th>
@@ -131,6 +137,7 @@
 
 <script>
 
+    //code for converting to excel sheet 
     $(document).ready(function () {
         $("#btnExcel").click(function () {
             console.log("clicked")
@@ -138,18 +145,15 @@
             console.log(table)
 
 
-            // Find the column index of the Invoice column.
             const invoiceColumnIndex = Array.from(table.querySelectorAll("th")).findIndex(th => th.textContent === "Invoice");
 
             if (invoiceColumnIndex !== -1) {
-                // Remove the Invoice column from the table.
                 let rows = table.getElementsByTagName("tr");
                 for (let i = 0; i < rows.length; i++) {
                     rows[i].deleteCell(invoiceColumnIndex);
                 }
             }
 
-            // Convert the modified table to Excel.
             TableToExcel.convert(table, {
                 name: 'salesreport.xlsx',
                 sheet: {
@@ -160,6 +164,30 @@
 
     });
 
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('#filterFormContainer form');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const fromDateInput = document.querySelector('input[name="from_Date"]');
+            const toDateInput = document.querySelector('input[name="to_Date"]');
+            const fromDate = new Date(fromDateInput.value);
+            const toDate = new Date(toDateInput.value);
+            const currentDate = new Date();
+
+            if (toDate > currentDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Date',
+                    text: 'Please select a date that is not in the future.',
+                });
+            } else {
+                form.submit();
+            }
+        });
+    });
 
 
 

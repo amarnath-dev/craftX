@@ -1,5 +1,4 @@
 
-const { count } = require("../models/adminModel");
 const Product = require("../models/productModel");
 const User = require("../models/userModel");
 const Order = require("../models/userOrderModel");
@@ -22,7 +21,6 @@ module.exports.adminchart_get = async (req, res) => {
         let totalSalesPrice = 0;
         let usersArray = [];
         let thismonthSalesPrice = 0;
-        const monthlyRevenues = [];
 
         //today date calculation
         const today = new Date();
@@ -124,47 +122,47 @@ module.exports.adminchart_get = async (req, res) => {
 
 
 
-
-        //Getting this month total Revenue
-        const allthismonthOrders = await Order.find({ orderDate: { $gte: startOfMonth, $lt: endOfMonth } });
-
-        let thisMonthRevenue = 0;
-
-        // Calculate revenue from delivered orders
-        allthismonthOrders.forEach((order) => {
-            order.orderItems.forEach((orderItem) => {
-                if (orderItem.orderStatus === "delivered") {
-                    thisMonthRevenue += orderItem.unitPrice;
-                }
-            });
-        });
-
-
-
-        for (let i = 0; i < 6; i++) {
-            const startMonth = new Date(currentYear, currentMonth - i, 1);
-            const endMonth = new Date(currentYear, currentMonth - i + 1, 0);
-            startMonths.push(startMonth);
-            endMonths.push(endMonth);
-        }
+        //Getting this month total Revenue(this code is not using)
+        // const allthismonthOrders = await Order.aggregate([
+        //     {
+        //         $match: {
+        //             orderDate: {
+        //                 $gte: startOfMonth,
+        //                 $lt: endOfMonth,
+        //             },
+        //             "orderItems.orderStatus": "delivered",
+        //         },
+        //     },
+        // ]);
+        const currentDate = new Date();
+        const currentMonthnow = currentDate.getMonth() + 1;
 
 
+        const monthlyRevenues = Array(6).fill(0);
 
         for (let i = 0; i < 6; i++) {
+            const startMonth = new Date(currentYear, currentMonthnow - 4 + i, 1);
+            const endMonth = new Date(currentYear, currentMonthnow - 3 + i, 0);
+
             const ordersInMonth = await Order.find({
-                orderDate: { $gte: startMonths[i], $lte: endMonths[i] },
+                orderDate: { $gte: startMonth, $lte: endMonth },
             });
 
-            const totalRevenue = ordersInMonth.reduce((total, order) => {
-                const orderTotal = order.orderItems.reduce((orderTotal, orderItem) => {
-                    return orderTotal + orderItem.unitPrice;
-                }, 0);
+            let totalRevenue = 0;
 
-                return total + orderTotal;
-            }, 0);
+            ordersInMonth.forEach((order) => {
+                order.orderItems.forEach((orderItem) => {
+                    if (orderItem.orderStatus === "delivered") {
+                        totalRevenue += orderItem.unitPrice;
+                    }
+                });
+            });
 
-            monthlyRevenues.push(totalRevenue);
+            monthlyRevenues[i] = totalRevenue;
         }
+
+        console.log("Monthly Revenues:", monthlyRevenues);
+
 
 
         try {
@@ -173,8 +171,8 @@ module.exports.adminchart_get = async (req, res) => {
 
             var getTotalProducts = await Product.find({}, { is_delete: false }).count();
 
-            if (getTotalUsers && getTotalProducts) {
-                console.log(getTotalUsers, getTotalProducts);
+            if (!getTotalUsers || !getTotalProducts) {
+                return res.status(400).json({ error: "Something went Wrong" });
             }
 
         } catch (error) {

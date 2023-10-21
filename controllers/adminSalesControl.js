@@ -160,8 +160,9 @@ module.exports.salesInvoice_post = async (req, res) => {
 
 
 module.exports.salesFilter_get = async (req, res) => {
-    
+
     let { from_Date, to_Date, from_amount, to_amount, payment_method } = req.body;
+
 
     try {
         let totalSales = await Order.aggregate([
@@ -197,8 +198,19 @@ module.exports.salesFilter_get = async (req, res) => {
 
         if (req.body.to_Date !== '') {
             to_Date = new Date(to_Date);
-            totalSales = totalSales.filter((order) => new Date(order.orderDate) <= to_Date);
+            const nextDay = new Date(to_Date)
+            nextDay.setDate(nextDay.getDate() + 1)
+            totalSales = totalSales.filter((order) => new Date(order.orderDate) <= nextDay);
         }
+
+        if (req.body.from_Date !== '' && req.body.to_Date !== '') {
+            from_Date = new Date(from_Date);
+            to_Date = new Date(to_Date);
+            const nextDay = new Date(to_Date)
+            nextDay.setDate(nextDay.getDate() + 1)
+            totalSales = totalSales.filter((order) => new Date(order.orderDate) >= from_Date && new Date(order.orderDate) < nextDay);
+        }
+
 
         if (req.body.from_amount !== '' && req.body.to_amount !== '') {
             totalSales = totalSales.filter((order) => {
