@@ -19,8 +19,8 @@ const { checkAuthadmin } = require('../middlewares/authMiddleware');
 router.get('/', checkAuthadmin, adminControllers.adminhome_get);
 
 //Admin SignUp Management
-// router.get("/signup", adminControllers.adminsignup_get); 
-// router.post("/signup", adminControllers.adminsignup_post); 
+router.get("/signup", adminControllers.adminsignup_get); 
+router.post("/signup", adminControllers.adminsignup_post); 
 
 router.get('/login', adminControllers.adminlogin_get);
 router.post("/login", adminControllers.adminlogin_post);
