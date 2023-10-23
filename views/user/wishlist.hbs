@@ -9,16 +9,17 @@
 
                 {{#each this.productDetails}}
                 <div class="col-md-3">
-
-                    <img class="img-fluid img-responsive rounded product-image mt-3 border border-dark"
-                        src="/uploads/{{this.primaryImage}}" style="width: 100px; height: 100px;margin-left: 20px;">
-
+                    <a href="/view-product/{{this._id}}">
+                        <img class="img-fluid img-responsive rounded product-image mt-3 border border-dark"
+                            src="/uploads/{{this.primaryImage}}" style="width: 100px; height: 100px;margin-left: 20px;">
+                    </a>
                 </div>
 
                 <div class="col-md-6 mt-1">
                     <h5 style="margin-top: 30px;">{{this.name}}</h5>
                     <strong>Color: {{this.color}}</strong>
                 </div>
+
 
                 <div class="align-items-center align-content-center col-md-3 border-left">
 

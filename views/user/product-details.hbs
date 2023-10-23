@@ -57,7 +57,8 @@
                     </div>
 
                     {{#if productDetails.is_Offer}}
-                    <small><strike><strong style="font-size: 15px;">{{productDetails.old_Price}}</strong></strike> <strong style="color: green;">{{productDetails.offer_discount}} % Discount</strong></small>
+                    <small><strike><strong style="font-size: 15px;">{{productDetails.old_Price}}</strong></strike>
+                        <strong style="color: green;">{{productDetails.offer_discount}} % Discount</strong></small>
                     {{/if}}
 
                     <div class="mb-3">
@@ -77,8 +78,14 @@
                 <a href="/check-out/{{productDetails._id}}" class="btn btn-warning shadow-0"> Buy now </a>
                 <a onclick="addToCart('{{productDetails._id}}')" class="btn btn-primary shadow-0"> <i
                         class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
-                <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i
+
+
+                <a href="#" onclick="addtoWishlist('{{productDetails._id}}')"
+                    class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i
                         class="me-1 fa fa-heart fa-lg"></i> Save </a>
+
+
+
 
                 {{#if productRating}}
                 <div class="mt-3">
@@ -166,6 +173,39 @@
                 }
             }
         });
+    }
+
+    function addtoWishlist(productID) {
+
+        console.log("this is product id", productID)
+
+        $.ajax({
+            url: '/my-wishlist/' + productID,
+            method: 'GET',
+        }).then(response => {
+            if (response.message) {
+                Swal.fire({
+                    title: "Product Added",
+                    text: "Product Added to Wishlist Successfully",
+                    icon: "success",
+                }).then(() => {
+                    console.log("Product Get Successfull");
+                })
+            } else if (response.exists) {
+                Swal.fire({
+                    title: "Product Alredy Exists",
+                    text: "Product is Alredy Present In Wishlist",
+                }).then(() => {
+                    console.log("Product Alredy Exists in Wishlist");
+                });
+            } else {
+                Swal.fire({
+                    title: "Product Add Failed",
+                    text: "Something Went Wrong. Please Try Again",
+                    icon: "error",
+                });
+            }
+        })
     }
 
 </script>

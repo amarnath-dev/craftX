@@ -92,7 +92,6 @@ router.get('/check-out/:productID', checkAuth, userOrderControl.purachasePage_ge
 // router.post('/check-out', userOrderControl.purachasePage_post);
 
 
-
 router.get('/profile/my-orders', userOrderControl.user_orderdetails_get)
 
 router.get('/profile/my-orders/cancel-order', userOrderControl.user_orderCancel_get);

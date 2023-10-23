@@ -367,6 +367,7 @@
                 <small>For <strong> {{this.discount_value}}%</strong> Discount</small>
                 <input type="text" name="discountValue" hidden value="{{this.discount_value}}">
                 <div class="input-group">
+
                     <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code"
                         style="display: none;" />
 
@@ -375,6 +376,8 @@
 
                     <a class="btn border border-dark mb-1 iamAnchor" style="margin-left: 320px;"
                         onclick="showCouponInput(this)">Apply</a>
+
+                    <a class="btn" onclick="Cancel()">Cancel</a>
 
                 </div>
 
@@ -395,7 +398,7 @@
 <div style="position: absolute;" id="wallet_price">
     <span>Wallet Balance :</span>
     <input type="text" value="{{userData.wallet}}" id="walletAmount" disabled class="border border-dark rounded"
-        style="width: 110px; font-size: 20px; color: green;">
+        style="width: 80px; font-size: 20px; color: green;">
 </div>
 
 
@@ -668,6 +671,9 @@
 
     }
 
+    function Cancel() {
+        location.reload()
+    }
 
 </script>
 

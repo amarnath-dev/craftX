@@ -247,7 +247,6 @@
                                                     </div>
 
 
-
                                                 </div>
                                             </div>
                                         </div>
@@ -353,7 +352,6 @@
     </div>
 </section>
 
-
 <div id="couponFormsContainer">
     <div class="card-body rounded" id="couponApply" style="position: absolute;">
 
@@ -370,15 +368,23 @@
                 <small>For <strong> {{this.discount_value}}%</strong> Discount</small>
                 <input type="text" name="discountValue" hidden value="{{this.discount_value}}">
                 <div class="input-group">
-                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code" />
 
-                    <button class="btn btn-primary border" type="submit" style="padding: 10px">Apply</button>
+                    <input type="text" class="form-control border" name="coupon_code" placeholder="Coupon code"
+                        style="display: none;" />
+
+                    <button class="btn btn-primary border iamAnchor" type="submit"
+                        style="padding: 10px; display:none">Apply</button>
+
+                    <a class="btn border border-dark mb-1 iamAnchor" style="margin-left: 320px;"
+                        onclick="showCouponInput(this)">Apply</a>
+
+                    <a class="btn" onclick="Cancel()">Cancel</a>
+
                 </div>
-                <small style="margin-left: 10px;">Apply the Coupon and Enjoy!</small>
 
                 <div class="couponRemoveBtn mb-2">
                     <a onclick="refreshPage()"
-                        style="background-color: transparent; border: none;margin-left: 370px;"><i
+                        style="background-color: transparent; border: none;margin-left: 370px;cursor: pointer;"><i
                             class="fa-solid fa-trash" style="color: black; font-size: 20px;"></i></a>
                 </div>
 
@@ -394,8 +400,8 @@
 {{!-- code for displaying the wallet --}}
 <div style="position: absolute;" id="wallet_price">
     <span>Wallet Balance :</span>
-    <input type="text" value="{{getUser.wallet}}" id="walletAmount" disabled class="border border-dark rounded"
-        style="width: 120px; font-size: 20px; color: green;">
+    <input type="text" value="{{getUser.wallet}}" id="walletAmount" disabled class="border border-dark rounded mt-4"
+        style="width: 80px; font-size: 20px; color: green; height: 30px;">
 </div>
 
 
@@ -655,6 +661,23 @@
             location.reload();
         });
     }
+
+    //rest of the code comes here
+    function showCouponInput(link) {
+        var $form = $(link).closest('form');
+
+        $form.find('input[name="coupon_code"]').show();
+        $form.find('button[type="submit"]').show();
+
+        $(link).hide()
+
+    }
+
+    function Cancel() {
+        location.reload()
+    }
+
+
 
 </script>
 
