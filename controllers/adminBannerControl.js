@@ -36,6 +36,8 @@ module.exports.newBanner_get = (req, res) => {
 
 module.exports.newBanner_post = async (req, res) => {
 
+    console.log("Inside New Banner Post");
+
     try {
         const { banner_title, banner_url, banner_link, banner_position, banner_category, banner_status, start_date, end_date } = req.body;
 
@@ -69,7 +71,6 @@ module.exports.newBanner_post = async (req, res) => {
         console.error(error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
-
 }
 
 module.exports.bannerEdit_get = async (req, res) => {
