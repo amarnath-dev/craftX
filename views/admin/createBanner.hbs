@@ -191,7 +191,7 @@
                         location.assign('/admin/banner')
                     });
                 } else {
-                    console.log("Request failed terrible");
+                    console.log(response.error);
                 }
             }).catch(error => {
                 console.error("Request failed:", error);

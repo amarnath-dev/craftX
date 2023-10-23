@@ -41,7 +41,6 @@ module.exports.newBanner_post = async (req, res) => {
     try {
         const { banner_title, banner_url, banner_link, banner_position, banner_category, banner_status, start_date, end_date } = req.body;
 
-
         const bannerImage = req.files['bannerImage'];
 
         //here it only takes second postion image(which is the cropped image )
@@ -69,9 +68,10 @@ module.exports.newBanner_post = async (req, res) => {
         return res.status(200).json({ message: "Banner Created Successfully" });
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error:error.message });
     }
 }
+
 
 module.exports.bannerEdit_get = async (req, res) => {
     const bannerId = req.params.bannerId;
@@ -149,14 +149,14 @@ module.exports.bannerDelete_get = async (req, res) => {
 
     try {
 
-        const getBanner = await Banner.findByIdAndUpdate(bannerId, {$set: {is_delete: true}}, {new: true});
+        const getBanner = await Banner.findByIdAndUpdate(bannerId, { $set: { is_delete: true } }, { new: true });
         await getBanner.save();
-        if(getBanner) {
-            return res.status(200).json({message: "Banner Delete Successfull"});
+        if (getBanner) {
+            return res.status(200).json({ message: "Banner Delete Successfull" });
         }
 
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         return res.status(500).json({ error: "Intenal Server Error" });
     }
 }
