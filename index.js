@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const nocache = require('nocache')
 const path = require('path');
-const punycode = require('punycode');
 
 
 const app = express();
@@ -39,14 +38,7 @@ const mongoDBURI = process.env.MONGODB_URI;
 mongoose.connect(mongoDBURI, {
   useNewUrlParser: true,         
   useUnifiedTopology: true, 
-});
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB!');
-});
+}).then(()=>console.log("db connected")).catch((err)=>console.log(err.message))
 
 
 // view engine setup

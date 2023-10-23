@@ -32,6 +32,6 @@
     "path": "^0.12.7",
     "pdf-creator-node": "^2.3.5",
     "puppeteer": "^21.3.6",
-    "razorpay": "^0.0.0"
+    "razorpay": "^2.9.2"
   }
 }
