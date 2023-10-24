@@ -98,8 +98,8 @@ const sendEmailotp = async (fullname, email, userID) => {
     const mailOptions = {
       from: process.env.MY_EMAIL,
       to: email,
-      subject: "CraftX Password Re-set",
-      html: '<p>Hy  ' + fullname + "," + otpnum + ' is youre OTP number for Verification'
+      subject: "CraftX",
+      html: '<p>Hy  ' + fullname + "," + otpnum + ' is youre OTP number for Verification Number'
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -139,7 +139,6 @@ module.exports.get_home = async (req, res) => {
       var getProductCount = getUser.cart.length;
     }
 
-    console.log("This is all products", allproducts);
     res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount, allBanner });
 
   } catch (error) {

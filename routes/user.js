@@ -74,7 +74,7 @@ router.get('/my-cart/decrement/:productID', userCartControl.usercartDec_get);
 
 
 //Product Details
-router.get('/view-product/:productID', checkAuth, userProductControl.productDetails_get);
+router.get('/view-product/:productID', userProductControl.productDetails_get);
 
 
 router.post('/check-out/edit-address', userOrderControl.checkOut_editproduct_post);
