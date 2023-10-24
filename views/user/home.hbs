@@ -33,10 +33,10 @@
     {{#each allproducts}}
     {{#unless this.is_delete}}
 
-    <div class="card border" style="width: 18rem;">
+    <div class="card border" id="cardHolder">
 
-      <a href="#" onclick="addtoWishlist('{{this._id}}')"><span class="material-symbols-outlined icon"
-          style="margin-left: 250px;">favorite</span></a>
+      <a href="#" id="addtoWishlist" onclick="addtoWishlist('{{this._id}}')"><span
+          class="material-symbols-outlined icon" style="margin-left: 250px;">favorite</span></a>
 
       {{#each this.primaryImage}}
       <a href="/view-product/{{../this._id}}">
@@ -49,15 +49,15 @@
         <br>
 
         {{!-- Show the Rating --}}
-        <small><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}} )</small>
+        <small id="stars"><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}} )</small>
 
 
         {{#unless this.is_Offer}}
-        <small class="card-text fw-bold" style="color: red; margin-left: 80px; font-size: 20px;">{{this.price}}</small>
+        <small class="card-text fw-bold priceElement">{{this.price}}</small>
         {{/unless}}
 
         {{#if this.is_Offer}}
-        <span style="color: green;"><strike
+        <span style="color: green;" class="itemPrice"><strike
             style="margin-left: 30px; font-size: 17px;">{{this.old_Price}}</strike><strong
             style="margin-left: 5px;">{{this.offer_discount}}% Off</strong> </span>
 
@@ -68,13 +68,12 @@
 
 
 
-
-
         <div class="d-flex">
           <button class="btn border border-dark mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
             Cart</button>
 
-          <input type="text" value="{{this._id}}" name="" id="productID" hidden>
+          {{!-- <input type="text" value="{{this._id}}" name="" id="productID" hidden> --}}
+
           <a onclick="buyNow('{{this.stock}}', '{{this._id}}')" target="_blank" class="btn border-dark mt-4"
             id="buy-now">Buy Now</a>
         </div>
@@ -134,7 +133,6 @@
   }
 
 
-
   function addtoWishlist(productID) {
 
     $.ajax({
@@ -165,7 +163,6 @@
       }
     })
   }
-
 
 
 </script>
@@ -213,6 +210,7 @@
 
   .card {
     margin-left: 40px;
+    width: 18rem;
   }
 
   .icon {
@@ -272,5 +270,50 @@
     margin-top: 5px;
   }
 
-  
+  .priceElement {
+    color: red;
+    margin-left: 80px;
+    font-size: 20px;
+  }
+
+
+  @media (max-width: 600px) {
+    .card {
+      width: 100px;
+      height: auto;
+    }
+
+    .images {
+      width: 100px !important;
+      height: 100px !important;
+    }
+
+
+    #addtoWishlist,
+    #buy-now {
+      display: none;
+    }
+
+    #add-to-cart {
+      width: 60px;
+      height: 20px;
+      font-size: 6px;
+    }
+
+    .priceElement {
+      display: none;
+    }
+
+    .card-title {
+      font-size: 10px;
+    }
+
+    #stars {
+      font-size: 9px;
+    }
+
+    .star {
+      font-size: 9px;
+    }
+  }
 </style>
