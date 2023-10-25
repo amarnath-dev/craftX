@@ -25,11 +25,6 @@
   </div>
 </section>
 
-{{!-- //loader --}}
-<div id="preLoader">
-
-</div>
-
 
 <section class="row mt-4" id="productContainer">
   <div class="card-container d-flex mt-3 border">
@@ -96,9 +91,6 @@
 <script>
 
   $(document).ready(() => {
-    const loader = document.getElementById('preLoader')
-    loader.style.display = 'none';
-
     $('#profile-list').hide()
     $('#profile-icon').click(function () {
       $('#profile-list').slideToggle();
