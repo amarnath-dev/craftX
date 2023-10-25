@@ -25,6 +25,10 @@
   </div>
 </section>
 
+{{!-- //loader --}}
+<div id="preLoader">
+
+</div>
 
 
 <section class="row mt-4" id="productContainer">
@@ -92,6 +96,9 @@
 <script>
 
   $(document).ready(() => {
+    const loader = document.getElementById('preLoader')
+    loader.style.display = 'none';
+
     $('#profile-list').hide()
     $('#profile-icon').click(function () {
       $('#profile-list').slideToggle();
@@ -308,5 +315,14 @@
     .card-title {
       font-size: 7px;
     }
+  }
+
+  #preLoader {
+    background: #000 url("/uploads/blackGifloader.gif") no-repeat center center;
+    background-size: 10%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
   }
 </style>
