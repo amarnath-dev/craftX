@@ -51,7 +51,7 @@ module.exports.adminsignup_post = async (req, res) => {
     //   const token = createToken(savedAdmin._id);
     //   res.cookie('jwtAdmin', token, {httpOnly: true ,maxAge: maxAge * 1000});
 
-
+  
     res.status(200).json({ message: 'Signup successful', adminID: savedAdmin._id });
 
   } catch (error) {

@@ -76,13 +76,32 @@
 <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 <body>
+
+  <div id="preLoader">
+
+  </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
   {{>adminHeader}}
   {{{body}}}
+
+
 </body>
 
 </html>
+
+
+<style>
+  #preLoader {
+    background: #000 url("/uploads/blackGifloader.gif") no-repeat center center;
+    background-size: 10%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+  }
+</style>
 
 
 {{#if success}}
@@ -99,6 +118,10 @@
 <script>
 
   $(document).ready(() => {
+
+    const loader = document.getElementById('preLoader')
+    loader.style.display = 'none';
+
     setTimeout(() => {
       $('.alert').toggle()
     }, 2500)
