@@ -13,11 +13,20 @@ module.exports.userCoupon_post = async (req, res) => {
     const discountValue = req.body.discountValue;
     const totalAmount = req.body.totalAmount;
 
+
     try {
         const getCoupon = await Coupon.findById({ _id: couponID });
 
         if (getCoupon) {
             const DBcoupon_code = getCoupon.coupon_code;
+
+
+            //Check if user alredy used that coupon
+            const userExists = getCoupon.used_users.includes(userID);
+            if (userExists) {
+                console.log("Inside User Alredy used the coupon")
+                return res.status(200).json({ exists: "User Alredy Used This Coupon" })
+            }
 
             if (DBcoupon_code === coupon_code) {
                 const updatedCoupon = await Coupon.findByIdAndUpdate(couponID,
@@ -33,13 +42,12 @@ module.exports.userCoupon_post = async (req, res) => {
                 const discountAmt = totalAmount - discount;
 
 
-
                 if (updatedCoupon) {
-                    return res.status(200).json({ discountAmt });
+                    return res.status(200).json({ message: "Coupon Applyed Successfully", discountAmt });
                 }
 
             } else {
-                return res.json({ message: "Unavailable Coupon" });
+                return res.json({ error: "Unavailable Coupon" });
             }
         }
 

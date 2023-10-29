@@ -37,7 +37,6 @@ router.post('/verifyotp', userControllers.verify_otp);
 router.get('/newpassword', userControllers.get_newpassword);
 router.post('/newpassword', userControllers.new_password);
 
-
 //Profile Route
 router.get('/profile', checkAuth, userProfileControl.userprofile_get);
 

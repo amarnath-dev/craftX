@@ -374,10 +374,11 @@
                     <button class="btn btn-primary border" type="submit"
                         style="padding: 10px; display:none">Apply</button>
 
-                    <a class="btn border border-dark mb-1 iamAnchor" style="margin-left: 320px;"
+                    <a class="btn border rounded border-dark mb-1 iamAnchor" style="margin-left: 320px;"
                         onclick="showCouponInput(this)">Apply</a>
 
-                    <a class="btn" onclick="Cancel()">Cancel</a>
+                    <a class="btn border border-dark rounded" onclick="Cancel()">Cancel</a>
+                    <small style="margin-left: 10px;">Carefull that, Once you use the coupon it will no longer applicable!!</small>
 
                 </div>
 
@@ -457,11 +458,11 @@
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            if (result.ok) {
-                const data = await result.json();
-                console.log("Discounted Amount:", data.discountAmt);
-                couponDiscountAmt = data.discountAmt;
+            const data = await result.json();
 
+
+            if (data.message) {
+                couponDiscountAmt = data.discountAmt;
                 //Swal message
                 Swal.fire({
                     icon: 'success',
@@ -485,6 +486,17 @@
                 //UI updation here
                 $('#discountPrice').show();
                 $('#couponApply').hide();
+
+            } else if (data.exists) {
+                Swal.fire({
+                    title: "Alredy Used",
+                    text: "Sorry! You have alredy Used this Coupon",
+                    icon: "error",
+                }).then(() => {
+                    console.log("Alredy Used Coupon")
+                    location.reload()
+                })
+
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -492,6 +504,7 @@
                     text: 'Please check the coupon code and try again.',
                 });
             }
+
         } catch (error) {
             console.log(error);
         }
@@ -672,7 +685,7 @@
     }
 
     function Cancel() {
-        location.reload()
+        $('#couponApply').hide();
     }
 
 </script>
