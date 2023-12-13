@@ -30,13 +30,10 @@
 </section>
 
 <section class="row mt-4" id="productContainer">
-  <div class="card-container d-flex mt-3 border">
-
-    {{#each allproducts}}
-    {{#unless this.is_delete}}
-
+  {{#each allproducts}}
+  {{#unless this.is_delete}}
+  <div class="col-md-4 mb-3">
     <div class="card border" id="cardHolder">
-
       <a href="#" id="addtoWishlist" onclick="addtoWishlist('{{this._id}}')"><span
           class="material-symbols-outlined icon" style="margin-left: 250px;">favorite</span></a>
 
@@ -80,14 +77,15 @@
         </div>
 
       </div>
+
     </div>
-    {{/unless}}
-    {{/each}}
   </div>
+  {{/unless}}
+  {{/each}}
 </section>
 
-{{>new-user-footer}}
 
+{{>new-user-footer}}
 
 
 <script>
@@ -220,6 +218,7 @@
   .card-title {
     text-decoration: none;
   }
+
 
   img {
     cursor: pointer;
