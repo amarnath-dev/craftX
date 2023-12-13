@@ -102,12 +102,7 @@ module.exports.editaddress_post = async (req, res) => {
         } else {
             res.redirect('/profile/manageaddress/');
         }
-
-        // if (updateAddress) {
-        //    return res.render('user/use-address', { updateAddress: updateAddress._id });
-        // } else {
-        //     return res.status(401).json({ error: "Update Failed" });
-        // }
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Internal Server Error" });
