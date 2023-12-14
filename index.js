@@ -69,7 +69,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //Listening to port
 app.listen(3000, (req,res)=>{
-  console.log("App is listening to port 5000")
+  console.log("App is listening to port 3000")
 });
 
 
