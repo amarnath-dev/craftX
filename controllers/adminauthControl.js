@@ -60,14 +60,9 @@ const sendEmailotpadmin = async (email) => {
   }
 };
 
-
-
-
-
 module.exports.adminforgotpass_get = (req, res) => {
   res.render('admin/newpassemail');
 }
-
 
 module.exports.adminforgotpass_post = async (req, res) => {
   const adminEmail = req.body.email;
@@ -75,18 +70,14 @@ module.exports.adminforgotpass_post = async (req, res) => {
 
   try {
     const checkAdmin = await Admin.findOne({ email: req.body.email });
-    console.log(checkAdmin);
-
-
+   
     if (!checkAdmin) {
       return res.status(401).json({ error: 'Email Doesnt Exists' });
     }
 
     //Sending email to the given email id
     await sendEmailotpadmin(checkAdmin.email);
-
     res.status(200).json({ message: "Admin Exists in DB", adminId: checkAdmin._id });
-
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Internal server error" });
@@ -96,7 +87,6 @@ module.exports.adminforgotpass_post = async (req, res) => {
 
 
 module.exports.adminpostverifynewmail_otp = (req, res) => {
-  console.log("Reached at new email otp sending");
 
   try {
     const userEmail = req.body.email;
@@ -129,7 +119,6 @@ module.exports.adminpostverify_otp = async (req, res) => {
     }
 
     res.status(201).json({ message: "OTP is Verified", emailID: dbOTP.emailID });
-
   } catch (error) {
     console.log(error.message);
     res.status(401).send("OTP Coudn't Find");
@@ -144,8 +133,6 @@ module.exports.adminnewpass_get = (req, res) => {
 
 
 module.exports.adminnewpass_post = async (req, res) => {
-  console.log("New password post");
-
   try {
     const newPassword = req.body.password;
     const newPasswordhashed = cryptojs.AES.encrypt(newPassword, process.env.HASH_KEY).toString();
@@ -161,14 +148,11 @@ module.exports.adminnewpass_post = async (req, res) => {
     }
 
     res.status(201).json({ message: "Password Updated Successfully", adminEmail: updating.email });
-
   } catch (error) {
     console.log(error);
     res.status(401).send("Something went Wrong!")
   }
 }
-
-
 
 module.exports.adminlogout_get = (req, res) => {
   res.cookie('jwtAdmin', '', { maxAge: 1 });

@@ -59,7 +59,6 @@ module.exports.adminOrders_get = async (req, res) => {
                 };
 
                 const originalDate = new Date(order.orderDate);
-
                 const formattedDate = formatDate(originalDate);
 
                 orderDetails.push({
@@ -73,8 +72,6 @@ module.exports.adminOrders_get = async (req, res) => {
                     payment_method: order.payment_method,
                 });
             }
-
-            console.log("This is all order daetais", orderDetails);
 
             return res.render('admin/order-management', { orderDetails });
 
@@ -92,7 +89,6 @@ module.exports.adminOrders_get = async (req, res) => {
 
 
 module.exports.adminOrderEdit_get = async (req, res) => {
-
     try {
         const orderId = new mongoose.Types.ObjectId(req.query.orderId);
         const productID = new mongoose.Types.ObjectId(req.query.productID);
@@ -120,17 +116,11 @@ module.exports.adminOrderEdit_get = async (req, res) => {
         ]);
 
         const product = await Product.findById(productID);
-
         if (!order || !product) {
             return res.status(404).json({ error: "Order or product not found" });
         }
 
-
-        // console.log(order)
-        // console.log(product)
-
         return res.render('admin/admin-order-edit', { order, product });
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
@@ -139,7 +129,6 @@ module.exports.adminOrderEdit_get = async (req, res) => {
 
 module.exports.adminOrderEdit_post = async (req, res) => {
     const { orderID, productID, newStatus } = req.body;
-
     try {
 
         const order = await Order.findOne({ _id: orderID });
@@ -147,25 +136,19 @@ module.exports.adminOrderEdit_post = async (req, res) => {
         if (!order) {
             return res.status(400).json({ error: "Order not found" });
         }
-
         const orderItem = order.orderItems.find(item => item.productID.toString() === productID);
-
         if (!orderItem) {
             return res.status(400).json({ error: "Item not found in the order" });
         }
 
         orderItem.orderStatus = newStatus;
-
         if (newStatus === "delivered") {
             orderItem.is_Delivered = true;
         } else {
             orderItem.is_Delivered = false;
         }
-
         await order.save();
-
         res.json({ success: true });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

@@ -3,40 +3,28 @@ const { newformatDate } = require('../helpers/dateFormat');
 
 
 module.exports.banner_get = async (req, res) => {
-
     try {
-
         const allBanner = await Banner.find();
-
         allBanner.forEach((item) => {
             item.startDate = newformatDate(item.startDate)
-
             item.endDate = newformatDate(item.endDate)
-
             item.createdDate = newformatDate(item.startDate)
-
         });
 
         if (allBanner) {
             return res.render('admin/bannerManagment', { allBanner });
         }
-
     } catch (error) {
         console.log(error)
         return res.status(500).json("Internal Server Error")
     }
 }
 
-
 module.exports.newBanner_get = (req, res) => {
     res.render('admin/createBanner');
 }
 
-
-
 module.exports.newBanner_post = async (req, res) => {
-
-    console.log("Inside New Banner Post");
 
     try {
         const { banner_title, banner_url, banner_link, banner_position, banner_category, banner_status, start_date, end_date } = req.body;
@@ -60,7 +48,6 @@ module.exports.newBanner_post = async (req, res) => {
         });
 
         const savedProduct = await newBanner.save();
-
         if (!savedProduct) {
             return res.status(400).send("Banner creation failed");
         }
@@ -71,7 +58,6 @@ module.exports.newBanner_post = async (req, res) => {
         res.status(500).json({ error:error.message });
     }
 }
-
 
 module.exports.bannerEdit_get = async (req, res) => {
     const bannerId = req.params.bannerId;
@@ -120,21 +106,16 @@ module.exports.bannerEdit_post = async (req, res) => {
         if (bannerImage) {
             updateFields.bannerImage = bannerImageNames[0];
         }
-
         if (banner_status != 'None') {
             updateFields.status = banner_status;
         }
-
         if (end_date) {
             updateFields.endDate = end_date;
         }
-
         const getBanner = await Banner.findByIdAndUpdate(bannerId, { $set: updateFields }, { new: true });
-
         if (getBanner) {
             return res.status(200).json({ message: "Banner Update Successful" });
         }
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
