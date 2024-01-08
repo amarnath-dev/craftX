@@ -36,8 +36,6 @@ module.exports.adminOrderReturnControl = async (req, res) => {
         ]);
 
         if (getReturnOrders) {
-            // console.log("This is all return order details", getReturnOrders);
-
             res.render('admin/orderReturn', { getReturnOrders });
         }
     } catch (error) {
@@ -47,11 +45,9 @@ module.exports.adminOrderReturnControl = async (req, res) => {
 };
 
 
-
 module.exports.orderApprove_get = async (req, res) => {
 
     const returnId = req.params.returnReqId;
-
     try {
 
         const getOrderReturn = await OrderReturn.findByIdAndUpdate(returnId, { $set: { status: "approved" } }, { new: true });
@@ -65,7 +61,6 @@ module.exports.orderApprove_get = async (req, res) => {
         try {
 
             const incrementAmount = userData.wallet + productPrice;
-
             const getUpdate = await User.findByIdAndUpdate(userID, { $set: { wallet: incrementAmount } }, { new: true });
 
             if (!getUpdate) {
@@ -76,8 +71,6 @@ module.exports.orderApprove_get = async (req, res) => {
             console.log(error)
             return res.status(500).json({ error: "Internal Server Error" });
         }
-
-
 
         if (getOrderReturn && userData) {
 
@@ -125,21 +118,16 @@ module.exports.orderApprove_get = async (req, res) => {
 }
 
 
-
 module.exports.orderReject_get = async (req, res) => {
-
     const returnId = req.params.returnReqId;
 
     try {
 
         const getOrderReturn = await OrderReturn.findByIdAndUpdate(returnId, { $set: { status: "declined" } }, { new: true });
-
         const userData = await User.findById(getOrderReturn.userID);
         const userID = userData._id;
-
         const productData = await Product.findById(getOrderReturn.productId);
         const productPrice = productData.price;
-
 
         try {
 

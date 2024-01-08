@@ -122,20 +122,15 @@ module.exports.bannerEdit_post = async (req, res) => {
     }
 }
 
-
 module.exports.bannerDelete_get = async (req, res) => {
-
     const bannerId = req.params.bannerId;
-    console.log("Banner id", bannerId);
 
     try {
-
         const getBanner = await Banner.findByIdAndUpdate(bannerId, { $set: { is_delete: true } }, { new: true });
         await getBanner.save();
         if (getBanner) {
             return res.status(200).json({ message: "Banner Delete Successfull" });
         }
-
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ error: "Intenal Server Error" });

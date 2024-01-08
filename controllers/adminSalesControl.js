@@ -75,9 +75,7 @@ module.exports.salesInvoice_get = async (req, res) => {
                 }
             }
         ]);
-
         if (allDetails) {
-            console.log("this is all deails from server", allDetails)
             return res.render('admin/sale-invoice', { allDetails });
         } else {
             return res.status(404).json({ error: "Order not found" });
@@ -88,14 +86,10 @@ module.exports.salesInvoice_get = async (req, res) => {
     }
 }
 
-
-
-
 module.exports.salesInvoice_post = async (req, res) => {
 
     const orderID = req.query.orderId;
     const productID = req.query.productID;
-
     try {
         const allDetails = await Order.aggregate([
             {
@@ -160,9 +154,7 @@ module.exports.salesInvoice_post = async (req, res) => {
 
 
 module.exports.salesFilter_get = async (req, res) => {
-
     let { from_Date, to_Date, from_amount, to_amount, payment_method } = req.body;
-
 
     try {
         let totalSales = await Order.aggregate([

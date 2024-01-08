@@ -3,12 +3,11 @@ const User = require('../models/userModel');
 module.exports.customers_get = async (req,res) => {
     try {
         const allCustomers = await User.find();
-        console.log(allCustomers);
         
         if (allCustomers.length === 0) {
             return res.status(404).send("No customers found");
           }
-          
+
         if (!allCustomers) {
           return res.status(404).send("Couldn't complete the request");
         }
@@ -32,7 +31,6 @@ module.exports.customer_block = async (req,res) => {
         }
         
         res.redirect('/admin/customers');
-
      } catch (error) {
         console.log(error.message);
         res.status(401).send("Blocking Failed");
@@ -48,7 +46,6 @@ module.exports.customer_unblock = async (req,res) => {
         if(!updateStatus) {
             return res.status(400).send("Status update failed");
         } 
-        
         res.redirect('/admin/customers');
      } catch (error) {
         console.log(error.message);

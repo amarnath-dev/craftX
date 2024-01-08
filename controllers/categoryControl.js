@@ -6,7 +6,6 @@ const { formatDate } = require('../helpers/date-time-format');
 //Get product coutn comes under each category
 
 const getProductCountsByCategory = async () => {
-
   try {
     const result = await Product.aggregate([
       {
@@ -57,8 +56,6 @@ module.exports.admincategory_get = async (req, res) => {
     if (!categoriesWithProductCount) {
       return res.status(404).send("Couldn't complete the request");
     }
-
-
     categoriesWithProductCount.forEach((category) => {
       category.formattedDate = formatDate(category.createdon);
     });

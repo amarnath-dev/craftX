@@ -72,13 +72,9 @@ module.exports.editCoupon_get = async (req, res) => {
     }
 }
 
-
-
-
 module.exports.editCoupon_post = async (req, res) => {
     const couponID = req.body.couponID;
     const status = req.body.status;
-    console.log("This is the current status of the coupon", status);
 
     if (status) {
         if (status === 'Activate') {
@@ -136,8 +132,6 @@ module.exports.editCoupon_post = async (req, res) => {
 
 module.exports.deleteCoupon_get = async (req,res) => {
     const couponID = req.params.couponID;
-    
-
     try {
 
         const deleteCoupon = await Coupon.updateOne({_id: couponID}, {$set: {is_delete: true}});

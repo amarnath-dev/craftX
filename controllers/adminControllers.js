@@ -17,7 +17,6 @@ module.exports.adminhome_get = (req, res) => {
   res.render('admin/home');
 };
 
-
 module.exports.adminsignup_get = (req, res) => {
   res.render('admin/signup');
 };
@@ -39,21 +38,13 @@ module.exports.adminsignup_post = async (req, res) => {
     }
 
     const encryptedPassword = cryptojs.AES.encrypt(password, process.env.HASH_KEY).toString();
-
     const newAdmin = new Admin({
       email,
       password: encryptedPassword,
     });
 
     const savedAdmin = await newAdmin.save();
-
-    //  //Crating token and sending to the admin
-    //   const token = createToken(savedAdmin._id);
-    //   res.cookie('jwtAdmin', token, {httpOnly: true ,maxAge: maxAge * 1000});
-
-  
     res.status(200).json({ message: 'Signup successful', adminID: savedAdmin._id });
-
   } catch (error) {
     console.error('Error in adminsignup_post:', error);
     res.status(500).json({ error: 'An error occurred during signup.' });
@@ -101,10 +92,7 @@ module.exports.adminlogin_post = async (req, res) => {
     //create a token and sent it to the admin
     const token = createToken(admin._id);
     res.cookie('jwtAdmin', token, { httpOnly: true, maxAge: maxAge * 1000 });
-
-
     res.status(200).json({ adminID: admin._id, jwtToken: token });
-
   } catch (error) {
     console.error('Error in adminlogin_post:', error);
     res.status(500).json({ error: 'An error occurred during login.' });

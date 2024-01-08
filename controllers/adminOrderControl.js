@@ -11,7 +11,6 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-
 module.exports.adminOrders_get = async (req, res) => {
 
     try {
@@ -60,7 +59,6 @@ module.exports.adminOrders_get = async (req, res) => {
 
                 const originalDate = new Date(order.orderDate);
                 const formattedDate = formatDate(originalDate);
-
                 orderDetails.push({
                     orderId: order._id,
                     customerName: order.userID.fullname,
@@ -72,21 +70,15 @@ module.exports.adminOrders_get = async (req, res) => {
                     payment_method: order.payment_method,
                 });
             }
-
             return res.render('admin/order-management', { orderDetails });
-
         } else {
             return res.status(400).json({ error: "All Orders fetch Failed" });
         }
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
-
-
 
 module.exports.adminOrderEdit_get = async (req, res) => {
     try {
@@ -114,12 +106,10 @@ module.exports.adminOrderEdit_get = async (req, res) => {
                 }
             }
         ]);
-
         const product = await Product.findById(productID);
         if (!order || !product) {
             return res.status(404).json({ error: "Order or product not found" });
         }
-
         return res.render('admin/admin-order-edit', { order, product });
     } catch (error) {
         console.log(error);

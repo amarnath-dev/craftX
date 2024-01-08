@@ -8,7 +8,6 @@ function sumArray(array) {
     return array.reduce((acc, curr) => acc + curr, 0);
 }
 
-
 module.exports.adminchart_get = async (req, res) => {
 
     try {
@@ -75,9 +74,6 @@ module.exports.adminchart_get = async (req, res) => {
                 todaysOrder++;
             });
         });
-        //getting order items today end
-
-
 
         //getting this year order items
         const getYearlyOrders = await Order.find({
@@ -94,9 +90,7 @@ module.exports.adminchart_get = async (req, res) => {
                 thisYearOrder++;
             });
         });
-        //order items getting this year end
-
-
+        
         getallOrders.forEach((orderItem) => {
             const deliveredOrderItems = orderItem.orderItems.filter((orderItem) => {
                 return orderItem.orderStatus === "delivered";
@@ -119,24 +113,8 @@ module.exports.adminchart_get = async (req, res) => {
                 totalSalesPrice += orderItem.unitPrice;
             })
         })
-
-
-
-        //Getting this month total Revenue(this code is not using)
-        // const allthismonthOrders = await Order.aggregate([
-        //     {
-        //         $match: {
-        //             orderDate: {
-        //                 $gte: startOfMonth,
-        //                 $lt: endOfMonth,
-        //             },
-        //             "orderItems.orderStatus": "delivered",
-        //         },
-        //     },
-        // ]);
         const currentDate = new Date();
         const currentMonthnow = currentDate.getMonth() + 1;
-
 
         const monthlyRevenues = Array(6).fill(0);
 
@@ -160,11 +138,6 @@ module.exports.adminchart_get = async (req, res) => {
 
             monthlyRevenues[i] = totalRevenue;
         }
-
-        console.log("Monthly Revenues:", monthlyRevenues);
-
-
-
         try {
 
             var getTotalUsers = await User.find({}).count();
@@ -180,13 +153,9 @@ module.exports.adminchart_get = async (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-
         //calling the function to get sum of result array
         const totalOrders = sumArray(result);
-
-
         return res.status(200).json({ todayOrders: todaysOrder, monthlyOrders: result, yearlyOrders: thisYearOrder, thismonthOrders: totalOrders, totalSalesPrice, getTotalUsers, getTotalProducts, thisMonthUsers, usersArray, thismonthSalesPrice, monthlyRevenues });
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
