@@ -333,10 +333,7 @@ module.exports.admineditproduct_post = async (req, res) => {
                     if (!product) {
                         return res.status(400).send("Edit Failed");
                     }
-
-
                     res.redirect(302, '/admin/products');
-
                 } else {
 
                     const product = await Product.findByIdAndUpdate(productID, updatedProduct, { new: true });
@@ -404,7 +401,6 @@ module.exports.admineditproduct_post = async (req, res) => {
                 }
             }
         }
-
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ error: "Internal Server Error" });

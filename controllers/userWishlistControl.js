@@ -35,7 +35,6 @@ module.exports.userWishlist_add = async (req, res) => {
         if (!wishlistAdd) {
             return res.status(400).json({ error: "Wishlist Product Add Failed" });
         }
-
         return res.status(200).json({ message: "Wishlist Product Add Successfull" })
 
     } catch (error) {
@@ -48,7 +47,6 @@ module.exports.userWishlist_add = async (req, res) => {
 module.exports.userWishlist_get = async (req, res) => {
 
     try {
-
         const getWishlistData = await Wishlist.aggregate([
 
             {
@@ -66,9 +64,7 @@ module.exports.userWishlist_get = async (req, res) => {
             return res.status(400).json({ error: "Wishlist Data Fetch Failed" })
         }
 
-        // console.log(getWishlistData);
         res.render('user/wishlist', { getWishlistData });
-
     } catch (error) {
         console.log(error)
         return res.status(500).json({ error: "Internal Server Error" })
@@ -79,8 +75,6 @@ module.exports.userWishlist_get = async (req, res) => {
 module.exports.wishlistDelete_get = async (req, res) => {
 
     const productID = req.params.productID;
-    console.log("This is the product To Remove From the Wishlist", productID);
-
     try {
         const getProduct = await Wishlist.findOneAndDelete(productID);
 
@@ -113,7 +107,6 @@ module.exports.moveToCart_get = async (req, res) => {
         }
 
         user.cart.push({ product_id: productID });
-
         const saveResult = await user.save();
 
         if (saveResult) {
@@ -125,14 +118,11 @@ module.exports.moveToCart_get = async (req, res) => {
                 if (!getCartItem) {
                     return res.status(400).json({ error: "Wishlist Item Remove Failed" });
                 }
-
-
                 return res.status(200).json({ message: "Item Added to the Cart" });
             } catch (error) {
                 console.log(error);
                 return res.status(500).json({ error: "Internal Server Error" });
             }
-
         } else {
             return res.status(400).json({ error: "Item Push To Cart Failed" });
         }

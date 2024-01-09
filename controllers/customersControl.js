@@ -15,7 +15,6 @@ module.exports.customers_get = async (req,res) => {
         res.render('admin/customers', { message: "Fetch Successful", allCustomers: allCustomers });
         
       } catch (error) {
-        console.error(error);
         res.status(500).send("An error occurred");
       }
 }

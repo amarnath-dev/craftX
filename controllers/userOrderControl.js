@@ -224,7 +224,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     //Single Product Buy
     if (req.body.productID) {
-        console.log("Inside single product buying page");
 
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;

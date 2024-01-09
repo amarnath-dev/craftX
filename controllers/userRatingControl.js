@@ -61,8 +61,6 @@ module.exports.productRatingPage_post = async (req, res) => {
         if (!updatedProduct) {
             return res.status(400).json({ error: "Product rating update failed" });
         }
-
-
         return res.status(200).json({ message: "Data saved successfully" });
     } catch (error) {
         console.error(error);

@@ -158,8 +158,6 @@ module.exports.get_login = (req, res) => {
   res.render('user/login');
 }
 
-
-
 module.exports.post_signup = async (req, res) => {
 
   req.session.userEmail = req.body.email;
@@ -198,11 +196,6 @@ module.exports.post_signup = async (req, res) => {
         if (!save) {
           return res.status(400).json({ error: "Wallet data creation Failed" });
         }
-
-        // return res.status(200).json({ message: "Cart amount increased by 100" });
-      } else {
-
-        // return res.status(404).json({ error: "User not found with the provided referral code" });
       }
     } catch (error) {
       console.log(error);

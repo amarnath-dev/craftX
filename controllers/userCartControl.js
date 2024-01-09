@@ -116,9 +116,7 @@ module.exports.mycart_get = async (req, res) => {
 module.exports.remove_product_get = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
-    // console.log(userID);
     const productID = req.params.productID;
-    // console.log(productID)
 
     try {
 

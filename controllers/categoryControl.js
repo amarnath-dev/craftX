@@ -90,7 +90,6 @@ module.exports.newadmincategory_post = async (req, res) => {
 
   try {
     const savedCat = await newCat.save();
-    console.log(savedCat);
     if (!savedCat) {
       return res.status(401).send("Cannot add Category");
     }
@@ -106,18 +105,14 @@ module.exports.newadmincategory_post = async (req, res) => {
 //Admin Edit Category Get
 module.exports.admineditcategory_get = async (req, res) => {
   const categoryId = req.params.categoryId;
-  console.log(`Received request for category with ID: ${categoryId}`);
-
   try {
     const category = await Category.findOne({ _id: categoryId });
 
     if (!category) {
       return res.status(404).send("Category not found");
     }
-
     res.render('admin/editcategory', { categories: category });
   } catch (error) {
-    console.error(`Error retrieving category: ${error}`);
     res.status(500).send("Internal server error");
   }
 };
@@ -126,7 +121,6 @@ module.exports.admineditcategory_get = async (req, res) => {
 //Edit Cat Post
 module.exports.admineditcategory_post = async (req, res) => {
   try {
-
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: req.body.id },
       {
@@ -140,10 +134,7 @@ module.exports.admineditcategory_post = async (req, res) => {
     if (!updatedCategory) {
       return res.status(400).json({ message: "Category not found or update failed" });
     }
-
-
     res.status(200).json({ message: "Update successful", updatedCategory, catID: updatedCategory._id });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -151,21 +142,15 @@ module.exports.admineditcategory_post = async (req, res) => {
 };
 
 
-
 //Admin Delete Catagory 
 module.exports.admindeletecategory_post = async (req, res) => {
-  console.log("Reached at delete category");
   const categoryId = req.params.categoryId;
-  console.log(categoryId);
-
   try {
-
     const changeStatus = await Category.findByIdAndUpdate({ _id: categoryId }, { $set: { delete: true } });
 
     if (!changeStatus) {
       return res.status(404).json({ message: 'Update Failed' });
     }
-
     return res.redirect('/admin/category');
   } catch (error) {
     console.error(error);

@@ -5,11 +5,8 @@ const Address = require('../models/addressModel');
 module.exports.newAddress_get = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
-    console.log(userID)
-
     try {
         const userAddress = await Address.find({ userId: userID });
-        console.log(userAddress);
 
         if (userAddress) {
             res.render('user/use-address', { userAddress: userAddress });
@@ -27,8 +24,6 @@ module.exports.newAddress_post = async (req, res) => {
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
 
-
-
     try {
         const formData = new Address({
             userId: userID,
@@ -45,7 +40,6 @@ module.exports.newAddress_post = async (req, res) => {
         });
 
         const savedData = await formData.save();
-        console.log(savedData);
 
         if (!savedData) {
             return res.status(401).json({ error: "Data save Failed" });

@@ -53,13 +53,9 @@ module.exports.wallestHistory_get = async (req, res) => {
     try {
 
         const getallData = await Wallet.find({ userID: userID }).sort({ date: -1 });
-
-
         getallData.forEach((item) => {
             item.date = newformatDate(item.date);
         });
-
-
         if (getallData) {
             return res.render('user/walletHistory', { getallData });
         } else {

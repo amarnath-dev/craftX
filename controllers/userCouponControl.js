@@ -20,11 +20,9 @@ module.exports.userCoupon_post = async (req, res) => {
         if (getCoupon) {
             const DBcoupon_code = getCoupon.coupon_code;
 
-
             //Check if user alredy used that coupon
             const userExists = getCoupon.used_users.includes(userID);
             if (userExists) {
-                console.log("Inside User Alredy used the coupon")
                 return res.status(200).json({ exists: "User Alredy Used This Coupon" })
             }
 
