@@ -25,7 +25,6 @@ const checkAuth = (req, res, next) => {
 const checkStatus = async (req, res, next) => {
   
    const currUser = req.session.userEmail;
-   console.log(currUser);
 
    try {
       const getData = await User.findById(currUser);

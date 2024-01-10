@@ -81,9 +81,7 @@ module.exports.wishlistDelete_get = async (req, res) => {
         if (!getProduct) {
             return res.status(400).json({ error: "Whalist Product Remove Failed" });
         }
-
         return res.status(200).json({ message: "Wishlist Product Remove Successfull" });
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal Server Error" });
