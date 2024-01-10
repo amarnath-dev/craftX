@@ -115,7 +115,6 @@ const sendEmailotp = async (fullname, email, userID) => {
 }
 
 
-
 //res and req managing exports belove
 module.exports.get_home = async (req, res) => {
 

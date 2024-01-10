@@ -39,11 +39,9 @@ module.exports.userCoupon_post = async (req, res) => {
                 const discount = (discountValue / 100) * totalAmount;
                 const discountAmt = totalAmount - discount;
 
-
                 if (updatedCoupon) {
                     return res.status(200).json({ message: "Coupon Applyed Successfully", discountAmt });
                 }
-
             } else {
                 return res.json({ error: "Unavailable Coupon" });
             }

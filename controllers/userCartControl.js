@@ -99,7 +99,6 @@ module.exports.mycart_get = async (req, res) => {
         }
 
         if (cartList.length > 0) {
-            console.log("This is the cart List", cartList);
             res.render('user/my-cart', { cartList, cartCount, totalAmount, message: 'Cart fetched successfully' });
         } else {
             res.render('user/my-cart', { message: 'Cart is empty or fetch failed' });

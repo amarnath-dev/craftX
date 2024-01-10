@@ -6,7 +6,6 @@ const Rating = require("../models/ratingModel");
 module.exports.productDetails_get = async (req, res) => {
 
     const productID = req.params.productID;
-
     try {
         const productDetails = await Product.findOne({ _id: productID });
         const productRating = await Rating.find({ productID: productID });
