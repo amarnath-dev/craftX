@@ -14,7 +14,6 @@ function generateRazorpay(orderID,totalAmount) {
             receipt: orderID
         };
         instance.orders.create(options, function(err, order) {
-            // console.log('This is new Order',order);
             resolve(order);
         });
     })

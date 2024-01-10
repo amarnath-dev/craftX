@@ -13,7 +13,6 @@ const getCartCount = async (userID) => {
 
     return 0;
   } catch (error) {
-    console.error('Error while getting cart count:', error);
     return 0;
   }
 };

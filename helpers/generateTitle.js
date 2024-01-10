@@ -5,5 +5,4 @@ function generateTitle(paymentAmt) {
     return title;
 }
 
-
 module.exports = { generateTitle }

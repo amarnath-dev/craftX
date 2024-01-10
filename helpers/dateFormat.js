@@ -1,6 +1,4 @@
 
-
-
 //This is a correct code for formating the date please use this
 function newformatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
