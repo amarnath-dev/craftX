@@ -1,6 +1,5 @@
 
 //function to genearate referal code
-
 function generateReferralCode(length) {
     const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     const codeArray = [];

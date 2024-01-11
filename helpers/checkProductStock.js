@@ -6,7 +6,6 @@ async function checkProductStock(userID) {
         const getUser = await User.findById(userID);
 
         if (!getUser) {
-            console.log("User not found");
             return 2;
         }
 
@@ -19,12 +18,10 @@ async function checkProductStock(userID) {
             const getProductStock = await Product.findById(productID);
 
             if (!getProductStock) {
-                console.log('Product no found in DB');
                 return 3; 
             }
 
             const stockCount = getProductStock.stock;
-
             if (stockCount < productCount) {
                 return 1; 
             }
@@ -32,7 +29,6 @@ async function checkProductStock(userID) {
 
         return 0;
     } catch (error) {
-        console.log(error);
         throw error; 
     }
 }

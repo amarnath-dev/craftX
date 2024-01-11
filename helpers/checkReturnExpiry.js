@@ -5,7 +5,6 @@ function checkReturnExpired(orderDate) {
     twoWeeksAgo.setDate(currentDate.getDate() - 14);
 
     const parsedOrderDate = new Date(orderDate);
-
     return parsedOrderDate < twoWeeksAgo;
 }
 
