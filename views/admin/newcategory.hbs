@@ -19,7 +19,6 @@
 
 <script>
   const form = document.querySelector('form');
-  
  
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -35,7 +34,6 @@
         headers: { 'Content-Type': 'application/json' }
       });
       const data = await result.json();
-      console.log(data);
 
       if (data.error) {
         res.status(401).send("Coudn't fetch the data")
