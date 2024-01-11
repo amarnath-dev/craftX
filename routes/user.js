@@ -58,8 +58,6 @@ router.post('/profile/manageaddress/edit-address', userAddressControl.editaddres
 
 router.get('/profile/manageaddress/delete/:addressID', userAddressControl.deleteaddress_get)
 
-//Address management routes
-
 
 //Product Details Page
 router.get('/add-to-cart/:productID',checkAuth, userCartControl.usercart_get);

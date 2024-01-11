@@ -14,7 +14,6 @@ async function cartCountCheck(userID, productID) {
         if (cartItem) {
             return cartItem.count;
         } else {
-            console.log("cart not get return");
             return 0;
         }
 

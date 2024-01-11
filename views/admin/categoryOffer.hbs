@@ -156,7 +156,6 @@
             method: 'POST',
             data: offerData,
             success: function (response) {
-                console.log("This is the message from the server", response.message)
                 if (response.message) {
                     Swal.fire({
                         title: "Offer Created",

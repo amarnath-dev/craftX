@@ -70,7 +70,6 @@
 
 <script>
     const hbs = require('express-handlebars');
-
     hbs.handlebars.registerHelper('getProductCount', function (categoryName, getProductcount) {
         return getProductcount[categoryName] || 0;
     });
@@ -82,6 +81,7 @@
     })
 
 </script>
+
 
 <style>
     a {
