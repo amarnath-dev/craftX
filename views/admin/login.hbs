@@ -71,7 +71,6 @@
     const emailError = document.getElementById('email-error')
     const passwordError = document.getElementById('password-error');
 
-
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -82,8 +81,6 @@
         emailError.textContent = '';
         passwordError.textContent = '';
 
-
-        // check if empty
         if (!email || !password) {
             emailError.textContent = 'Email and password are required.';
             passwordError.textContent = 'Email and password are required.';
@@ -111,7 +108,6 @@
             if (data.adminID) {
                 location.assign('/admin');
             }
-
         } catch (error) {
             emailError.textContent = 'An error occurred. Please try again later.';
             passwordError.textContent = 'An error occurred. Please try again later.';
