@@ -84,17 +84,14 @@ router.get('/sales-report', adminSalesControl.salesPage_get);
 router.get('/sales-report/getInvoice', adminSalesControl.salesInvoice_get);
 router.get('/sales-report/postInvoice', adminSalesControl.salesInvoice_post);
 
-
 //sales Filter Router
 router.post('/sales-report/filter', adminSalesControl.salesFilter_get);
-
 
 //Coupons
 router.get('/coupons', adminCouponControl.adminCoupon_get);
 router.post('/coupons/new-coupon', adminCouponControl.newCoupon_post);
 router.get('/coupons/edit-coupon/:couponID', adminCouponControl.editCoupon_get);
 router.post('/coupons/edit-coupon', adminCouponControl.editCoupon_post);
-
 router.get('/coupons/delete-coupon/:couponID', adminCouponControl.deleteCoupon_get)
 
 //Banner Management
