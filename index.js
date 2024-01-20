@@ -10,10 +10,8 @@ const session = require('express-session');
 const nocache = require('nocache')
 const path = require('path');
 
-
 const app = express();
 app.use(nocache())
-
 
 //Using Modules
 app.use(express.json())
@@ -21,8 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static('public'));
-
-
 
 app.use(
   session({
@@ -40,11 +36,9 @@ mongoose.connect(mongoDBURI, {
   useUnifiedTopology: true, 
 }).then(()=>console.log("db connected")).catch((err)=>console.log(err.message))
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
 
 app.engine('hbs', hbs.engine({ 
   layoutsDir: __dirname + '/views/layouts',
@@ -57,17 +51,11 @@ app.engine('hbs', hbs.engine({
       }
     }));
 
-
-
-
-//using things
 app.use('/',userRouter);
 app.use('/admin',adminRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
-//Listening to port
 app.listen(3000, (req,res)=>{
   console.log("App is listening to port 3000")
 });
