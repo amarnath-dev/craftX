@@ -20,10 +20,7 @@ const { walletPurchaseTitle } = require('../helpers/walletPurchaseTitle');
 const Wallet = require("../models/walletHistoryModel");
 
 
-
-
 module.exports.purachasePage_get = async (req, res) => {
-
     const token = req.cookies.jwt;
     const userID = decodeJwt(token);
     const productID = req.params.productID;
@@ -37,9 +34,7 @@ module.exports.purachasePage_get = async (req, res) => {
 
         const getUser = await User.findById(userID);
 
-
         if (userAddress && productDetails) {
-            console.log("This is product Details", productDetails);
             return res.render('user/order-summary', { userAddress, productDetails, allCoupons, getUser });
         } else {
             return res.status(401).json({ error: "User Coudn't find" });
@@ -50,13 +45,6 @@ module.exports.purachasePage_get = async (req, res) => {
         res.status(500).json({ error: "Internal server Error" });
     }
 }
-
-
-
-
-
-
-
 
 //This was the single product Purchase route 
 // now both cartCheck out and single product buying merged into one route 
@@ -76,8 +64,6 @@ module.exports.purachasePage_post = async (req, res) => {
         const userAddress = await Address.findOne({ _id: addressID });
 
         const productDetails = await Product.findOne({ _id: productID });
-
-        console.log("This is product details", productDetails);
 
         let orderData = {};
 
@@ -224,7 +210,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     //Single Product Buy
     if (req.body.productID) {
-
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
         const appliedCouponID = req.body.appliedCouponID;
@@ -255,7 +240,6 @@ module.exports.user_confirmOrder = async (req, res) => {
                     return res.status(400).json({ error: "Discount Coupon Get Failed" })
                 }
             }
-
 
             if (userAddress && productDetails) {
                 orderData = {
@@ -302,9 +286,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                         }
 
                     } else if (newOrder.payment_method === "Pay Online") {
-
-                        //Choosed Online Payment
-                        const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
+                        await generateRazorpay(newOrder._id, newOrder.orderAmount)
                             .then((response) => {
 
                                 const paymentData = {
@@ -344,9 +326,7 @@ module.exports.user_confirmOrder = async (req, res) => {
                             attempts: 1,
                         }
 
-
                         try {
-
                             const getUserwallet = await User.findById(userID);
                             const walletAmount = getUserwallet.wallet;
 
@@ -379,14 +359,10 @@ module.exports.user_confirmOrder = async (req, res) => {
 
                             }
 
-
-
                         } catch (error) {
                             console.log(error);
                             return res.status(500).json({ error: "Single item order wallet data insertion failed" });
                         }
-
-
                     } else {
                         return res.status(400).json({ error: "Please select an payment Method" });
                     }
@@ -403,13 +379,9 @@ module.exports.user_confirmOrder = async (req, res) => {
 
     } else {
 
-        console.log("Inside cart multiple product buying page");
-
-
         const addressID = req.body.orderAddressID;
         const paymentType = req.body.paymentType;
         const appliedCouponID = req.body.appliedCouponID;
-
 
         const paymentMethod = paymentType.join(', ');
 
@@ -441,7 +413,6 @@ module.exports.user_confirmOrder = async (req, res) => {
                 const productID = item.cart.product_id;
                 const productQuantity = item.cart.count;
                 const itemPrice = item.prod_detail.price;
-
 
                 orderItems.push({
                     productID: productID,
@@ -484,7 +455,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
             const newOrder = new Order(orderData);
 
-
             newOrder.save()
                 .then(async savedOrder => {
                     if (newOrder.payment_method === "Cash On Delivery") {
@@ -513,40 +483,33 @@ module.exports.user_confirmOrder = async (req, res) => {
                             return res.status(400).json({ error: "Payment data insertion failed" })
                         }
 
-
                     } else if (newOrder.payment_method === "Pay Online") {
-
-
-                        //Choosed Online Payment
-                        const razorPayGeneration = await generateRazorpay(newOrder._id, newOrder.orderAmount)
+                        await generateRazorpay(newOrder?._id, newOrder?.orderAmount)
                             .then((response) => {
-
                                 const paymentData = {
-                                    payment_ID: response.id,
-                                    amount: response.amount,
-                                    currency: response.currency,
+                                    payment_ID: response?.id,
+                                    amount: response?.amount,
+                                    currency: response?.currency,
                                     payment_method: "Pay Online",
-                                    status: response.status,
-                                    order_id: response.receipt,
-                                    created_at: response.created_at,
-                                    attempts: response.attempts,
+                                    status: response?.status,
+                                    order_id: response?.receipt,
+                                    created_at: response?.created_at,
+                                    attempts: response?.attempts,
                                 }
-
                                 try {
                                     const savePaymentData = new Payment(paymentData).save();
-
                                     if (savePaymentData) {
                                         return res.status(200).json(response);
                                     }
-
                                 } catch (error) {
                                     console.log(error);
                                     return res.status(400).json({ error: "Payment Data Saved Failed" })
                                 }
-                            });
+                            }).catch((err) => {
+                                console.log("Error Occured", err)
+                            })
 
                     } else if (newOrder.payment_method === "wallet payment") {
-
 
                         const paymentData = {
                             payment_ID: "order_" + generateUniqueID(),
@@ -561,7 +524,6 @@ module.exports.user_confirmOrder = async (req, res) => {
 
 
                         try {
-
                             const getUserwallet = await User.findById(userID);
                             const walletAmount = getUserwallet.wallet;
 
@@ -614,7 +576,6 @@ module.exports.user_confirmOrder = async (req, res) => {
     }
 
 };
-
 
 
 module.exports.user_orderdetails_get = async (req, res) => {
@@ -720,18 +681,15 @@ module.exports.user_orderCancel_get = async (req, res) => {
 
 module.exports.verifyPayment_post = async (req, res) => {
 
-    const payment = req.body.payment;
-    const order = req.body.order;
+    const payment = req.body?.payment;
+    const order = req.body?.order;
 
-    let hmac = crypto.createHmac('sha256', 'bfr2tHHzfjafjSdQPPtH8MuY');
-
+    let hmac = crypto.createHmac('sha256', 'TCG5kzd8GkoW1S7rznvNpJ74');
     hmac.update(payment.razorpay_order_id + '|' + payment.razorpay_payment_id);
-
     hmac = hmac.digest('hex');
 
-    if (hmac == payment.razorpay_signature) {
+    if (hmac == payment?.razorpay_signature) {
         const orderID = new mongoose.Types.ObjectId(order.receipt);
-
         try {
             const getPaymentData = await Payment.find({ order_id: orderID });
 
@@ -739,10 +697,8 @@ module.exports.verifyPayment_post = async (req, res) => {
                 return res.status(400).json({ error: "Payment Failed" });
             }
 
-            // Iterate through payment documents
             for (const paymentDoc of getPaymentData) {
                 const getOrderID = await Order.findById(paymentDoc.order_id);
-
                 if (!getOrderID) {
                     console.log("Order not found for payment ID: ", paymentDoc._id);
                     continue; //move to the next payment
@@ -775,12 +731,10 @@ module.exports.verifyPayment_post = async (req, res) => {
                     { order_id: orderID },
                     { $set: { status: 'placed' } }
                 );
-
                 if (update) {
                     return res.status(200).json({ message: "Payment Successful" });
                 }
             }
-
             return res.status(400).json({ error: "No valid payment found" });
         } catch (error) {
             console.log(error);
@@ -791,11 +745,9 @@ module.exports.verifyPayment_post = async (req, res) => {
     }
 }
 
-
 module.exports.userThankyoupage_get = (req, res) => {
     res.render('user/orderCompleteTnxPage');
 }
-
 
 module.exports.userOrderFailure_get = (req, res) => {
     res.render('user/userOrderFailurePage');

@@ -6,7 +6,6 @@ module.exports.productRatingPage_get = async (req, res) => {
     const productID = req.params.productID;
 
     try {
-
         const getProduct = await Product.findById(productID);
 
         if (!getProduct) {
@@ -14,7 +13,6 @@ module.exports.productRatingPage_get = async (req, res) => {
         }
 
         return res.render('user/productRating', { getProduct });
-
     } catch (error) {
         console.log(error)
         return res.status(500).json({ error: "Internal Server Error" })

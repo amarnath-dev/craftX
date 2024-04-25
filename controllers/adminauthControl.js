@@ -90,7 +90,6 @@ module.exports.adminpostverifynewmail_otp = (req, res) => {
 
   try {
     const userEmail = req.body.email;
-    console.log(userEmail);
 
     //send the email
     sendEmailotpadmin(userEmail);
@@ -139,7 +138,6 @@ module.exports.adminnewpass_post = async (req, res) => {
 
 
     const sessionEmail = req.session.adminEmail;
-    console.log(sessionEmail);
     const updating = await Admin.findOneAndUpdate({ email: req.session.adminEmail }, { password: newPasswordhashed });
     console.log(updating);
 

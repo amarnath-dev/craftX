@@ -107,7 +107,6 @@ module.exports.updatePass_post = async (req, res) => {
 
 module.exports.newpass_post = async (req, res) => {
     const token = req.cookies.jwt;
-    const newPass = req.body.password;
 
     const user = decodeJwt(token);
     const hashing = cryptojs.AES.encrypt(req.body.password, process.env.HASH_KEY).toString();

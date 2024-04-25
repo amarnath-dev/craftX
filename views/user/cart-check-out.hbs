@@ -613,7 +613,7 @@
 
         function razorPayPayment(order) {
             var options = {
-                "key": "rzp_test_tCfZmeT9T0PkkV",
+                "key": "rzp_test_d4DYYP3DeZhYXu",
                 "amount": parseInt(order.amount),
                 "currency": "INR",
                 "name": "CraftX",
@@ -625,7 +625,7 @@
                 },
                 "prefill": {
                     "name": "Amarnath AS",
-                    "email": "amarnath@example.com",
+                    "email": "amarnathas2003@example.com",
                     "contact": "9000090000"
                 },
                 "notes": {
@@ -636,15 +636,16 @@
                 }
             };
             function verifyPayment(payment, order) {
+                console.log("--->", payment)
                 $.ajax({
                     url: '/verify-payment',
                     data: {
                         payment,
                         order,
                     },
-                    method: "post",
+                    method: "POST",
                     success: (response) => {
-                        if (response.message) {
+                        if (response?.message) {
                             Swal.fire({
                                 title: 'Order Placed',
                                 text: 'Your Order Has been Placed Successfully.',

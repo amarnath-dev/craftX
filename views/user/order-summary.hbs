@@ -540,7 +540,6 @@
 
 
             var productID = $('#productId').val();
-
             if (selectedCheckbox.length > 0) {
                 const orderAddressID = selectedCheckbox.attr('data-address-id');
 
@@ -567,8 +566,7 @@
                                 return;
                             }
                         }
-
-                        //sending the ajax request to the server.
+                  
                         $.ajax({
                             type: 'POST',
                             url: '/check-out',
@@ -598,13 +596,13 @@
 
         function razorPayPayment(order) {
             var options = {
-                "key": "rzp_test_tCfZmeT9T0PkkV",
+                "key": "rzp_test_d4DYYP3DeZhYXu",
                 "amount": parseInt(order.amount),
                 "currency": "INR",
                 "name": "CraftX",
                 "description": "Test Transaction",
-                "image": "https://example.com/your_logo",
-                "order_id": order.id,
+                "image": "",
+                "order_id": order?.id,
                 "handler": function (response) {
                     verifyPayment(response, order)
                 },
@@ -620,7 +618,6 @@
                     "color": "#3399cc"
                 }
             };
-
             function verifyPayment(payment, order) {
                 $.ajax({
                     url: '/verify-payment',
@@ -628,7 +625,7 @@
                         payment,
                         order,
                     },
-                    method: "post",
+                    method: "POST",
                     success: (response) => {
                         if (response.message) {
                             Swal.fire({

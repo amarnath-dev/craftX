@@ -51,9 +51,6 @@ module.exports.adminsignup_post = async (req, res) => {
   }
 };
 
-
-
-
 module.exports.adminlogin_get = (req, res) => {
   const token = req.cookies.jwtAdmin;
 
