@@ -31,14 +31,16 @@
 <section class="row mt-4" id="productContainer">
   {{#each allproducts}}
   {{#unless this.is_delete}}
-  <div class="col-md-4 mb-3">
+  
+  <div class="col-12 col-sm-6 col-md-4 mb-3">
+
     <div class="card border" id="cardHolder">
       <a href="#" id="addtoWishlist" onclick="addtoWishlist('{{this._id}}')"><span
-          class="material-symbols-outlined icon" style="margin-left: 250px;">favorite</span></a>
+        class="material-symbols-outlined icon">favorite</span></a>
 
       {{#each this.primaryImage}}
       <a href="/view-product/{{../this._id}}">
-        <img src="/uploads/{{this}}" class="card-img-top images" alt="">
+        <img src="/uploads/{{this}}" class="card-img-top images" alt="prod_img">
       </a>
       {{/each}}
 
@@ -47,41 +49,30 @@
         <br>
 
         {{!-- Show the Rating --}}
-        <small id="stars"><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}} )</small>
+        <small id="stars"><span class="star" data-rating="1">&#9733;</span>Rating ({{this.rating}})</small>
 
+        <div class="price-container">
+          {{#unless this.is_Offer}}
+          <small class="card-text fw-bold priceElement">Rs.{{this.price}}</small>
+          {{/unless}}
 
-        {{#unless this.is_Offer}}
-        <small class="card-text fw-bold priceElement">{{this.price}}</small>
-        {{/unless}}
-
-        {{#if this.is_Offer}}
-        <span style="color: green;" class="itemPrice"><strike
-            style="margin-left: 30px; font-size: 17px;">{{this.old_Price}}</strike><strong
-            style="margin-left: 5px;">{{this.offer_discount}}% Off</strong> </span>
-
-        <small class="card-text fw-bold"
-          style="color: red; margin-left: 160px; font-size: 20px;">Rs.{{this.offer_price}}</small>
-
-        {{/if}}
-
-
-        <div class="d-flex">
-          <button class="btn border border-dark mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to
-            Cart</button>
-
-          {{!-- <input type="text" value="{{this._id}}" name="" id="productID" hidden> --}}
-
-          <a onclick="buyNow('{{this.stock}}', '{{this._id}}')" target="_blank" class="btn border-dark mt-4"
-            id="buy-now">Buy Now</a>
+          {{#if this.is_Offer}}
+          <span style="color: green;" class="itemPrice"><strike>{{this.old_Price}}</strike><strong>{{this.offer_discount}}% Off</strong> </span>
+          <small class="card-text fw-bold" style="color: red; font-size: 20px;">Rs.{{this.offer_price}}</small>
+          {{/if}}
         </div>
 
+        <div class="d-flex row gap-2 justify-content-center">
+          <button class="btn mt-4" onclick="addToCart('{{this._id}}')" id="add-to-cart">Add to Cart</button>
+          <a onclick="buyNow('{{this.stock}}', '{{this._id}}')" target="_blank" class="btn border-dark" id="buy-now">Buy Now</a>
+        </div>
       </div>
-
     </div>
   </div>
   {{/unless}}
   {{/each}}
 </section>
+
 
 
 {{>new-user-footer}}
@@ -246,7 +237,6 @@
 
   .images {
     height: 250px;
-    margin-top: 10px;
   }
 
   .card {
@@ -272,7 +262,6 @@
   }
 
   #add-to-cart {
-    margin-left: 10px;
     background-color: red;
     color: white;
 
@@ -282,8 +271,6 @@
   }
 
   #buy-now {
-    margin-left: 40px;
-
     &:hover {
       background-color: rgb(176, 176, 168);
     }

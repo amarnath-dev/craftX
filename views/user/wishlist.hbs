@@ -2,11 +2,10 @@
 
 {{#if getWishlistData}}
 {{#each getWishlistData}}
-<div class="container mt-5 mb-5">
+<div class="container mt-5 mb-2">
     <div class="d-flex justify-content-center row">
-        <div class="col-md-10">
-            <div class="row p-2 bg-white border rounded">
-
+        <div>
+            <div class="row p-4 bg-white border rounded">
                 {{#each this.productDetails}}
                 <div class="col-md-3">
                     <a href="/view-product/{{this._id}}">
@@ -15,35 +14,20 @@
                     </a>
                 </div>
 
-                <div class="col-md-6 mt-1">
-                    <h5 style="margin-top: 30px;">{{this.name}}</h5>
+                <div class="col-md-6 mt-1 word-wrap: break-word">
+                    <h5 class="fs-4">{{this.name}}</h5>
                     <strong>Color: {{this.color}}</strong>
                 </div>
 
-
-                <div class="align-items-center align-content-center col-md-3 border-left">
-
-                    <button type="button" style="width: 15px;height: 15px; margin-left: 180px;"
-                        class="btn btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Remove item"
-                        onclick="removeItem('{{this._id}}')">
-
-                        <span class="material-symbols-outlined" style="color: black;">delete</span>
-                    </button>
-
-                    <div class="d-flex flex-row align-items-center">
-                        <h4 class="mr-1" style="color: green; margin-left: 35px;">Price: {{this.price}}</h4><span
-                            class="strike-text"></span>
+                <div class="col-md-3 border-left d-flex row">
+                    <div class="d-flex flex-row justify-content-center align-items-center mt-1">
+                        <h4 class="mr-1 fs-2" style="color: green; text-center">Price: {{this.price}}</h4>
+                        <span class="strike-text"></span>
                     </div>
-
-
-
                     <button class="btn btn-success btn-sm cancel-button mt-2" type="button"
-                        onclick="moveToCart('{{this._id}}')">Add To Cart</button>
-
-                    <a href="/view-product/{{this._id}}" class="btn btn-primary btn-sm cancel-button mt-2"
-                        type="button">Check Item</a>
-
-
+                        onclick="moveToCart('{{this._id}}')">Add to Cart</button>
+                    <a href="/view-product/{{this._id}}" class="btn btn-primary btn-sm cancel-button mt-2" type="button">Check Item</a>
+                    <button type="button" class="btn btn-lg btn btn-danger btn-sm mt-2" data-mdb-toggle="tooltip" title="Remove item" onclick="removeItem('{{this._id}}')">Delete</button>
                 </div>
                 {{/each}}
             </div>

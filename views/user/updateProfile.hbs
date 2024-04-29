@@ -1,21 +1,16 @@
 {{>new-user-header}}
 
 <section>
-
-    <div class="col-md-9 personal-info border border-dark-subtle rounded-4"
-        style="margin-left: 400px; margin-top: 20px; width: 500px">
-
+    <div class="personal-info border border-dark-subtle rounded-4">
         <div class="container">
-            <h2 style="margin-left: 150px;" class="mt-2">Edit Profile</h2>
+            <h2 class="mt-2">Edit Profile</h2>
             <hr>
-
             <form id="edit-profile-form" class="profileForm">
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Full Name</label>
                     <input type="text" class="form-control" id="fullname" value="{{userDetails.fullname}}"
                         name="fullname" placeholder="Enter your full name">
                 </div>
-
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" value="{{userDetails.email}}" name="email"
@@ -28,7 +23,7 @@
                         name="phonenumber" placeholder="Enter your phone number">
                 </div>
 
-                <label for="pass">Change Password ?</label>
+                <label for="pass">Change Password ? </label>
                 <input id="checkBox" type="checkbox">
                 <br>
 
@@ -45,25 +40,17 @@
                     <input type="button" value="Submit" class="btn mt-3 btn-primary" id="confirmPass">
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-2" style="margin-left: 160px;">Save Changes</button>
-
-            </form>
-
-            <div style="margin-left: 190px;" class="mt-2">
-                <a href="/profile" style="text-decoration: none;" class="btn">Back</a>
+                <div class="mt-2 mb-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/profile" class="btn btn-secondary">Back</a>
             </div>
+            </form>
         </div>
     </div>
-
-
 </section>
 
-{{>user-footer}}
-
 <script>
-
     $(document).ready(() => {
-
         const editProfileForm = document.getElementById('edit-profile-form');
 
         editProfileForm.addEventListener('submit', async (e) => {
@@ -106,12 +93,10 @@
 
 
         //Password Updating Section
-
         $('.very-pass').hide();
         $('.newPassplace').hide();
 
         let checkBox = document.getElementById('checkBox');
-
        
         checkBox.addEventListener('click', () => {
             if (checkBox.checked) {
@@ -121,8 +106,6 @@
 
             }
         })
-
-       
 
         const checkPass = document.getElementById('checkPass');
 
@@ -146,18 +129,14 @@
                 });
 
                 const data = await response.json();
-                console.log(data);
-
-
+            
                 if (data.userID) {
-
                     $('.very-pass').animate({
                         height: 'hide',
                     }, 500);
 
                     $('.newPassplace').show();
                 }
-
 
                 //Settin the New Password
                 const confirmPass = document.getElementById('confirmPass');
@@ -176,7 +155,6 @@
                         console.log("Password Does not Match");
                     } else {
                         try {
-
                             const response = await fetch('/profile/update/password/newpass', {
                                 method: 'POST',
                                 headers: {
@@ -184,10 +162,7 @@
                                 },
                                 body: JSON.stringify(payload)
                             })
-
                             const data = await response.json();
-                            console.log(data);
-
                             if (data.message) {
                                 location.assign('/profile');
                             }

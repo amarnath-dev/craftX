@@ -13,7 +13,7 @@
                 </div>
                 {{/each}}
 
-                <div class="d-flex" style="margin-left: 150px">
+                <div class="d-flex justify-content-center">
                     {{#each this.secondaryImage}}
                     <a data-fslightbox="mygallery" class="border mx-1 rounded-2 secondary-image" data-type="image"
                         class="item-thumb" data-id="{{@index}}">
@@ -21,27 +21,15 @@
                     </a>
                     {{/each}}
                 </div>
-
                 {{/each}}
             </aside>
 
             <main class="col-lg-6">
                 <div class="ps-lg-3">
-                    <h4 class="title text-dark">
+                    <h4 class="title text-dark mt-3">
                         {{productDetails.name}}
                     </h4>
                     <div class="d-flex flex-row my-3">
-                        {{!-- <div class="text-warning mb-1 me-2">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span class="ms-1">
-                                4.5
-                            </span>
-                        </div> --}}
-
                         {{#if productDetails.in_Stock}}
                         <span class="text-muted">
                             <i class="fa fa-star star"></i>( {{productDetails.rating}} )</i>
@@ -62,16 +50,16 @@
                     {{/if}}
 
                     <div class="mb-3">
-                        <span class="h5">{{productDetails.price}}</span>
+                        <span class="h5 fs-2">{{productDetails.price}}</span>
                         <span class="text-muted">/per Item</span>
                     </div>
 
-                    <p>
+                    <p class="fs-5">
                         {{productDetails.description}}
                     </p>
 
                     <div class="row">
-                        <dt class="col-3">Color: {{productDetails.color}}</dt>
+                        <span class="col-3">Color: {{productDetails.color}}</span>
                     </div>
                     <hr />
                 </div>
@@ -92,13 +80,11 @@
                     <h5>Ratings and Reviews</h5>
                     <hr>
                     {{#each productRating}}
-                    {{!-- Show the Rating --}}
                     <small><span class="star" data-rating="1">&#9733;</span> Rating ( {{this.rating}}
                         )</small>
                     <h6>{{this.description}}</h6>
                     <hr>
                     {{/each}}
-
                 </div>
                 {{/if}}
         </div>

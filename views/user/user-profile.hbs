@@ -1,47 +1,11 @@
-<section>
-    <header>
-        {{>new-user-header}}
-
-
-        <!-- Jumbotron -->
-
-        <!-- Heading -->
-        {{!-- <div style="background-color: rgb(148, 243, 243);">
-            <div class="container py-4">
-                <!-- Breadcrumb -->
-                <nav class="d-flex">
-                    <h6 class="mb-0">
-                        <a href="" class="text-dark-50">Home</a>
-                        <span class="text-dark-50 mx-2"> > </span>
-                        <a href="" class="text-dark-50">Library</a>
-                        <span class="text-dark-50 mx-2"> > </span>
-                        <a href="" class="text-dark"><u>Data</u></a>
-                    </h6>
-                </nav>
-                <!-- Breadcrumb -->
-            </div>
-        </div> --}}
-        <!-- Heading -->
-
-
-    </header>
-</section>
-
-
-
-
+{{>new-user-header}}
 
 <section style="background-color: #eee; position: relative;">
     <div class="container py-5">
-
         <div class="row">
-
-
-            {{>user-left-menue}}
-
-
-            <div class="col-lg-8">
-                <div class="card mb-4 rounded-4 border border-dark" id="details-container">
+            {{!-- {{>user-left-menue}} --}}
+            <div>
+                <div class="card mb-4 rounded border" id="details-container">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-3">
@@ -63,93 +27,96 @@
                         <hr>
                         <div class="row">
                             <div class="col-sm-3">
-                                <p class="mb-0">Phone Number</p>
+                            <p class="mb-0">Phone Number</p>
                             </div>
                             <div class="col-sm-9">
                                 <p class="text-muted mb-0">{{userDetails.phonenumber}}</p>
                             </div>
                         </div>
                         <hr>
-
-                        <button class="btn border border-primary edit-profile" style="margin-left: 280px"><a
-                                href="/profile/update" class="update-btn">Update Details</a></button>
+                        <div class="d-flex justify-content-between">
+                           <button class="btn border edit-profile"><a
+                                href="/profile/update" class="update-btn">Update Details</a>
+                        </button>
+                        <button class="btn border"><a href="/profile/my-orders">My Orders</a></button>
+                        <button class="btn border"><a href="/profile/manageaddress">Manage Address</a></button>
+                        <a href="logout" class="btn border-secondary" style="color: red;">Log out</a>
+                        </div>
                     </div>
                 </div>
-
-                <small>Refer and Earn RS. 100 !!</small>
-                <div class="d-flex border rounded" style="width: 297px;">
+                <small class="text-bold">Refer and Earn RS.100!!</small>
+                <div class="d-flex border rounded">
                     <small style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
-                        class="mt-1">My Referal Code : </small>
-                    <input type="text" class="border rounded" value="{{userDetails.referalCode}}" disabled
-                        name="referalCode" id="" style="padding-left: 10px;">
+                        class="mt-1">Referal Code: </small>
+                    <input type="text" class="border" value="{{userDetails.referalCode}}" disabled
+                        name="referalCode" id="">
                 </div>
-
                 <hr>
 
-                <div class="card" style="width: 18rem; height: 17rem;">
+                <div class="card">
                     <div class="card-body">
-                        <small style="margin-left: 210px;">History</small>
-
-                        <div class="d-flex">
-                            <h5 class="card-title">My Wallet</h5>
-                            <a href="/profile/wallet-history" style="margin-left: 130px;">
-                                <span><i class="fa-solid fa-clock-rotate-left"></i></span>
+                     <div class="d-flex justify-content-evenly">
+                          <div>
+                             <h5 class="card-title">Wallet</h5>
+                          </div>
+                           <div>
+                             <a href="/profile/wallet-history" style="margin-left: 130px;">
+                            History
                             </a>
-                        </div>
-
+                           </div>
+                     </div>
                         <hr>
-                        <p class="card-text" style="font-size: 22px;margin-left: 40px;"> Current Balance </p>
-                        <p style="margin-left: 60px; color: green; font-size: 30px;">
+                        <p class="card-text text-center" style="font-size: 22px;">Current Balance</p>
+                       <div class="d-flex justify-content-center">
+                         <p style="color: green; font-size: 30px;">
                             RS.<strong>{{userDetails.wallet}}</strong></p>
-                        <div class="d-flex">
-                            <a href="/" class="btn btn-primary mt-1">Buy Products!</a>
-
-                            <a onclick="addMoney()" class="btn btn-primary mt-1" style="margin-left: 10px;">Add
-                                Money</a>
-
+                       </div>
+                        <div class="d-flex justify-content-evenly gap-2">
+                            <a href="/" class="btn btn-primary">Buy Products</a>
+                            <a onclick="addMoney()" class="btn btn-primary">Add Money</a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
 
 
-<section style="position: absolute;" class="walletPayment">
-    <div class="container py-5" id="walletMoneyAdd">
+<section style="position:absolute;" class="walletPayment">
+    <div class="container" id="walletMoneyAdd">
         <div class="row">
-            <div class="col-lg-6 mx-auto">
+            <div class="col-lg-4 mx-auto">
                 <div class="card border border-dark">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
-                            <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
                                 <li class="nav-item">
-
-                                    <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i
-                                            class="fas fa-credit-card mr-2"></i> Credit Card
+                                <a data-toggle="pill" href="#credit-card" class="nav-link active"> 
+                                <i class="fas fa-credit-card mr-2"></i>
+                                Credit Card
                             </ul>
                         </div>
-
-                        <!-- Credit card form content -->
                         <div class="tab-content">
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-
                                 <form role="form" onsubmit="event.preventDefault()">
                                     <div class="form-group"> <label for="username">
-                                            <h6>Card Owner</h6>
+                                        <h6>Card Owner</h6>
                                         </label> <input type="text" name="username" placeholder="Card Owner Name"
                                             required class="form-control "> </div>
                                     <div class="form-group"> <label for="cardNumber">
                                             <h6>Card number</h6>
                                         </label>
-                                        <div class="input-group"> <input type="text" name="cardNumber"
-                                                placeholder="Valid card number" class="form-control " required>
-                                            <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <i class="fab fa-cc-visa mx-1"></i> <i
-                                                        class="fab fa-cc-mastercard mx-1"></i> <i
-                                                        class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                        <div class="input-group"> 
+                                            <input type="text" name="cardNumber" placeholder="Valid card number" class="form-control" required>
+                                            <div class="input-group-append"> 
+                                                <span class="input-group-text text-muted">
+                                                    <i class="fab fa-cc-visa mx-1"></i> 
+                                                    <i class="fab fa-cc-mastercard mx-1"></i> 
+                                                    <i class="fab fa-cc-amex mx-1"></i> 
+                                                </span> 
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -208,22 +175,16 @@
 {{>new-user-footer}}
 
 <script>
-
     $(document).ready(function () {
-
         $('#walletMoneyAdd').hide();
-
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
     });
 
-
     function confirmPayment() {
         const getAmount = document.getElementById('paymentAmount').value;
         const paymentAmount = getAmount;
-        console.log(paymentAmount);
-
         Swal.fire({
             title: "Add Money",
             text: "Are you sure you want to add the money to the wallet?",
@@ -261,7 +222,6 @@
     function addMoney() {
         $('#walletMoneyAdd').show();
     }
-
     function cancelAdd() {
         $('#walletMoneyAdd').hide();
     }

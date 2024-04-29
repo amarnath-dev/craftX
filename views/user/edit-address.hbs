@@ -1,8 +1,8 @@
-{{>user-navbar}}
+{{>new-user-header}}
 
 <section style="background-color: #eee;">
     <div class="container py-5">
-        <div class="row">
+        {{!-- <div class="row">
             <div class="col">
                 <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
@@ -14,58 +14,48 @@
                     </ol>
                 </nav>
             </div>
-        </div>
-
+        </div> --}}
         <div class="row">
-
-            {{>user-left-menue}}
-            <div class="col-lg-8" id="address-card">
+            <div class="" id="address-card">
                 <div class="card mb-4 rounded-4" id="details-container">
                     <div class="card-body">
 
                         {{!-- Edit Addess Container --}}
-                        <div class="col-md-8 mb-4 mt-4" style="width: 700px;" id="edit-container">
+                        <div class="mb-4 mt-4" id="edit-container">
                             <div class="card mb-4">
                                 <div class="card-header py-3">
                                     <h5 class="mb-0">Edit Address</h5>
                                 </div>
                                 <div class="card-body">
-
                                     <form action="/profile/manageaddress/edit-address" method="post"
                                         id="editAddressForm">
-
-                                        <div class="row mb-4">
+                                        <div class="row">
                                             <div class="col">
-                                                <div class="form-outline d-flex">
-                                                    <div class="form-group">
+                                                <div class="form-outline d-flex justify-content-evenly">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example1" name="name"
                                                             class="form-control" placeholder="Name"
                                                             value="{{userAddress.userName}}" />
-
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example3" class="form-control"
-                                                            placeholder="Mobile Number" style="margin-left: 40px;"
+                                                            placeholder="Mobile Number"
                                                             name="phonenumber" value="{{userAddress.phoneNumber}}" />
                                                     </div>
                                                 </div>
-
-
-                                                <div class="form-outline mt-3 d-flex">
-                                                    <div class="form-group">
+                                                <div class="form-outline mt-3 d-flex justify-content-evenly">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example1" class="form-control"
                                                             placeholder="Pincode" name="pincode"
                                                             value="{{userAddress.pinCode}}" />
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example3" class="form-control"
                                                             placeholder="Locality" name="locality"
-                                                            style="margin-left: 40px;"
                                                             value="{{userAddress.locality}}" />
                                                     </div>
                                                 </div>
-
 
                                                 <div class="form-floating mt-3">
                                                     <div class="form-group">
@@ -77,33 +67,30 @@
                                                     </div>
                                                 </div>
 
-
-                                                <div class="form-outline d-flex mt-3">
-                                                    <div class="form-group">
+                                                <div class="form-outline d-flex justify-content-evenly mt-3">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example1" class="form-control"
                                                             placeholder="City/District/Town" name="town"
                                                             value="{{userAddress.town}}" />
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example3" class="form-control"
-                                                            placeholder="State" name="state" style="margin-left: 40px;"
+                                                            placeholder="State" name="state"
                                                             value="{{userAddress.state}}" />
                                                     </div>
                                                 </div>
 
-
-                                                <div class="form-outline d-flex mt-3">
-                                                    <div class="form-group">
+                                                <div class="form-outline d-flex justify-content-evenly mt-3">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example1" class="form-control"
                                                             placeholder="Landmark(Optional)" name="optionalLandmark" />
                                                     </div>
 
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="width: 50%;">
                                                         <input type="text" id="form7Example3" class="form-control"
                                                             placeholder="Alternative Phone(Optional)"
-                                                            style="margin-left: 40px;" name="alternativenumber" />
+                                                            name="alternativenumber" />
                                                     </div>
-
                                                 </div>
 
 
@@ -130,11 +117,8 @@
 
                                             </div>
                                             <hr class="mt-4">
-
                                             <button class="btn border bg-primary" type="submit">Edit</button>
-
-                                            <a href="/profile/manageaddress/" class="btn mt-3"
-                                                id="update-cancel">Cancel</a>
+                                            <a href="/profile/manageaddress/" class="btn btn-secondary mt-3" id="update-cancel">Cancel</a>
                                         </div>
                                     </form>
                                 </div>

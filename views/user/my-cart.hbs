@@ -1,12 +1,10 @@
 {{>new-user-header}}
 
-
 <section class="h-100 gradient-custom">
     <div class="container py-5">
         <div class="row d-flex justify-content-center my-4">
             <div class="col-md-8">
                 <div class="card mb-4">
-
 
                     {{#if error}}
                     <div class="alert alert-danger">
@@ -18,7 +16,6 @@
                         <h5 class="mb-0">Cart - {{cartCount}} items</h5>
                     </div>
 
-
                     {{#if cartList}}
                     {{#unless cartList.prod_detail.is_delete}}
                     <div class="card-body">
@@ -26,7 +23,6 @@
 
                         <div class="row">
                             <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-
                                 {{#each this.prod_detail.primaryImage}}
                                 <a href="/view-product/{{../this.prod_detail._id}}">
                                     <div class="bg-image hover-overlay hover-zoom ripple rounded "
@@ -36,30 +32,24 @@
                                 </a>
                                 <input type="text" id="productQuantity" value="{{../this.prod_detail.stock}}" hidden>
                                 {{/each}}
-
                             </div>
 
                             <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                                 <p><strong>{{this.prod_detail.name}}</strong></p>
                                 <p>Color: {{this.prod_detail.color}}</p>
-
                                 <p class="">
                                     <strong style="color: green; font-size: 20px;">{{this.prod_detail.price}}</strong>
                                 </p>
-
                                 <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
                                     title="Remove item" onclick="removeItem('{{this.prod_detail._id}}')">
 
                                     <span class="material-symbols-outlined" style="color: black;">delete</span>
                                 </button>
 
-
-
-
                                 <button type="button" class="btn btn-danger btn-sm mb-2 " data-mdb-toggle="tooltip"
                                     title="Move to the wish list">
-                                    <a href=""><span class="material-symbols-outlined"
-                                            style="color: white;">favorite</span></a>
+                                    <a href="">
+                                    <span class="material-symbols-outlined" style="color: white;">favorite</span></a>
                                 </button>
                             </div>
 
@@ -72,12 +62,9 @@
 
                                     <div class="form-outline">
 
-
                                         <input id="cartCount_{{this.prod_detail._id}}" min="0" name="quantity"
                                             value="{{cart.count}}" type="number" class="form-control increment mt-3"
                                             disabled max="4" />
-
-
 
                                         <input type="text" id="currentQuantity" value="{{cart.count}}" hidden>
 
@@ -94,24 +81,7 @@
                             </div>
                         </div>
                         <hr class="my-4" />
-
                         {{/each}}
-                    </div>
-                </div>
-
-
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body">
-                        <p><strong>We accept</strong></p>
-                        <img class="me-2" width="45px"
-                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                            alt="Visa" />
-                        <img class="me-2" width="45px"
-                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                            alt="American Express" />
-                        <img class="me-2" width="45px"
-                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                            alt="Mastercard" />
                     </div>
                 </div>
             </div>
@@ -143,22 +113,15 @@
 
                                     </strong>
                                 </div>
-
                                 <span>
                                     <strong style="color: green; font-size: 20px; font-weight: bold"
                                         id="pricePlace">Rs.{{totalAmount}}</strong>
                                 </span>
-
-
                             </li>
                         </ul>
-
-
                         <button type="button" onclick="getCheckOut()" class="btn bg-info-subtle btn-lg btn-block">
                             Go to Checkout
                         </button>
-
-
                     </div>
                 </div>
             </div>
@@ -168,9 +131,7 @@
     </div>
 </section>
 
-
 {{>new-user-footer}}
-
 
 <script>
 

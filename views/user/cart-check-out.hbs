@@ -3,7 +3,6 @@
         <div class="row justify-content-center ">
             <div class="col-xl-10">
                 <div class="card shadow-lg ">
-
                     <div class="row justify-content-around">
                         <div class="col-md-5">
                             <div class="card border-0">
@@ -399,7 +398,6 @@
     </div>
 </div>
 
-
 <div style="position: absolute;" id="wallet_price">
     <span>Wallet Balance :</span>
     <input type="text" value="{{userData.wallet}}" id="walletAmount" disabled class="border border-dark rounded"
@@ -407,15 +405,12 @@
 </div>
 
 
-
 <script>
     let appliedCouponID;
-
     $(document).ready(() => {
         $('#discountPrice').hide();
         $('.checkOut-editAddress').hide();
         $('.couponRemoveBtn').hide();
-
 
         $('.editBtn').on('click', function () {
             const editForm = $(this).closest('.card-body').find('.checkOut-editAddress');
@@ -463,7 +458,6 @@
             });
 
             const data = await result.json();
-
 
             if (data.message) {
                 couponDiscountAmt = data.discountAmt;
