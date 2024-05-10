@@ -7,48 +7,42 @@
                         <div class="col-md-5">
                             <div class="card border-0">
                                 <div class="card-header pb-0">
-                                    <h2 class="card-title space mt-5">Checkout</h2>
-                                    <p class="card-text text-muted mt-4  space">SHIPPING DETAILS</p>
-                                    <button class="btn border bg-light">
-                                        <a href="/profile/manageaddress">Add Address</a>
-                                    </button>
+                                    <h2 class="card-title space mt-3">Checkout</h2>
+                                    <p class="card-text text-muted mt-4 space">SHIPPING DETAILS</p>
+                                        <div class="mb-1">
+                                          <a href="/profile/manageaddress" class="btn btn-outline-primary">Add Address</a>
+                                        </div>
                                     <hr class="my-0">
                                 </div>
 
                                 {{#if cartList}}
                                 {{#each userAddress}}
-
                                 <div class="card-body">
-
                                     <div class="row justify-content-between">
                                         <div>
-
-                                            <div class="d-flex">
-                                                <button type="button" id="userPlace" disabled>{{this.workHome}}</button>
-
-                                                <button class="editBtn" style="margin-left: 300px;" id="editButton"
-                                                    onclick="editAddress()">
-                                                    <span class="material-symbols-outlined">Edit</span></button>
+                                            <div class="d-flex justify-content-between">
+                                               <div>
+                                                 <button type="button" id="userPlace" class="text-dark rounded" disabled>{{this.workHome}}</button>
+                                               </div>
+                                               <div>
+                                                  <button class="editBtn" id="editButton" onclick="editAddress()">
+                                                    <span class="material-symbols-outlined">Edit</span>
+                                                </button>
+                                               </div>       
                                             </div>
 
                                             {{!-- Edit Address Form --}}
                                             <div class="card-body">
+                                                <form action="/check-out/edit-address" method="post" class="checkOut-editAddress" id="submitData">
 
-                                                <form action="/check-out/edit-address" method="post"
-                                                    class="checkOut-editAddress" id="submitData">
-
+                                                
                                                     <div class="row mb-4">
                                                         <div class="col">
-
-
                                                             <div>
-                                                                <input type="text" name="addressID" value="{{this._id}}"
-                                                                    hidden>
+                                                                <input type="text" name="addressID" value="{{this._id}}" hidden>
                                                             </div>
-
-                                                            <div class="form-outline d-flex">
+                                                            <div class="form-outline d-flex gap-1">
                                                                 <div class="form-group">
-
                                                                     <input type="text" id="form7Example1" name="name"
                                                                         class="form-control" placeholder="Name" required
                                                                         value="{{this.userName}}" />
@@ -57,15 +51,12 @@
 
                                                                 <div class="from-group">
                                                                     <input type="text" id="form7Example3"
-                                                                        class="form-control" placeholder="Mobile Number"
-                                                                        style="margin-left: 40px;" name="phonenumber"
+                                                                        class="form-control" placeholder="Mobile Number" name="phonenumber"
                                                                         required value="{{this.phoneNumber}}" />
-
                                                                 </div>
                                                             </div>
 
-
-                                                            <div class="form-outline mt-3 d-flex">
+                                                            <div class="form-outline mt-3 d-flex gap-1">
                                                                 <div class="form-group">
                                                                     <input type="text" id="form7Example1"
                                                                         class="form-control" placeholder="Pincode"
@@ -73,25 +64,20 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <input type="text" id="form7Example3"
-                                                                        class="form-control" placeholder="Locality"
-                                                                        name="locality" style="margin-left: 40px;"
+                                                                        class="form-control" placeholder="Locality" name="locality"
                                                                         value="{{this.locality}}" />
                                                                 </div>
                                                             </div>
 
-
                                                             <div class="form-floating mt-3">
                                                                 <div class="form-group">
                                                                     <textarea class="form-control"
-                                                                        id="floatingTextarea2"
-                                                                        style="height: 100px; width: 390px;"
-                                                                        name="address"
+                                                                        id="floatingTextarea2" name="address"
                                                                         placeholder="Adress(Area and Street)">{{this.address}}</textarea>
                                                                 </div>
                                                             </div>
 
-
-                                                            <div class="form-outline d-flex mt-3">
+                                                            <div class="form-outline d-flex mt-3 gap-1">
                                                                 <div class="form-group">
                                                                     <input type="text" id="form7Example1"
                                                                         class="form-control"
@@ -100,14 +86,13 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <input type="text" id="form7Example3"
-                                                                        class="form-control" placeholder="State"
-                                                                        name="state" style="margin-left: 40px;"
+                                                                        class="form-control" placeholder="State" name="state"
                                                                         value="{{this.state}}" />
                                                                 </div>
                                                             </div>
 
 
-                                                            <div class="form-outline d-flex mt-3">
+                                                            <div class="form-outline d-flex mt-3 gap-1">
                                                                 <div class="form-group">
                                                                     <input type="text" id="form7Example1"
                                                                         class="form-control"
@@ -119,13 +104,10 @@
                                                                     <input type="text" id="form7Example3"
                                                                         class="form-control"
                                                                         placeholder="Alternative Phone(Optional)"
-                                                                        style="margin-left: 40px;"
                                                                         name="alternativenumber"
                                                                         value="{{this.alternativeNumber}}" />
                                                                 </div>
                                                             </div>
-
-
 
                                                             <div class="form-check mt-2">
                                                                 <input class="form-check-input" type="radio"
@@ -145,11 +127,10 @@
                                                             </div>
                                                         </div>
                                                         <hr class="mt-4">
+                                                        <button class="btn border" type="submit"
+                                                            style="width: 100%; background-color: #4bb8a9;">Edit</button>
 
-                                                        <button class="btn border bg-primary" type="submit"
-                                                            style="width: 100%;">Edit</button>
-
-                                                        <a href="" class="btn cancel-Btn mt-3 border"
+                                                        <a href="" class="btn cancel-Btn mt-1 border"
                                                             onclick="updateCancel()">Cancel</a>
                                                     </div>
                                                 </form>
@@ -158,32 +139,27 @@
                                             <h4>{{this.userName}}</h4>
                                         </div>
 
-                                        <div class="col-auto mt-0">
-                                            <p><b>{{this.address}}</b></p>
+                                        <div class="d-flex row">
+                                            <span>{{this.address}}</span> 
+                                            <span>Pin Code: {{this.pinCode}}</span> 
+                                            <span>Phone: {{this.phoneNumber}}</span> 
                                         </div>
-                                        <div class="col-auto">
-                                            <p><b>Pin Code: {{this.pinCode}}</b> </p>
-                                        </div>
-                                        <br>
-                                        <div class="col-auto">
-                                            <p><b>Phone: {{this.phoneNumber}}</b> </p>
-                                        </div>
+                                
+                                        <div class="form-check d-flex justify-content-between mt-2">
+                                          <div>
+                                              <input class="form-check-input" name="userAddress" type="checkbox"
+                                            value="{{this._id}}" id="addressCheck" data-address-id="{{this._id}}">
 
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="userAddress" type="checkbox"
-                                                value="{{this._id}}" id="addressCheck" data-address-id="{{this._id}}">
-
-                                            <label class="form-check-label" for="flexCheckDefault"
-                                                style="margin-left: 5px;">
+                                            <label class="form-check-label" for="flexCheckDefault">
                                                 <strong style="color: #414243;">Deliver to this Address</strong>
                                             </label>
+                                          </div>
+                                          <div>
+                                            <div class="d-flex justify-content-end">
+                                            <a href="/profile/manageaddress" class="border text-white rounded p-1" style="background-color: #4bb8a9;">Manage Address</a>
+                                            </div>
+                                          </div>
                                         </div>
-
-
-                                        <a href="/profile/manageaddress">
-                                            <button class="btn border mb-3"
-                                                style="margin-left: 240px; width: 150px;">Manage Address</button>
-                                        </a>
                                         <hr>
                                     </div>
                                 </div>
@@ -193,29 +169,20 @@
                         </div>
 
 
-
                         <div class="col-md-5">
-
                             <div class="card border-0 ">
                                 <div class="card-header card-2">
-
                                     <span style="color: red; font-size: 24px;" id="errorShow"></span>
-
-                                    <div class="card text-white mt-3"
-                                        style="max-width: 25rem; background-color: black;">
-                                        <button id="couponCheck" style="border: none; height: 50px; padding: 5px;">
+                                     <div class="card text-white mt-3">
+                                        <button id="couponCheck" class="btn-outline-primary fw-bold">
                                             <span>Check For Coupons</span>
                                         </button>
                                     </div>
-
-
-                                    <p class="card-text text-muted mt-md-4  mb-2 space">YOUR ORDER</p>
+                                    <p class="card-text text-muted mt-md-4 mb-2 space">YOUR ORDER</p>
                                     <hr class="my-2">
                                 </div>
 
-
                                 <div class="card-body pt-0">
-
                                     <div class="row justify-content-between">
                                         <div class="col-auto col-md-7">
                                             {{#each cartList}}
@@ -231,14 +198,9 @@
                                                                 <p class="mb-0 mt-2"><b
                                                                         style="color: black;">{{prod_detail.name}}</b>
                                                                 </p>
-
-                                                                {{!-- Quantity Button --}}
                                                                 <button type="input" class="btn btn-primary" disabled>
-                                                                    Qty:
-                                                                    <span
-                                                                        class="badge badge-light">{{cart.count}}</span>
+                                                                    Qty: <span class="badge badge-light">{{cart.count}}</span>
                                                                 </button>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -250,7 +212,6 @@
                                     </div>
 
                                     <hr class="my-2">
-
                                     <div class="row ">
                                         <div class="col">
                                             <div class="row justify-content-between">
@@ -270,32 +231,24 @@
                                                 </div>
                                             </div>
                                             <div class="row justify-content-between">
-
-                                                <span id="totalCartCount" class="mt-2"><strong>Total Products :
-                                                        {{cartCount}}</strong></span>
-
-
+                                                <span id="totalCartCount" class="mt-2">
+                                                    <strong>Total Products: {{cartCount}}</strong>
+                                                </span>
                                                 <div class="col-4">
-                                                    <p class="mt-2" style="font-size: 20px;"><b>Total</b></p>
+                                                    <p class="mt-2 fw-bold fs-5"><b>Total</b></p>
                                                 </div>
 
                                                 <div class="flex-sm-col col-auto">
+                                                    <p id="discountPrice" class="mb-1 mt-2 text-success">
+                                                        <strike><b>Rs.{{totalAmount}}</b></strike>
 
-                                                    <p id="discountPrice" class="mb-1 mt-2"
-                                                        style="color: green; font-size: 16px;">
-                                                        <strike><b>RS.{{totalAmount}}</b></strike>
-
-                                                    <p id="totalAmount" class="mb-1 mt-2"
-                                                        style="color: green; font-size: 20px;">
+                                                    <p id="totalAmount" class="mb-1 mt-2 fw-bold fs-5 text-success">
                                                         <b>RS.{{totalAmount}}</b>
-
-
                                                         <input type="text" name="checkoutTotalAmt"
                                                             value="{{totalAmount}}" hidden disabled name=""
                                                             id="cartTotalAmount">
                                                     </p>
                                                 </div>
-
                                             </div>
                                             <hr class="my-0">
                                         </div>
@@ -325,7 +278,6 @@
                                             </label>
                                         </div>
 
-
                                         <div class="form-check mt-3">
                                             <input class="form-check-input" type="radio" value="wallet payment"
                                                 id="flexCheckDefault2" name="paymentType">
@@ -335,7 +287,11 @@
                                             </label>
                                         </div>
 
-
+                                    <div id="wallet_price">
+                                        <span>Wallet Balance:</span>
+                                        <input type="text" value="{{userData.wallet}}" id="walletAmount" disabled class="border border-dark rounded fw-bold mt-3"
+                                        style="max-width: 80px; color: green; height: 30px;">
+                                    </div>
                                         <div class="row mb-md-5 mt-3">
                                             <div class="col">
                                                 <button type="button" id="purchaseButton"
@@ -355,14 +311,12 @@
 
 
 <div id="couponFormsContainer">
-
     <div class="card-body rounded" id="couponApply" style="position: absolute;">
         {{#each allCoupons}}
         {{#unless this.status}}
         {{#unless this.is_delete}}
         <form id="getCouponDiscount_{{this._id}}">
             <input type="text" hidden value="{{this._id}}" name="couponID">
-
             <div class="form-group border border-dark rounded">
                 <label class="form-label mt-4" style="margin-left: 10px;">Enter the Coupon Code
                     <strong>{{this.coupon_code}}</strong></label>
@@ -382,13 +336,10 @@
                     <a class="btn border border-dark rounded" onclick="Cancel()">Cancel</a>
                     <small style="margin-left: 10px;">Carefull that, Once you use the coupon it will no longer
                         applicable!!</small>
-
                 </div>
-
                 <div class="couponRemoveBtn mb-2">
-                    <a onclick="refreshPage()"
-                        style="background-color: transparent; border: none;margin-left: 370px;"><i
-                            class="fa-solid fa-trash" style="color: black; font-size: 20px;"></i></a>
+                    <a onclick="refreshPage()" style="background-color: transparent; border: none;margin-left: 370px;"><i
+                    class="fa-solid fa-trash" style="color: black; font-size: 20px;"></i></a>
                 </div>
             </div>
         </form>
@@ -397,13 +348,6 @@
         {{/each}}
     </div>
 </div>
-
-<div style="position: absolute;" id="wallet_price">
-    <span>Wallet Balance :</span>
-    <input type="text" value="{{userData.wallet}}" id="walletAmount" disabled class="border border-dark rounded"
-        style="width: 80px; font-size: 20px; color: green;">
-</div>
-
 
 <script>
     let appliedCouponID;
@@ -689,12 +633,21 @@
 </script>
 
 
-
-
-
-
-
 <style>
+
+    .btn-outline-primary {
+        background-color: #fff !important;
+        color: #4bb8a9 !important;
+        border-radius: 0.2rem !important;
+        border: 1px solid #4bb8a9;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #4bb8a9 !important;
+        color: #fff !important;
+        border: 1px solid #4bb8a9;
+    }
+
     #couponApply {
         top: 220px;
         left: 700px;
@@ -899,16 +852,4 @@
         background-color: white;
     }
 
-    #userPlace {
-        width: 60px;
-        height: 25px;
-        color: black;
-        border-radius: 10px;
-        padding-bottom: 10px;
-    }
-
-    #wallet_price {
-        top: 780px;
-        left: 920px;
-    }
 </style>

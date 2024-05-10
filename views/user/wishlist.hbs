@@ -26,7 +26,7 @@
                     </div>
                     <button class="btn btn-success btn-sm cancel-button mt-2" type="button"
                         onclick="moveToCart('{{this._id}}')">Add to Cart</button>
-                    <a href="/view-product/{{this._id}}" class="btn btn-primary btn-sm cancel-button mt-2" type="button">Check Item</a>
+                    {{!-- <a href="/view-product/{{this._id}}" class="btn btn-primary btn-sm cancel-button mt-2" type="button">Check Item</a> --}}
                     <button type="button" class="btn btn-lg btn btn-danger btn-sm mt-2" data-mdb-toggle="tooltip" title="Remove item" onclick="removeItem('{{this._id}}')">Delete</button>
                 </div>
                 {{/each}}

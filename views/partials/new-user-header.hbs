@@ -1,48 +1,70 @@
 <section>
-    <header>
-        <div class="p-3 text-center bg-white border-bottom">
-            <div class="container">
-                <div class="row gy-3">
-                    <div class="col-lg-2 col-sm-4 col-4">
-                        <a href="/" class="float-start">
-                            <img src="" />
-                        </a>
-                    </div>
-        
-                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-                        <div class="d-flex float-end">
-                            <a href="/profile" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                                <i class="fas fa-user-alt m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Profile</p>
-                            </a>
+  <header>
+    <div class="p-3 text-center bg-white border-bottom">
+      <div class="container">
 
-                            <a href="/wishlist"
-                                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i
-                                    class="fas fa-heart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Wishlist</p>
-                            </a>
+        <div class="row gy-1">
+          <div class="col-lg-2 col-sm-4 col-4">
+            <a href="/" class="float-start">
+              <img class="logo" src="https://img.freepik.com/premium-vector/initial-letter-b-with-feather-logo-vector-icon-illustration_683738-5011.jpg" />
+            </a>
+          </div>
 
-                            <a href="/my-cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
-                                <span class="badge" id="count-badge">{{getProductCount}}</span>
-                                <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Cart</p>
-                            </a>
+          <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+            <div class="d-flex float-end">
+              <a
+                href="/profile"
+                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+              >
+                <i class="fas fa-user-alt m-1 me-md-2"></i>
+                <p class="d-none d-md-block mb-0">Profile</p>
+              </a>
 
-                        </div>
-                    </div>
-            
-                    <div class="col-lg-5 col-md-12 col-12">
-                        <div class="input-group float-center">
-                            <div class="form-outline">
-                                <input type="search" id="form1" class="form-control" placeholder="Search" />
-                            </div>
-                            <button type="button" class="btn btn-primary shadow-0">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+              <a
+                href="/wishlist"
+                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+              >
+                <i class="fas fa-heart m-1 me-md-2"></i>
+                <p class="d-none d-md-block mb-0">Wishlist</p>
+              </a>
+
+              <a
+                href="/my-cart"
+                class="border rounded py-1 px-3 nav-link d-flex align-items-center"
+              >
+                <span class="badge" id="count-badge">{{getProductCount}}</span>
+                <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+                <p class="d-none d-md-block mb-0">Cart</p>
+              </a>
+
             </div>
+          </div>
+
+          <div class="col-lg-5 col-md-12 col-12">
+            <div class="input-group float-center">
+              <div class="form-outline">
+                <input
+                  type="search"
+                  id="form1"
+                  class="form-control"
+                  placeholder="Search"
+                />
+              </div>
+              <button type="button" class="btn btn-primary shadow-0">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </header>
 </section>
+
+<style>
+    .logo{
+        width: 2rem;
+        height: 2rem;
+        border-radius: 10px;
+    }
+</style>
