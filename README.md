@@ -26,7 +26,7 @@
         <a href="https://craftx.onrender.com">Deployed URL</a>
     <p>
 </h4>
-CraftX is an c-commerce platform specializing in the sale of handcrafted products. It offers a range of features aimed at providing a seamless shopping experience for the users.Below are the key features implemented in the project:
+CraftX is an e-commerce platform specializing in the sale of handcrafted products. It offers a range of features aimed at providing a seamless shopping experience for the users.Below are the key features implemented in the project:
 
 ## Features
 
@@ -62,7 +62,7 @@ Main web-frameworks and libraries:
 - JWT tocken based Authentication
 - BCrypt Hashing
 
-CraftX is successfully hosted on render You can access the live site [https://craftx.onrender.com](https://craftx.onrender.com).
+CraftX is successfully hosted on render You can access the live site [https://craftx.onrender.com](https://craftx.onrender.com)
 
 ## How to setup the application locally on your system
 
