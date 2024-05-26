@@ -41,7 +41,7 @@ CraftX is an e-commerce platform specializing in the sale of handcrafted product
 
 <p align="center">
     <picture>
-    <img alt="craftx" src="./assets/Screenshot (484).png" width=90%>
+    <img alt="craftx" src="./assets/Screenshothome.png" width=90%>
     </picture>
 </p>
 <p align="center">
