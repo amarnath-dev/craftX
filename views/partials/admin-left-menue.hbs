@@ -1,77 +1,59 @@
 <div class="col-md-4" style="width: 250px; margin-top: 25px;">
-    <div class="list-group">
-        <li class="list-group-item"><a href="/admin/products" class="nav-link">
-                <i class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
-        <li class="list-group-item"><a href="/admin/customers" class="nav-link"><i
-                    class="fa-regular fa-user side-bar-icon"></i>Customers</a>
-        </li>
-        <li class="list-group-item"><a href="/admin/orders" class="nav-link">
-                <i class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a>
-        </li>
-        <li class="list-group-item"><a href="/admin/category" class="nav-link">
-                <i class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"></i>Category</a></li>
-        <li class="list-group-item"><a href="/admin/sales-report" class="nav-link">
-                <i class="fa-solid fa-arrow-up-from-bracket side-bar-icon" style="transform: rotate(90deg);"></i>Sales
-                Report</a></li>
-        <li class="list-group-item"><a href="/admin/coupons" class="nav-link">
-                <i class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage
-                Coupon</a></li>
-        <li class="list-group-item"><a href="/admin/banner" class="nav-link">
-                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner
-                Manage</a></li>
-        <li class="list-group-item"><a href="/admin/orderReturn" class="nav-link">
-                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Product Return</a></li>
+  <div class="list-group">
+    <li class="list-group-item"><a href="/admin/products" class="nav-link">
+        <i class="fa-solid fa-box-open side-bar-icon"></i>Products</a></li>
+    <li class="list-group-item"><a href="/admin/customers" class="nav-link"><i
+          class="fa-regular fa-user side-bar-icon"
+        ></i>Customers</a>
+    </li>
+    <li class="list-group-item"><a href="/admin/orders" class="nav-link">
+        <i class="fa-solid fa-cart-shopping side-bar-icon"></i>Orders</a>
+    </li>
+    <li class="list-group-item"><a href="/admin/category" class="nav-link">
+        <i
+          class="fa-solid fa-table-cells-large fa-custom-icon side-bar-icon"
+        ></i>Category</a></li>
+    <li class="list-group-item"><a href="/admin/sales-report" class="nav-link">
+        <i
+          class="fa-solid fa-arrow-up-from-bracket side-bar-icon"
+          style="transform: rotate(90deg);"
+        ></i>Sales Report</a></li>
+    <li class="list-group-item"><a href="/admin/coupons" class="nav-link">
+        <i class="fa-solid fa-money-bill-wave side-bar-icon"></i>Manage Coupon</a></li>
+    <li class="list-group-item"><a href="/admin/banner" class="nav-link">
+        <i class="fa-solid fa-font-awesome side-bar-icon"></i>Banner Manage</a></li>
+    <li class="list-group-item"><a href="/admin/orderReturn" class="nav-link">
+        <i class="fa-solid fa-font-awesome side-bar-icon"></i>Product Return</a></li>
 
-        <li class="list-group-item"><a href="/admin/categoryOffer" class="nav-link">
-                <i class="fa-solid fa-font-awesome side-bar-icon"></i>Category Offer</a></li>
-    </div>
+    <li class="list-group-item"><a href="/admin/categoryOffer" class="nav-link">
+        <i class="fa-solid fa-font-awesome side-bar-icon"></i>Category Offer</a></li>
+  </div>
 
-    <div class="btn-container d-flex justify-content-center align-items-inline mt-3">
-
-        <a href="logout" class="btn border-primary-subtle">Log Out</a>
-
-        <a href="/admin" class="btn border-primary-subtle" style="margin-left: 40px;">Back</a>
-
-    </div>
+  <div
+    class="btn-container d-flex justify-content-center align-items-inline mt-3"
+  >
+    <a href="logout" class="btn border-primary-subtle">Log Out</a>
+    <a
+      href="/admin"
+      class="btn border-primary-subtle"
+      style="margin-left: 40px;"
+    >Back</a>
+  </div>
 </div>
 
-
 <style>
-    .active-link {
-        background-color: #3879ce;
-        color: white !important;
-        border-radius: 5px;
-    }
-
-    .nav-link {
-        color: black;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .nav-link:hover {
-        background-color: #f0f0f0;
-    }
-
-    .nav-link.active {
-        background-color: #007bff;
-        color: #fff;
-    }
+  .active-link { background-color: #3879ce; color: white !important;
+  border-radius: 5px; } .nav-link { color: black; text-decoration: none;
+  transition: background-color 0.2s; } .nav-link:hover { background-color:
+  #f0f0f0; } .nav-link.active { background-color: #007bff; color: #fff; }
 </style>
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll(".nav-link");
-
-        navLinks.forEach(function (link) {
-            const linkPath = link.getAttribute("href");
-
-            if (currentPath === linkPath) {
-                link.classList.add("active-link");
-            }
-        });
-    });
+  document.addEventListener("DOMContentLoaded", function () { const currentPath
+  = window.location.pathname; const navLinks =
+  document.querySelectorAll(".nav-link"); navLinks.forEach(function (link) {
+  const linkPath = link.getAttribute("href"); if (currentPath === linkPath) {
+  link.classList.add("active-link"); } }); });
 
 </script>
