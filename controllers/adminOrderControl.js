@@ -61,7 +61,7 @@ module.exports.adminOrders_get = async (req, res) => {
                 const formattedDate = formatDate(originalDate);
                 orderDetails.push({
                     orderId: order._id,
-                    customerName: order.userID.fullname,
+                    customerName: order.userID?.fullname,
                     orderDate: formatDate(new Date(order.orderDate)),
                     orderItems,
                     orderAmount,

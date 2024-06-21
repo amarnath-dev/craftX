@@ -9,59 +9,6 @@
                     <div class="object-fit-contain mt-3" style="width: 100%;">
                         <div class="header d-flex justify-content-between">
                             <h3 class="h3 text-second fw-bold mb-3">Sales</h3>
-                            {{!-- Filter Items DIV --}}
-                            <div id="filterFormContainer">
-                                <form action="/admin/sales-report/filter" method="post">
-                                    <div class="card border border-dark"
-                                        style="background-color: rgb(234, 240, 238); width: 800px; height: 100px"
-                                        id="itemsContainer">
-                                        <div class="card-body">
-
-                                            <div class="d-flex">
-
-                                                <small>From </small>
-
-                                                <input type="date" name="from_Date"
-                                                    style="height: 30px; margin-left: 10px">
-
-                                                <small>To</small>
-
-                                                <input type="date" name="to_Date"
-                                                    style="height: 30px; margin-left: 10px">
-
-
-
-                                                <div class="d-flex" style="margin-left: 20px;">
-
-                                                    <div class="form-check" style="margin-left: 20px;">
-                                                        <input type="radio" class="form-check-input" id="radio1"
-                                                            name="payment_method" value="Cash On Delivery">
-                                                        COD
-                                                        <label class="form-check-label" for="radio1"></label>
-                                                    </div>
-                                                    <div class="form-check" style="margin-left: 20px;">
-                                                        <input type="radio" class="form-check-input" id="radio2"
-                                                            name="payment_method" value="Pay Online">
-                                                        Online
-                                                        <label class="form-check-label" for="radio2"></label>
-                                                    </div>
-
-                                                    <div style="margin-left: 30px;">
-
-                                                        <input type="number" name="from_amount" id="inputBox1">
-
-                                                        <input type="number" name="to_amount" id="inputBox2"
-                                                            class="mt-2">
-                                                    </div>
-                                                </div>
-                                                <button type="submit" class="btn border border-dark">Apply</button>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
 
                         {{!-- Report Invoice Excel Download --}}

@@ -94,8 +94,10 @@
 
          if (response.ok) {
             const fetchedData = await response.json();
+            console
 
             const todayOrders = document.getElementById('todayOrders')
+            console.log("Today orders", fetchedData.todayOrders)
             todayOrders.textContent = fetchedData.todayOrders;
 
             const thisMonth = document.getElementById('thisMonth')
