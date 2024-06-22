@@ -135,7 +135,7 @@ module.exports.get_home = async (req, res) => {
 
     if (userID) {
       const getUser = await User.findById({ _id: userID });
-      var getProductCount = getUser.cart.length;
+      var getProductCount = getUser?.cart?.length;
     }
 
     res.render('user/home', { message: "Products Fetch successfully", allproducts, getProductCount, allBanner });
